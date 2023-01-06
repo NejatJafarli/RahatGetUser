@@ -1,0 +1,17 @@
+ion-header{
+  ion-toolbar{
+    ion-menu-button{}
+  }
+  ion-avatar {
+    margin-left: 10px;
+    margin-right: 10px;
+    width: 35px;
+    height: 35px;
+    border: 1px solid #0028ff;
+    img {
+    }
+  }
+}
+.header-md::after{
+  display: none;
+}

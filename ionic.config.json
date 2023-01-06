@@ -1,0 +1,14 @@
+{
+  "name": "reciclica-app",
+  "integrations": {
+    "capacitor": {},
+    "cordova": {}
+  },
+  "type": "angular",
+  "proxies": [
+    {
+      "path": "/places",
+      "proxyUrl": "https://maps.googleapis.com/maps/api/place/textsearch/json"
+    }
+  ]
+}

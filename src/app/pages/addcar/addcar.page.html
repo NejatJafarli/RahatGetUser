@@ -1,0 +1,102 @@
+<ion-content class="carviewlist" *ngIf="step == 1">
+  <app-headerbg></app-headerbg>
+  <div class="main">
+    <div class="title">
+      <ion-buttons slot="start" routerLink="/setting">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-buttons>
+      <ion-title slot="center">Avtomobilinizi daxil edin</ion-title>
+    </div>
+    <div class="carlist">
+      <ion-text>
+        <p>Sizin nəqliyatınız</p>
+      </ion-text>
+      <ion-list>
+        <ion-item lines="none" class="items">
+          <ion-card>
+            <ion-card-content>
+              <ion-item class="ion-no-padding" lines="none">
+                <div class="carimg">
+                  <img src="/assets/img/car1.jpg">
+                </div>
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col size="6" size-md="4" size-lg="6"><p>Marka</p></ion-col>
+                      <ion-col size="6" size-md="4" size-lg="6"><p>Bmw</p></ion-col>
+                      <ion-col size="6" size-md="4" size-lg="6"><p>Model</p></ion-col>
+                      <ion-col size="6" size-md="4" size-lg="6"><p>M3</p></ion-col>
+                      <ion-col size="6" size-md="4" size-lg="6"><p>D.nişanı</p></ion-col>
+                      <ion-col size="6" size-md="4" size-lg="6"><p>77-zz-777</p></ion-col>
+                    </ion-row>
+                  </ion-grid>
+                  <div class="icon">
+                    <img src="/assets/icon/edit.svg">
+                  </div>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+        </ion-item>
+        <ion-item lines="none" class="items">
+          <ion-card>
+            <ion-card-content>
+              <ion-item class="ion-no-padding" lines="none">
+                <div class="carimg">
+                  <img src="/assets/img/car1.jpg">
+                </div>
+                  <ion-grid>
+                    <ion-row>
+                      <ion-col size="6" size-md="4" size-lg="6"><p>Marka</p></ion-col>
+                      <ion-col size="6" size-md="4" size-lg="6"><p>Bmw</p></ion-col>
+                      <ion-col size="6" size-md="4" size-lg="6"><p>Model</p></ion-col>
+                      <ion-col size="6" size-md="4" size-lg="6"><p>M3</p></ion-col>
+                      <ion-col size="6" size-md="4" size-lg="6"><p>D.nişanı</p></ion-col>
+                      <ion-col size="6" size-md="4" size-lg="6"><p>77-zz-777</p></ion-col>
+                    </ion-row>
+                  </ion-grid>
+                  <div class="icon">
+                    <img src="/assets/icon/edit.svg">
+                  </div>
+              </ion-item>
+            </ion-card-content>
+          </ion-card>
+        </ion-item>
+      </ion-list>
+      <div class="add-car-btn">
+        <ion-button class="btn-primary" (click)="addcar2()"><ion-icon name="add-outline"></ion-icon></ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>
+<ion-content class="editcar" *ngIf="step == 2">
+ <app-headerbg></app-headerbg>
+  <div class="editmain">
+    <div class="title">
+      <ion-buttons slot="start" (click)="backbtn()">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-buttons>
+      <ion-title slot="center">Avtomobilinizi daxil edin</ion-title>
+    </div>
+    <div class="form">
+      <ion-list>
+        <ion-item lines="none">
+          <ion-button><p>Avtomobilinizin şəklini yükləyin</p></ion-button>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label position="stacked">Marka</ion-label>
+          <ion-input type="text" placeholder="Bmw"></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label position="stacked">Model</ion-label>
+          <ion-input type="text" placeholder="M3"></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label position="stacked">Dövlət nişanı</ion-label>
+          <ion-input type="text" placeholder="77-zz-777"></ion-input>
+        </ion-item>
+      </ion-list>
+      <div class="enter-btn">
+        <ion-button class="btn-primary">Daxil et</ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>

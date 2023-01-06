@@ -1,0 +1,20 @@
+<div class="otpcode-component">
+  <ion-item lines="none">
+    <ion-grid>
+      <ion-row>
+        <ion-col>
+          <ion-input type="tel" maxlength="1" inputmode="numeric" pattern="tel" (keydown)="keyDown($event)" (keyup)="gotoNextField(otpInput2,0,$event)" #otpInput1 [(ngModel)]="icode1" placeholder="0"></ion-input>
+        </ion-col>
+        <ion-col>
+          <ion-input type="tel" maxlength="1" inputmode="numeric" pattern="tel" (keydown)="keyDown($event)" (ionFocus)="focus(2)"   (keyup)="gotoNextField(otpInput3,1,$event)" #otpInput2 [(ngModel)]="icode2" placeholder="0"></ion-input>
+        </ion-col>
+        <ion-col>
+          <ion-input type="tel" maxlength="1" inputmode="numeric" pattern="tel" (keydown)="keyDown($event)"  (ionFocus)="focus(3)" (keyup)="gotoNextField(otpInput4,2,$event)" #otpInput3 [(ngModel)]="icode3" placeholder="0"></ion-input>
+        </ion-col>
+        <ion-col>
+          <ion-input type="tel" maxlength="1" inputmode="numeric" pattern="tel" (keydown)="keyDown($event)"  (ionFocus)="focus(4)"  (keyup)="gotoNextField(otpInput1,3,$event)" #otpInput4 [(ngModel)]="icode4" placeholder="0"></ion-input>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-item>
+</div>

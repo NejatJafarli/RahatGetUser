@@ -1,0 +1,32 @@
+<div class="radar-component" [class]="isSearching ? 'is-searching':''">
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <div>
+    <ion-avatar #pPhoto1  [class]="(isSearching) ? 'photo1' : (correctPerson == 1 ? 'photo1 correct' : 'photo1 wrong') ">
+      <img [src]="personPhoto1"/>
+    </ion-avatar>
+    <ion-avatar #pPhoto2  [class]="(isSearching) ? 'photo2' : (correctPerson == 2 ? 'photo2 correct' : 'photo2 wrong') ">
+      <img [src]="personPhoto2"/>
+    </ion-avatar>
+    <ion-avatar #pPhoto3  [class]="(isSearching) ? 'photo3' : (correctPerson == 3 ? 'photo3 correct' : 'photo3 wrong') ">
+      <img [src]="personPhoto3"/>
+    </ion-avatar>
+    <ion-avatar #pPhoto4  [class]="(isSearching) ? 'photo4' : (correctPerson == 4 ? 'photo4 correct' : 'photo4 wrong') ">
+      <img [src]="personPhoto4"/>
+    </ion-avatar>
+    <ion-avatar #pPhoto5  [class]="(isSearching) ? 'photo5' : (correctPerson == 5 ? 'photo5 correct' : 'photo5 wrong') ">
+      <img [src]="personPhoto5"/>
+    </ion-avatar>
+  </div>
+  <div class="person-name" [class]="isSearching ? 'is-searching':''">
+    <ion-label>{{personName}}</ion-label>
+  </div>
+</div>
+
+<!-- <ion-button (click)="changeState()"></ion-button> -->
+
+<div *ngIf="!isSearching">
+  <ion-label class="person-name">{{personName}}</ion-label>
+</div>

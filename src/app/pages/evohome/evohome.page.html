@@ -1,0 +1,283 @@
+<ion-content class="loading-step" *ngIf="step==1">
+  <div class="loading-page">
+    <div class="header">
+      <p class="title">Evakuator xidməti</p>
+      <p class="subtitle">Sizin və sürücülərin təhlükəsizliyi üçün qəza işıqlarınızın yandığından əmin olun.</p>
+    </div>
+    <div class="main-img">
+      <img src="/assets/evoimg/evo-lodaingcar.png">
+    </div>
+    <div class="loading-text">
+      <p>Loading...</p>
+    </div>
+  </div>
+</ion-content>
+<ion-content class="main-homepage" *ngIf="step==2">
+  <div class="maps">
+    <div class="header-search">
+      <ion-menu-button class="nav-btn ion-no-padding"><img src="/assets/icon/menu1.svg"></ion-menu-button>
+      <div class="search-loc">
+        <div class="search-input">
+          <div class="search1">
+            <ion-input type="text" [(ngModel)]="selectedPositionGeoCode" id="open-modal-haraya" placeholder="Haradan?" class="ion-no-padding"></ion-input>
+            <ion-button (click)="SetWhereIAm()">
+              <ion-icon name="map-outline"></ion-icon>
+            </ion-button>
+          </div>
+          <div class="search2">
+            <ion-input type="text" [(ngModel)]="selectedPositionGeoCodeTwo" (click)="openModal()" class="ion-no-padding" placeholder="Haraya?"></ion-input>
+            <ion-button (click)="SetWhereIAm()">
+              <ion-icon name="map-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+        <ion-modal class="searchlocation-modal" #modal2 trigger="open-modal-haraya" onload="" [presentingElement]="presentingElement">
+          <ng-template>
+            <ion-header>
+              <ion-toolbar>
+                <ion-buttons slot="start">
+                  <ion-button  class="close-btn" (click)="modal2.dismiss()"><ion-icon name="close-outline"></ion-icon></ion-button>
+                </ion-buttons>
+                <ion-buttons  slot="end">
+                  <ion-button class="success-btn" (click)="closeModal($event)" ><ion-icon name="checkmark-sharp"></ion-icon></ion-button>
+                </ion-buttons>
+              </ion-toolbar>
+            </ion-header>
+            <ion-content>
+              <ion-searchbar [(ngModel)]="selectedSearchOne" placeholder="Hardan?" (click)="textOne=true; textTwo=false;" (ionChange)="changeText(selectedSearchOne)"></ion-searchbar>
+              <ion-searchbar [(ngModel)]="selectedSearchTwo" placeholder="Haraya?" (click)="textOne=false; textTwo=true;" (ionChange)="changeText(selectedSearchTwo)"></ion-searchbar>
+              <ion-list>
+                <ion-item lines="none" *ngFor="let item of  WhereTextResults">
+                  <ion-label class="list-location" (click)="resultClick(item)" ><ion-icon name="location-outline"></ion-icon>{{item}}</ion-label>
+                </ion-item>
+              </ion-list>
+            </ion-content>
+          </ng-template>
+        </ion-modal>
+      </div>
+    </div>
+    <div id="map" style="width: 100%; height: 100%;"></div>
+  </div>
+  <div class="footer">
+    <div class="search-btn">
+      <ion-button [disabled]="selectedDataTwo==null || selectedData==null" class="btn-yellow" (click)="confirmation()">Məkanı təsdiq et</ion-button>
+      <ion-button *ngIf="toggleDisplay==false" class="close-btn" (click)="SetWhereIAm()">İmtina et</ion-button>
+    </div>
+  </div>
+</ion-content>
+<ion-content class="location-added" *ngIf="step==3">
+  <div class="cont">
+    <div class="head-menu">
+      <ion-button (click)="backstep1()" class="ion-no-padding">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+      <ion-menu-button class="nav-btn1 ion-no-padding"><img src="/assets/icon/menu1.svg"></ion-menu-button>
+    </div>
+    <div class="head-info">
+      <p>Ünavanınızı təyin etdik.Sizə ən yaxın Evakuator yola cıxdı. Zəhmət olmasa aşağıda göstərlilən zəruri yerleri doldurun </p>
+    </div>
+    <div class="form-detail">
+      <ion-list>
+        <ion-item lines="none">
+          <ion-label position="stacked">Haradan?</ion-label>
+          <ion-input [(ngModel)]="selectedPositionGeoCode" placeholder="Hardan?" disabled="true"></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label position="stacked">Haraya?</ion-label>
+          <ion-input [(ngModel)]="selectedPositionGeoCodeTwo" disabled="true" placeholder="Haraya?"></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label position="stacked">Nəqliyatın Markası</ion-label>
+          <ion-input type="text" placeholder="BMW"></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label position="stacked">D.Nişanı</ion-label>
+          <ion-input type="text" placeholder="XX-XX-XXX"></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label position="stacked">Evakuassiyanın səbəbi?</ion-label>
+          <ion-select [(ngModel)]="SelectedAccidents" interface="popover" (ionChange)="accidentsChange()">
+            <ion-select-option *ngFor="let item of SelectAccidents" value="{{item}}">{{item}}</ion-select-option>
+          </ion-select>
+          <span class="info">Qəza,Texniki nasazlığ və ya digər  </span>
+        </ion-item>
+        <ion-item  lines="none"  *ngIf="toggleDisplayForAccidents">
+          <ion-label position="stacked">Digər</ion-label>
+          <ion-textarea></ion-textarea>
+        </ion-item>
+        <div class="payment-sections">
+          <div class="left">
+             <div class="cash-methods" (click)="SelectedPayment=1" [class.PaymentActive]="SelectedPayment==1">
+                <img src="/assets/icon/cash.png" >
+                <p>Nağd ödəniş</p>
+             </div>
+             <div class="cart-methods" id="open-modal" [class.PaymentActive]="SelectedPayment==2">
+                <img src="/assets/icon/apple-pay2.png" >
+                <p>{{CardValue}}</p>
+             </div>
+          </div>
+          <div class="right">
+            <div class="text">
+              <p class="title">Qiymət</p>
+              <p class="price">56₼</p>
+            </div>
+            <img src="/assets/icon/car2.png">
+          </div>
+        </div>
+        <ion-modal #modal trigger="open-modal" [backdropDismiss]="true" class="payment-modal" (willDismiss)="onWillDismiss($event)" >
+          <ng-template>
+            <ion-content>
+              <p class="title">Kredit kartları</p>
+              <ion-list>
+                <ion-radio-group   [(ngModel)]="selectedRadio">
+                  <ion-item lines="none" *ngFor="let card of MyCards;let i=index">
+                    <div class="labels">
+                      <img src="/assets/icon/apple-pay2.png">
+                      <p>{{card.Cardvalue}}</p>
+                    </div>
+                    <ion-radio (click)="RadioClick(i)" slot="end" value="{{i}}"></ion-radio>
+                  </ion-item>
+                  <ion-item lines="none" (click)="sendProfile()" >
+                    <div class="labels">
+                      <img src="/assets/icon/apple-pay2.png">
+                      <p>Kart əlavə et</p>
+                    </div>
+                    <ion-icon slot="end" name="add-circle-outline"></ion-icon>
+                  </ion-item>
+                </ion-radio-group>
+              </ion-list>
+            </ion-content>
+          </ng-template>
+        </ion-modal>
+        <!-- <ion-item id="open-modal-payment" lines="none">
+          <div class="cash">
+            <p class="left"> <img src="/assets/icon/{{this.selectedIcon}}.png"> {{this.CardValue}}</p>
+            <div class="right">
+              <img src="/assets/icon/money.svg">
+              <span>56₼</span>
+            </div>
+          </div>
+          <ion-modal #modal trigger="open-modal-payment" [backdropDismiss]="false" class="payment-modal" (willDismiss)="onWillDismiss($event)" >
+            <ng-template>
+              <ion-content>
+                <p class="title">Kredit kartları</p>
+                <ion-list>
+                  <ion-radio-group   [(ngModel)]="selectedRadio">
+                    <ion-item lines="none" *ngFor="let card of MyCards;let i=index">
+                      <div class="labels">
+                        <img src="/assets/icon/{{card.iconName}}.png">
+                        <p>{{card.Cardvalue}}</p>
+                      </div>
+                      <ion-radio (click)="RadioClick(i)" slot="end" value="{{i}}"></ion-radio>
+                    </ion-item>
+                    <ion-item lines="none" (click)="sendProfile()" >
+                      <div class="labels">
+                        <img src="/assets/icon/apple-pay2.png">
+                        <p>Kart əlavə et</p>
+                      </div>
+                      <ion-icon slot="end" name="add-circle-outline"></ion-icon>
+                    </ion-item>
+                  </ion-radio-group>
+                </ion-list>
+              </ion-content>
+            </ng-template>
+          </ion-modal>
+        </ion-item> -->
+      </ion-list>
+      <div class="salary-button">
+        <div class="left">
+          <p>56₼</p>
+          <span>Qiymət</span>
+        </div>
+        <div class="right">
+          <ion-button class="btn-yellow ion-no-padding" (click)="searchevo()">Evakuator Çağır</ion-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+<ion-content class="loading-step2" *ngIf="step==4">
+  <div class="loading-page">
+    <div class="header">
+      <p class="subtitle">Ünavanınızı təyin etdik.Sizə ən yaxın Evakuator axtarılır.</p>
+    </div>
+    <div class="main-img">
+      <img src="/assets/evoimg/evo-lodaingcar.png">
+      <div class="wearning-text">
+        <p class="subtitle1">Sizin və sürücülərin təhlükəsizliyi üçün qəza işıqlarınızın yandığından əmin olun.</p>
+      </div>
+    </div>
+  </div>
+</ion-content>
+<ion-content class="finishlocpage" *ngIf="step==5">
+  <div class="maps">
+    <!-- <ion-menu-button class="nav-btn ion-no-padding"><img src="/assets/icon/menu1.svg"></ion-menu-button> -->
+    <ion-button (click)="step6()">Try</ion-button>
+  </div>
+  <ion-modal #modal3 trigger="open-modal3"
+   [initialBreakpoint]="0.25" 
+   [breakpoints]="[0.25, 0.7]"
+   [isOpen]="true"
+   [backdropBreakpoint]="0.25"
+   [backdropDismiss]="false"
+   >
+    <ng-template>
+      <ion-content class="drive-modals">
+        <div class="drive-info-card">
+          <div class="head">
+            <div class="left">
+              <div class="img">
+                <img src="/assets/icon/evolocation.svg">
+              </div>
+              <div class="text">
+                <p>Gənclik</p>
+                <span>Olipiya st</span>
+              </div>
+            </div>
+            <div class="right">
+              <ion-button><img src="/assets/icon/call.svg"></ion-button>
+              <ion-button (click)="evochat()"><img src="/assets/icon/message.svg"></ion-button>
+            </div>
+          </div>
+          <div class="phone">
+            <div class="left">
+              <p>İlkin<ion-icon name="call-outline"></ion-icon></p>
+              <span>55 555 55 55</span>
+            </div>
+            <div class="right">
+              <p>Honda</p>
+              <span><ion-icon name="star-sharp"></ion-icon> 5</span>
+            </div>
+          </div>
+          <div class="time">
+            <div class="left">
+              <p>77-zz-777</p>
+            </div>
+            <div class="right">
+              <ion-icon name="time-outline"></ion-icon>
+              <span>2:50</span>
+            </div>
+          </div>
+        </div>
+        <div class="rating-form">
+          <p class="title">İlkinlə səfəriniz necə keçdi ?</p>
+          <div class="rating-star">
+            <ion-button class="ion-no-padding" *ngFor="let r of [1,2,3,4,5]" (click)="starClick(r)">
+              <img [src]="(rating >= r) ? '/assets/icon/starsolid.svg' : '/assets/icon/starreg.svg'">
+            </ion-button>
+          </div>
+          <ion-textarea cols="1" rows="1" placeholder="Əlavə Şərhlər ..."></ion-textarea>
+        </div>
+        <div class="salary-button">
+          <div class="left">
+            <p>56₼</p>
+            <span>Kart</span>
+          </div>
+          <div class="right">
+            <ion-button class="btn-yellow ion-no-padding">Rəyi göndər</ion-button>
+          </div>
+        </div>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content> 

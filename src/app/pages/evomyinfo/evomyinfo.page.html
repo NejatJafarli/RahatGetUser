@@ -1,0 +1,85 @@
+<ion-content class="editprofile" *ngIf="step == 1">
+   <div class="editmain">
+     <div class="title">
+       <ion-buttons slot="start" (click)="backevohome()">
+         <ion-icon name="chevron-back-outline"></ion-icon>
+       </ion-buttons>
+       <ion-title slot="center">İstifadəci məlumatlarım</ion-title>
+     </div>
+     <div class="form">
+       <ion-list>
+         <ion-item lines="none">
+           <ion-button><p>Öz şəklinizi yükləyin</p></ion-button>
+         </ion-item>
+         <ion-item lines="none">
+           <ion-label position="stacked">Ad</ion-label>
+           <ion-input type="text" placeholder="İlkin"></ion-input>
+         </ion-item>
+         <ion-item lines="none">
+           <ion-label position="stacked">Soyad</ion-label>
+           <ion-input type="text" placeholder="Qurbanov"></ion-input>
+         </ion-item>
+         <ion-item lines="none">
+           <ion-label position="stacked">Yaş</ion-label>
+           <ion-input type="number" placeholder="31"></ion-input>
+         </ion-item>
+         <ion-item lines="none">
+          <ion-label position="stacked">Telefon</ion-label>
+          <ion-input type="text" placeholder="050 000 00 00"></ion-input>
+        </ion-item>
+       </ion-list>
+       <div class="enter-btn">
+         <ion-button class="btn-yellow">Yadda saxla</ion-button>
+         <ion-button (click)="profile2()" class="reset">Parolu yenilə</ion-button>
+       </div>
+     </div>
+   </div>
+ </ion-content>
+<ion-content class="editprofile" *ngIf="step == 2">
+   <div class="editmain">
+     <div class="title">
+       <ion-buttons slot="start" (click)="backbtn()">
+         <ion-icon name="chevron-back-outline"></ion-icon>
+       </ion-buttons>
+       <ion-title slot="center">Parolu yenilə</ion-title>
+     </div>
+     <div class="form">
+       <ion-list>
+         <ion-item lines="none">
+           <ion-label position="stacked">Köhnə parol</ion-label>
+           <div class="inputs">
+            <ion-input class="ion-no-padding" [type]="passwordType2" placeholder="*********"></ion-input>
+            <a class="type-toggle" (click)="tooglePassword2()">
+              <ion-icon class="show-option" [hidden]="passwordShow2" name="eye-off-outline"></ion-icon>
+              <ion-icon class="hide-option" [hidden]="!passwordShow2" name="eye-outline"></ion-icon>
+           </a>
+          </div>
+         </ion-item>
+         <ion-item lines="none">
+           <ion-label position="stacked">Yeni parol</ion-label>
+           <div class="inputs">
+            <ion-input class="ion-no-padding" [type]="passwordType" placeholder="*********"></ion-input>
+            <a class="type-toggle" (click)="tooglePassword()">
+              <ion-icon class="show-option" [hidden]="passwordShow" name="eye-off-outline"></ion-icon>
+              <ion-icon class="hide-option" [hidden]="!passwordShow" name="eye-outline"></ion-icon>
+           </a>
+          </div>
+         </ion-item>
+         <ion-item lines="none">
+           <ion-label position="stacked">Yeni parolu təkrar edin</ion-label>
+           <div class="inputs">
+            <ion-input class="ion-no-padding" [type]="passwordType1" placeholder="*********"></ion-input>
+            <a class="type-toggle" (click)="tooglePassword1()">
+              <ion-icon class="show-option" [hidden]="passwordShow1" name="eye-off-outline"></ion-icon>
+              <ion-icon class="hide-option" [hidden]="!passwordShow1" name="eye-outline"></ion-icon>
+           </a>
+          </div>
+           <span class="text-span">Min 6 karakter</span>
+         </ion-item>
+       </ion-list>
+       <div class="enter-btn">
+         <ion-button class="btn-yellow">Yadda saxla</ion-button>
+       </div>
+     </div>
+   </div>
+</ion-content>

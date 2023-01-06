@@ -1,0 +1,68 @@
+<ion-content class="menu-content">
+  <app-headerbg></app-headerbg>
+  <div class="main-cont">
+    <div class="avatar">
+      <ion-avatar>
+        <img src="{{imgURL}}" />
+        <!-- <img src="assets/img/p4.jpg" /> -->
+        <div class="edit-icon" (click)="getgallery()">
+          <ion-icon name="camera-outline"></ion-icon>
+        </div>
+        <!-- <div class="edit-icon">
+          <ion-icon name="camera-outline"></ion-icon>
+        </div> -->
+      </ion-avatar>
+      <div class="name">
+        <h3>İlkin</h3>
+        <p>+994 50 000-00-00</p>
+      </div>
+    </div>
+    <ion-list>
+      <ion-item lines="none" detail="true" routerLink="/home">
+        <ion-label class="ion-no-padding">Sifariş ver</ion-label>
+      </ion-item>
+      <ion-item lines="none" detail="true" routerLink="/addcar">
+        <ion-label class="ion-no-padding">Nəqliyatlarım</ion-label>
+      </ion-item>
+      <ion-item lines="none" detail="true" routerLink="/notification">
+        <ion-label class="ion-no-padding"><p>Bildirişlər <span></span></p></ion-label>
+      </ion-item>
+      <ion-item lines="none" detail="true" routerLink="/departures">
+        <ion-label class="ion-no-padding">Gedişlər</ion-label>
+      </ion-item>
+      <ion-item lines="none" detail="true" routerLink="/paymentmethods">
+        <ion-label class="ion-no-padding">Ödəmə üsulları</ion-label>
+      </ion-item>
+      <ion-item lines="none" detail="true" routerLink="/myinfo">
+        <ion-label class="ion-no-padding">İstifadəci məlumatlarım</ion-label>
+      </ion-item>
+      <ion-item lines="none" detail="true" routerLink="/promocode">
+        <ion-label class="ion-no-padding">Promo code</ion-label>
+      </ion-item>
+      <ion-item lines="none" detail="true" routerLink="/myaddress">
+        <ion-label class="ion-no-padding">Ünvanlarım</ion-label>
+      </ion-item>
+      <ion-item lines="none" detail="true" routerLink="/myreservation">
+        <ion-label class="ion-no-padding">Rezervlərim</ion-label>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label class="ion-no-padding">Dili dəyiş</ion-label>
+        <ion-select value="AZ">
+          <ion-select-option value="AZ">AZ</ion-select-option>
+          <ion-select-option value="RU">RU</ion-select-option>
+          <ion-select-option value="EN">EN</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item lines="none" detail="true" routerLink="/help">
+        <ion-label class="ion-no-padding">Dəstəy</ion-label>
+      </ion-item>
+      <ion-item lines="none" class="log-out" detail="true">
+        <ion-icon name="log-out-outline"></ion-icon>
+        <ion-label class="ion-no-padding">Hesabdan çıxış</ion-label>
+      </ion-item>
+      <ion-item lines="none" class="access-towtruck">
+        <ion-label class="ion-no-padding">Evakuator xidmeti</ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

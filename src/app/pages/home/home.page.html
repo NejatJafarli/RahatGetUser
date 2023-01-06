@@ -1,0 +1,629 @@
+<ion-content *ngIf="step==1">
+  <app-menu></app-menu>
+  <div class="home1">
+    <div class="radar">
+      <app-radar-search [isSearching]=true personPhoto="/assets/img/p4.jpg" personPhoto1="/assets/img/p1.jpg"
+        personPhoto2="/assets/img/p2.jpg" personPhoto3="/assets/img/p3.jpg" personPhoto4="/assets/img/p4.jpg"
+        personPhoto5="/assets/img/p5.jpg">
+      </app-radar-search>
+    </div>
+    <div class="modals">
+      <div class="foot">
+        <p>Ünvanı daxıl edin</p>
+        <ion-item lines="none" (click)="setOpen(true)" class="ion-no-padding where">
+          <ion-input type="text" placeholder="Haraya?" expand="block"></ion-input>
+          <ion-icon name="navigate-outline"></ion-icon>
+        </ion-item>
+        <span>Gedəceyiniz ünvanı qeyd edin</span>
+      </div>
+      <ion-modal class="add-loc-modal" [isOpen]="isModalOpen" [keepContentsMounted]="true">
+        <ng-template #modalTemplate>
+          <ion-header>
+            <ion-toolbar>
+              <ion-buttons slot="start">
+                <ion-button (click)="setOpen(false)">
+                  <ion-icon name="chevron-back-outline"></ion-icon>
+                </ion-button>
+              </ion-buttons>
+            </ion-toolbar>
+          </ion-header>
+          <ion-content class="ion-padding">
+            <div class="enteraddress-component">
+              <div class="dot">
+                <div class="dot1"></div>
+                <div class="line"></div>
+                <div class="dot2"></div>
+              </div>
+              <form>
+                <ion-item lines="none" class="ion-margin-bottom">
+                  <ion-input type="text" [(ngModel)]="positionGeocod" [ngModelOptions]="{standalone:true}"
+                    (ionChange)="whereChange(WhereText)" placeholder="Hardan?"></ion-input>
+                  <ion-icon name="location-outline"></ion-icon>
+                </ion-item>
+                <ion-item lines="none">
+                  <ion-input type="text" placeholder="Haraya?" [(ngModel)]="WhereText" debounce="100"
+                    [ngModelOptions]="{standalone: true}" (ionChange)="whereChange(WhereText)"
+                    expand="block"></ion-input>
+                  <ion-icon name="navigate-outline"></ion-icon>
+                </ion-item>
+              </form>
+            </div>
+            <div class="abs">
+              <div class="ready-location">
+                <ion-list>
+                  <ion-item lines="none">
+                    <ion-icon name="heart-outline"></ion-icon>
+                    <ion-label>
+                      <p>Ev</p>
+                      <span>Neemuch RD. Gopalbari, Bari Sadri Rajasthan</span>
+                    </ion-label>
+                  </ion-item>
+                </ion-list>
+              </div>
+              <div class="fond-location">
+                <ion-list class="ion-no-padding">
+                  <ion-item (click)="resultClick(result)" class="ion-no-padding" lines="none"
+                    *ngFor="let result of WhereTextResults">
+                    <ion-label>
+                      <span></span>
+                      <p>{{result}}</p>
+                    </ion-label>
+                  </ion-item>
+                </ion-list>
+              </div>
+            </div>
+          </ion-content>
+        </ng-template>
+      </ion-modal>
+    </div>
+
+  </div>
+</ion-content>
+<ion-content class="location-added" *ngIf="step==2">
+  <div class="cont">
+    <div class="head-menu">
+      <ion-button (click)="step=1" class="ion-no-padding">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+      <ion-menu-button class="nav-btn1 ion-no-padding"><img src="/assets/icon/menu1.svg"></ion-menu-button>
+    </div>
+    <div class="head-info">
+      <p>Ünavanınızı təyin etdik.Sizə ən yaxın Evakuator yola cıxdı. Zəhmət olmasa aşağıda göstərlilən zəruri yerleri
+        doldurun </p>
+    </div>
+    <div class="form-detail">
+      <ion-list>
+        <ion-item lines="none">
+          <ion-label position="stacked">Haradan?</ion-label>
+          <ion-input placeholder="Hardan?" [(ngModel)]="positionGeocod"  disabled="true"></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label position="stacked">Haraya?</ion-label>
+          <ion-input disabled="true" [(ngModel)]="WhereText" placeholder="Haraya?"></ion-input>
+        </ion-item>
+        <div class="select-to-rezerv">
+          <p>Vaxtı təyin et</p>
+          <div class="rezeservation-btns">
+            <ion-button class="btns" (click)="rezervChange()"
+              [class.reservationActive]="!toggleDisplayForRezerv">İndi</ion-button>
+            <ion-button class="btns" (click)="rezervChange()"
+              [class.reservationActive]="toggleDisplayForRezerv">Rezerv</ion-button>
+          </div>
+        </div>
+        <div class="reservation-date" *ngIf="toggleDisplayForRezerv">
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                <div class="date-times">
+                  <ion-label>
+                    <p>Tarix</p>
+                  </ion-label>
+                  <ion-datetime-button datetime="datetime"></ion-datetime-button>
+                  <ion-modal class="datetime-modal" [keepContentsMounted]="true">
+                    <ng-template>
+                      <ion-datetime id="datetime" presentation="date" [showDefaultButtons]="true"></ion-datetime>
+                    </ng-template>
+                  </ion-modal>
+                </div>
+              </ion-col>
+              <ion-col>
+                <div class="date-times">
+                  <ion-label>
+                    <p>Saat</p>
+                  </ion-label>
+                  <ion-datetime-button datetime="datetime1"></ion-datetime-button>
+                  <ion-modal class="datetime-modal" [keepContentsMounted]="true">
+                    <ng-template>
+                      <ion-datetime id="datetime1" presentation="time" [showDefaultButtons]="true"></ion-datetime>
+                    </ng-template>
+                  </ion-modal>
+                </div>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </div>
+        <ion-item lines="none">
+          <ion-label position="stacked">Nəqliyatın Markası</ion-label>
+          <ion-input type="text" placeholder="BMW"></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label position="stacked">D.Nişanı</ion-label>
+          <ion-input type="text" placeholder="XX-XX-XXX"></ion-input>
+        </ion-item>
+        <div class="payment-sections">
+          <div class="left">
+            <div class="cash-methods" (click)="SelectedPayment=1" [class.PaymentActive]="SelectedPayment==1">
+              <img src="/assets/icon/cash.png">
+              <p>Nağd ödəniş</p>
+            </div>
+            <div class="cart-methods" id="open-modal" [class.PaymentActive]="SelectedPayment==2">
+              <img src="/assets/icon/apple-pay2.png">
+              <p>{{CardValue}}</p>
+            </div>
+          </div>
+          <ion-modal #modal trigger="open-modal" [backdropDismiss]="true" class="payment-modal"
+          (willDismiss)="onWillDismiss($event)">
+          <ng-template>
+            <ion-content>
+              <p class="title">Kredit kartları</p>
+              <ion-list>
+                <ion-radio-group [(ngModel)]="selectedRadio">
+                  <ion-item lines="none" *ngFor="let card of MyCards;let i=index">
+                    <div class="labels">
+                      <img src="/assets/icon/apple-pay2.png">
+                      <p>{{card.Cardvalue}}</p>
+                    </div>
+                    <ion-radio (click)="RadioClick(i)" slot="end" value="{{i}}"></ion-radio>
+                  </ion-item>
+                  <ion-item lines="none" (click)="sendProfile()">
+                    <div class="labels">
+                      <img src="/assets/icon/apple-pay2.png">
+                      <p>Kart əlavə et</p>
+                    </div>
+                    <ion-icon slot="end" name="add-circle-outline"></ion-icon>
+                  </ion-item>
+                </ion-radio-group>
+              </ion-list>
+            </ion-content>
+          </ng-template>
+        </ion-modal>
+          <div class="right">
+            <div class="text">
+              <p class="title">Qiymət</p>
+              <p class="price">56₼</p>
+            </div>
+            <img src="/assets/icon/car2.png">
+          </div>
+        </div>
+      </ion-list>
+      <div class="salary-button">
+        <div class="left">
+          <p>56₼</p>
+          <span>Qiymət</span>
+        </div>
+        <div class="right">
+          <ion-button class="btn-yellow ion-no-padding" (click)="home3()">Sürücü axtar</ion-button>
+        </div>
+      </div>
+      <ion-button (click)="step=1" class="backto-loc ion-no-padding">Dəyişiklik et</ion-button>
+    </div>
+  </div>
+</ion-content>
+<ion-content *ngIf="step ==3">
+  <div class="home2">
+    <ion-item lines="none">
+      <p class="text1">Ünvanı daxil edin</p>
+    </ion-item>
+    <div class="enteraddress-component">
+      <div class="dot">
+        <div class="dot1"></div>
+        <div class="line"></div>
+        <div class="dot2"></div>
+      </div>
+      <form>
+        <ion-item lines="none" class="ion-margin-bottom">
+          <ion-input type="text" [(ngModel)]="positionGeocod" [ngModelOptions]="{standalone: true}"
+            placeholder="Hardan?" disabled="true"></ion-input>
+          <ion-icon name="location-outline"></ion-icon>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-input type="text" placeholder="Haraya?" [(ngModel)]="WhereText" [ngModelOptions]="{standalone: true}"
+            expand="block" disabled="true"></ion-input>
+          <ion-icon name="navigate-outline"></ion-icon>
+        </ion-item>
+      </form>
+    </div>
+    <ion-item lines="none">
+      <p class="text2">Sizə ən yaxın sürücü axtarılır</p>
+    </ion-item>
+    <app-radar-search [isSearching]=true personPhoto="/assets/img/p4.jpg" personPhoto1="/assets/img/p1.jpg"
+      personPhoto2="/assets/img/p2.jpg" personPhoto3="/assets/img/p3.jpg" personPhoto4="/assets/img/p4.jpg"
+      personPhoto5="/assets/img/p5.jpg">
+    </app-radar-search>
+    <ion-button (click)="home4()">Sürücü axtarılır</ion-button>
+  </div>
+</ion-content>
+<ion-content *ngIf="step == 4">
+  <div class="home3">
+    <app-menu background="#59C3B9"></app-menu>
+    <app-headerbg></app-headerbg>
+    <div class="conts">
+      <div class="enteraddress-component">
+        <div class="dot">
+          <div class="dot1"></div>
+          <div class="line"></div>
+          <div class="dot2"></div>
+        </div>
+        <form>
+          <ion-item lines="none" class="ion-margin-bottom">
+            <ion-input type="text" [(ngModel)]="positionGeocod" [ngModelOptions]="{standalone: true}"
+              placeholder="Hardan?" disabled="true"></ion-input>
+            <ion-icon name="location-outline"></ion-icon>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-input type="text" placeholder="Haraya?" [(ngModel)]="WhereText" [ngModelOptions]="{standalone: true}"
+              expand="block" disabled="true"></ion-input>
+            <ion-icon name="navigate-outline"></ion-icon>
+          </ion-item>
+        </form>
+      </div>
+    </div>
+    <app-radar-search [isSearching]=true personPhoto="/assets/img/p4.jpg" personPhoto1="/assets/img/p1.jpg"
+      personPhoto2="/assets/img/p2.jpg" personPhoto3="/assets/img/p3.jpg" personPhoto4="/assets/img/p4.jpg"
+      personPhoto5="/assets/img/p5.jpg">
+    </app-radar-search>
+    <p class="name">İlkin</p>
+    <ion-button (click)="home5()">Go</ion-button>
+  </div>
+</ion-content>
+<ion-content *ngIf="step==5">
+  <div class="home4">
+    <app-menu background="#59C3B9"></app-menu>
+    <app-headerbg [heigth1]=150></app-headerbg>
+    <div class="head-img">
+      <ion-avatar>
+        <img src="/assets/img/p4.jpg">
+      </ion-avatar>
+      <ion-text>
+        <p>İlkin <img src="/assets/icon/star.svg"><span>5</span></p>
+        <span class="phone">+994 00 000 00 00</span>
+      </ion-text>
+    </div>
+    <div class="enteraddress-component">
+      <div class="dot">
+        <div class="dot1"></div>
+        <div class="line"></div>
+        <div class="dot2"></div>
+      </div>
+      <form>
+        <ion-item lines="none" class="ion-margin-bottom">
+          <ion-input type="text" [(ngModel)]="positionGeocod" [ngModelOptions]="{standalone: true}"
+            placeholder="Hardan?" disabled="true"></ion-input>
+          <ion-icon name="location-outline"></ion-icon>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-input type="text" placeholder="Haraya?" [(ngModel)]="WhereText" [ngModelOptions]="{standalone: true}"
+            expand="block" disabled="true"></ion-input>
+          <ion-icon name="navigate-outline"></ion-icon>
+        </ion-item>
+      </form>
+    </div>
+    <div class="reservation-date">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <div class="date-times">
+              <ion-label>
+                <p>Tarix</p>
+              </ion-label>
+              <ion-datetime-button disabled="true" datetime="datetime"></ion-datetime-button>
+              <ion-modal class="datetime-modal" [keepContentsMounted]="true">
+                <ng-template>
+                  <ion-datetime id="datetime" presentation="date" [showDefaultButtons]="true"></ion-datetime>
+                </ng-template>
+              </ion-modal>
+            </div>
+          </ion-col>
+          <ion-col>
+            <div class="date-times">
+              <ion-label>
+                <p>Saat</p>
+              </ion-label>
+              <ion-datetime-button disabled="true" datetime="datetime1"></ion-datetime-button>
+              <ion-modal class="datetime-modal" [keepContentsMounted]="true">
+                <ng-template>
+                  <ion-datetime id="datetime1" presentation="time" [showDefaultButtons]="true"></ion-datetime>
+                </ng-template>
+              </ion-modal>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+    <div class="car-form">
+      <div class="car-model">
+        <ion-item lines="none">
+          <ion-label position="stacked">
+            <p>Nəqliyatın Markası</p>
+          </ion-label>
+          <ion-input type="text" disabled="true" placeholder="BMW"></ion-input>
+        </ion-item>
+      </div>
+      <div class="d-number">
+        <ion-item lines="none">
+          <ion-label position="stacked">
+            <p>D.Nişanı</p>
+          </ion-label>
+          <ion-input type="text" disabled="true" placeholder="XX-XX-XXX"></ion-input>
+        </ion-item>
+      </div>
+    </div>
+    <ion-item lines="none">
+      <div class="cash">
+        <p class="left"> <img src="/assets/icon/apple-pay2.png"> {{this.CardValue}}</p>
+        <div class="right">
+          <img src="/assets/icon/money.svg">
+          <span>56₼</span>
+        </div>
+      </div>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-button class="btn-primary confirmation-btn" (click)="home6()">Təsdiqlə</ion-button>
+    </ion-item>
+    <ion-item lines="none" (click)="home1()">
+      <ion-button class="edit-btn">Dəyişiklik et</ion-button>
+    </ion-item>
+
+  </div>
+</ion-content>
+<ion-content *ngIf="step==6">
+  <div class="home4 home5">
+    <app-menu background="#59C3B9"></app-menu>
+    <app-headerbg [heigth1]=150></app-headerbg>
+    <div class="head-img">
+      <ion-avatar>
+        <img src="/assets/img/p4.jpg">
+      </ion-avatar>
+      <ion-text>
+        <p>İlkin <img src="/assets/icon/star.svg"><span>5</span></p>
+        <span class="phone">+994 00 000 00 00</span>
+      </ion-text>
+    </div>
+    <div class="options-btn">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-button class="btn-primary"><img src="/assets/icon/call.svg"></ion-button>
+            <p>Zəng et</p>
+          </ion-col>
+          <ion-col>
+            <ion-button class="btn-primary" routerLink="/chatrg"><img src="/assets/icon/message.svg"></ion-button>
+            <p>Mesaj</p>
+          </ion-col>
+          <!-- <ion-col>
+            <ion-button class="btn-primary" (click)="home8()"><img src="/assets/icon/maps.svg"></ion-button>
+            <p>Xəritəni aç</p>
+          </ion-col> -->
+          <ion-col>
+            <ion-button class="btn-primary" (click)="home1()"><img src="/assets/icon/x-mark.svg"></ion-button>
+            <p>İmtina et</p>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+    <div class="enteraddress-component">
+      <div class="dot">
+        <div class="dot1"></div>
+        <div class="line"></div>
+        <div class="dot2"></div>
+      </div>
+      <form>
+        <ion-item lines="none" class="ion-margin-bottom">
+          <ion-input type="text" [(ngModel)]="positionGeocod" [ngModelOptions]="{standalone: true}"
+            placeholder="Hardan?" disabled="true"></ion-input>
+          <ion-icon name="location-outline"></ion-icon>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-input type="text" placeholder="Haraya?" [(ngModel)]="WhereText" [ngModelOptions]="{standalone: true}"
+            expand="block" disabled="true"></ion-input>
+          <ion-icon name="navigate-outline"></ion-icon>
+        </ion-item>
+      </form>
+    </div>
+    <div class="catchtime">
+      <p class="text">Çatma vaxdı: <span>20 dəqiqə</span> </p>
+      <span class="status">Yolda</span>
+    </div>
+    <div class="reservation-date">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <div class="date-times">
+              <ion-label>
+                <p>Tarix</p>
+              </ion-label>
+              <ion-datetime-button disabled="true" datetime="datetime"></ion-datetime-button>
+              <ion-modal class="datetime-modal" [keepContentsMounted]="true">
+                <ng-template>
+                  <ion-datetime id="datetime" presentation="date" [showDefaultButtons]="true"></ion-datetime>
+                </ng-template>
+              </ion-modal>
+            </div>
+          </ion-col>
+          <ion-col>
+            <div class="date-times">
+              <ion-label>
+                <p>Saat</p>
+              </ion-label>
+              <ion-datetime-button disabled="true" datetime="datetime1"></ion-datetime-button>
+              <ion-modal class="datetime-modal" [keepContentsMounted]="true">
+                <ng-template>
+                  <ion-datetime id="datetime1" presentation="time" [showDefaultButtons]="true"></ion-datetime>
+                </ng-template>
+              </ion-modal>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+    <div class="car-view">
+      <p class="title">Nəqliyatım</p>
+      <div class="conts">
+        <div class="left">
+          <p class="left-text">Marka</p>
+          <p class="left-text">D.nişanı</p>
+        </div>
+        <div class="right">
+          <p class="right-text">BMW</p>
+          <p class="right-text">77-zz-777</p>
+        </div>
+      </div>
+    </div>
+    <ion-item lines="none">
+      <div class="cash">
+        <p class="left"> <img src="/assets/icon/apple-pay2.png"> {{this.CardValue}}</p>
+        <div class="right">
+          <img src="/assets/icon/money.svg">
+          <span>56₼</span>
+        </div>
+      </div>
+    </ion-item>
+  </div>
+  <ion-button class="btn-primary" (click)="home7()">Təsdiqlə</ion-button>
+</ion-content>
+<ion-content *ngIf="step == 7">
+  <div class="home6">
+    <app-menu background="#59C3B9"></app-menu>
+    <app-headerbg [heigth1]=150></app-headerbg>
+    <div class="const">
+      <div class="head-img">
+        <ion-avatar>
+          <img src="/assets/img/p4.jpg">
+        </ion-avatar>
+        <ion-text>
+          <p>İlkin <img src="/assets/icon/star.svg"><span>5</span></p>
+          <span class="phone">+994 00 000 00 00</span>
+        </ion-text>
+      </div>
+      <div class="main">
+        <div class="head-title">
+          <p>İlkinlə səfəriniz necə keçdi?</p>
+        </div>
+        <div class="rating">
+          <ion-button *ngFor="let r of [1,2,3,4,5]" (click)="starClick(r)">
+            <img [src]="(rating >= r) ? '/assets/icon/starsolid.svg' : '/assets/icon/starreg.svg'">
+          </ion-button>
+        </div>
+        <div class="comment">
+          <ion-item lines="none">
+            <ion-textarea placeholder="Şərh yazın" rows="1"></ion-textarea>
+          </ion-item>
+        </div>
+      </div>
+      <div class="foot-btn">
+        <ion-button (click)="home8()" class="btn-primary">Rəyi Göndər</ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>
+<ion-content *ngIf="step == 8">
+  <div class="home6 home7">
+    <app-menu background="#59C3B9"></app-menu>
+    <app-headerbg></app-headerbg>
+    <div class="const">
+      <div class="main">
+        <div class="gifimg">
+          <img src="/assets/img/1103-confetti-outline.gif">
+        </div>
+        <div class="head-title">
+          <p>Bizi seçdiyiniz ücün təşəkkürlər</p>
+        </div>
+        <div class="rating">
+          <ion-button *ngFor="let r of [1,2,3,4,5]" (click)="starClick(r)">
+            <img [src]="(rating >= r) ? '/assets/icon/starsolid.svg' : '/assets/icon/starreg.svg'">
+          </ion-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+<!-- <ion-content *ngIf="step == 8">
+  <div class="home8">
+    <div class="main">
+      <div class="maps">
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6078.330795363138!2d49.87114752784727!3d40.38302672761279!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40307d19542065e1%3A0x670932b7a0a230c4!2sX%C9%99tai%20metro%20stansiyas%C4%B1!5e0!3m2!1str!2s!4v1669284436241!5m2!1str!2s" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <ion-modal
+      #modal
+      trigger="open-modal"
+      [isOpen]="true"
+      [initialBreakpoint]="0.25"
+      [breakpoints]="[0.25, 0.75]"
+      [backdropDismiss]="false"
+      [backdropBreakpoint]="0.5"
+      class="finish-modal"
+      >
+        <ng-template>
+          <ion-content class="ion-padding">
+            <div class="modal-card">
+              <div class="head-img">
+                <ion-avatar>
+                  <img src="/assets/img/p4.jpg">
+                </ion-avatar>
+                <ion-text>
+                  <p>İlkin</p>
+                  <span class="phone">+994 00 000 00 00</span>
+                </ion-text>
+              </div>
+              <div class="card-body">
+                <div class="enteraddress-component">
+                  <div class="dot">
+                    <div class="dot1"></div>
+                    <div class="line"></div>
+                    <div class="dot2"></div>
+                  </div>
+                  <form>
+                    <ion-item lines="none" class="ion-margin-bottom">
+                      <ion-input type="text" [(ngModel)]="positionGeocod" [ngModelOptions]="{standalone: true}"  placeholder="Hardan?" disabled="true"></ion-input>
+                      <ion-icon name="location-outline"></ion-icon>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-input type="text" placeholder="Haraya?" [(ngModel)]="WhereText" [ngModelOptions]="{standalone: true}"  expand="block" disabled="true"></ion-input>
+                      <ion-icon name="navigate-outline"></ion-icon>
+                    </ion-item>
+                  </form>
+                </div>
+                <div class="catchtime">
+                  <p class="text">Çatma vaxdı: <span>20 dəqiqə</span> </p>
+                  <span class="status">Yolda</span>
+                </div>
+                <div class="car-view" style="margin-top: 20px;">
+                  <p class="title">Nəqliyatım</p>
+                  <div class="conts">
+                    <div class="left">
+                      <p class="left-text">Marka</p>
+                      <p class="left-text">D.nişanı</p>
+                    </div>
+                    <div class="right">
+                      <p class="right-text">BMW</p>
+                      <p class="right-text">77-zz-777</p>
+                    </div>
+                  </div>
+                </div>
+                <ion-item lines="none">
+                  <div class="cash">
+                    <p class="left"> <img src="/assets/icon/apple-pay2.png"> {{this.CardValue}}</p>
+                    <div class="right">
+                      <img src="/assets/icon/money.svg">
+                      <span>56₼</span>
+                    </div>
+                  </div>
+                </ion-item>
+              </div>
+            </div>
+          </ion-content>
+        </ng-template>
+      </ion-modal>
+    </div>
+  </div>
+</ion-content> -->

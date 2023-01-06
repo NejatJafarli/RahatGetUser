@@ -1,0 +1,11 @@
+<div class="headerbg-component" [style.height]="height1Css">
+  <div class="text">
+    <h1 *ngIf="title" [style.padding-top]="paddingTopStyle"
+      
+    >{{title}}</h1>
+    <p *ngIf="subtitle">{{subtitle}}</p>
+  </div>
+</div>
+<div class="pageimg" *ngIf="image">
+  <img [src]="image">
+</div>

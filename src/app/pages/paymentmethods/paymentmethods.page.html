@@ -1,0 +1,81 @@
+<ion-content class="paymentmethods" *ngIf="step == 1">
+  <app-headerbg></app-headerbg>
+   <div class="payment-main">
+    <div class="title">
+      <ion-buttons slot="start" routerLink="/setting">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-buttons>
+      <ion-title slot="center">Ödəniş üsulları</ion-title>
+    </div>
+    <div class="cashmet">
+      <img src="/assets/icon/dollar.svg">
+      <div class="text">
+        <p>Nəğd ödəniş</p>
+        <span>Ödəniş üsulu</span>
+      </div>
+    </div>
+    <div class="list">
+      <p class="cart-title">Kredit kartları</p>
+      <div class="itemss">
+        <img src="/assets/icon/apple-pay.png">
+        <p>**** **** **** 5755</p>
+      </div>
+      <div class="itemss">
+        <img src="/assets/icon/apple-pay.png">
+        <p>**** **** **** 5755</p>
+      </div>
+      <div class="itemss">
+        <img src="/assets/icon/apple-pay.png">
+        <p>**** **** **** 5755</p>
+      </div>
+    </div>
+    <div class="add-cartmet">
+      <ion-button class="btn-primary" (click)="addcart2()">
+        <ion-icon name="add-outline"></ion-icon>
+        <p>Yeni kart əlavə edin</p>
+      </ion-button>
+    </div>
+   </div>
+</ion-content>
+<ion-content class="addcartmethods" *ngIf="step == 2">
+  <app-headerbg></app-headerbg>
+  <div class="addpayment">
+    <div class="heads">
+      <div class="title1">
+        <ion-buttons slot="start" (click)="backbtn()">
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </ion-buttons>
+        <ion-title slot="center">Ödəniş üsulları</ion-title>
+      </div>
+      <p>PCI DSS ilə təhlükəsiz şəkildə davam edin</p>
+    </div>
+    <div class="main">
+      <div class="card">
+        <ion-item lines="none">
+          <ion-label position="stacked">Kart sahibinin adı</ion-label>
+          <ion-input type="text" placeholder="Kart sahibinin adını daxil edin"></ion-input>
+        </ion-item>
+        <ion-item lines="none">
+          <ion-label position="stacked">Kartın nömrəsi</ion-label>
+          <ion-input type="text" placeholder="Kartın nömrəsini daxil edin"></ion-input>
+        </ion-item>
+        <div class="cvv">
+          <ion-item lines="none">
+            <ion-label position="stacked">Tarix</ion-label>
+            <ion-input type="text" placeholder="MM/YY"></ion-input>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-label position="stacked">CVV</ion-label>
+            <ion-input type="text" placeholder="XXX"></ion-input>
+          </ion-item>
+        </div>
+        <!-- btn -->
+        <div class="btn-add">
+          <ion-button class="btn-primary">
+            <p>Kartı əlavə et</p>
+          </ion-button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

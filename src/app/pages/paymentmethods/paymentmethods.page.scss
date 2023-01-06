@@ -1,0 +1,235 @@
+.title{
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    justify-content: center;
+    margin-bottom: 60px;
+    ion-buttons{
+        ion-icon{
+            font-size: 25px;
+        }
+    }
+    ion-title{
+        font-family: 'Notosans', sans-serif;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 22px;
+        line-height: 24px;
+        text-align: center;
+        padding: 0;
+        color: #161616;
+    }
+    .heads{
+        p{
+            font-family: 'Roboto', sans-serif;
+            font-style: normal;
+            font-weight: 400;
+            font-size: 13px;
+            line-height: 15px;
+            color: #484848;
+        }
+    }
+}
+.paymentmethods{
+    .payment-main{
+        margin-top: -180px;
+        .cashmet{
+            background: #FFFFFF;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            margin: 0 16px;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+
+            img{
+                background: linear-gradient(90deg, #0028FF 0%, #657EFF 100%);
+                border-radius: 27px;
+                padding: 15px;
+            }
+            .text{
+                margin-left: 25px;
+                p{
+                    font-family: 'Roboto', sans-serif;
+                    font-style: normal;
+                    font-weight: 700;
+                    font-size: 16px;
+                    line-height: 24px;
+                    color: #161616;
+                    margin: 0;
+                }
+                span{
+                    font-family: 'NotoSans', sans-serif;
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 13px;
+                    line-height: 15px;
+                    color: #161616;
+                }
+            }
+        }
+        .contss{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+        .list{
+            height: 100%;
+            max-height: 64vh;
+            overflow-x: auto;
+            margin:16px;
+            padding: 10px 15px;
+            background: #FFFFFF;
+            box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            .cart-title{
+                margin: 0 0 10px 0;
+                font-family: 'Soho Gothic Pro';
+                font-style: normal;
+                font-weight: 700;
+                font-size: 17px;
+                line-height: 24px;
+                color: #161616;
+
+            }
+            .itemss{
+                background: #F3F3F3;
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                padding: 15px 10px;
+                margin-bottom: 10px;
+                img{}
+                p{
+                    margin-left: 10px;
+                    font-family: 'Roboto', sans-serif;
+                    font-style: normal;
+                    font-weight: 400;
+                    font-size: 15px;
+                    line-height: 15px;
+                    color: #161616;
+                }
+            }
+        }
+        .add-cartmet{
+            margin: 0 16px;
+            ion-button{
+                height: 56px;
+                width: 100%;
+                font-family: 'Roboto', sans-serif;
+                font-style: normal;
+                font-weight: 400;
+                font-size: 16px;
+                line-height: 19px;
+                color: #FFFFFF;
+                text-transform: none;
+                ion-icon{}
+                p{}
+            }
+        }
+    }
+}
+
+.addcartmethods{
+    .addpayment{
+        margin-top: -180px;
+        .heads{
+            margin-bottom: 60px;
+            .title1{
+                display: flex;
+                align-items: center;
+                padding: 0 16px;
+                justify-content: center;
+                ion-buttons{
+                    ion-icon{
+                        font-size: 25px;
+                    }
+                }
+                ion-title{
+                    font-family: 'Notosans', sans-serif;
+                    font-style: normal;
+                    font-weight: 700;
+                    font-size: 22px;
+                    line-height: 24px;
+                    text-align: center;
+                    padding: 0;
+                    color: #161616;
+                }
+            }
+            p{
+                text-align: center;
+                margin-top: 15px;
+                font-family: 'Roboto', sans-serif;
+                font-style: normal;
+                font-weight: 400;
+                font-size: 13px;
+                line-height: 15px;
+                color: #484848;
+            }
+        }
+        .main{
+            .card{
+                background: #FFFFFF;
+                box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+                border-radius: 10px;
+                padding: 10px;
+                margin: 0 16px;
+                ion-item{
+                    margin-bottom: 20px;
+                    ion-label{
+                        font-family: 'Roboto', sans-serif;
+                        font-style: normal;
+                        font-weight: 700;
+                        font-size: 20px;
+                        line-height: 24px;
+                        color: #141519;
+                        margin-bottom: 10px;
+                    }
+                    ion-input{
+                        --padding-start:12px;
+                        --padding-end:12px;
+                        --padding-top:16px;
+                        --padding-bottom:16px;
+                        background: #F3F3F3;
+                        border-radius: 4px;
+                        font-family: 'Roboto', sans-serif;
+                        font-style: normal;
+                        font-weight: 400;
+                        font-size: 16px;
+                        line-height: 19px;
+                        color: #838799;
+                    }
+                }
+                .cvv{
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    ion-item{
+                        width: 100%;
+                    }
+                }
+                .btn-add{
+                    ion-button{
+                        height: 56px;
+                        width: 100%;
+                        text-transform: none;
+                        ion-icon{}
+                        p{
+                            font-family: 'Roboto', sans-serif;
+                            font-style: normal;
+                            font-weight: 400;
+                            font-size: 16px;
+                            line-height: 19px;
+                            text-align: center;
+                            color: #FFFFFF;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

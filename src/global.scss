@@ -1,0 +1,158 @@
+/*
+ * App Global CSS
+ * ----------------------------------------------------------------------------
+ * Put style rules here that you want to apply globally. These styles are for
+ * the entire app and not just one component. Additionally, this file can be
+ * used as an entry point to import other CSS/Sass files to be included in the
+ * output CSS.
+ * For more information on global stylesheets, visit the documentation:
+ * https://ionicframework.com/docs/layout/global-stylesheets
+ */
+
+/* Core CSS required for Ionic components to work properly */
+@import "~@ionic/angular/css/core.css";
+
+/* Basic CSS for apps built with Ionic */
+@import "~@ionic/angular/css/normalize.css";
+@import "~@ionic/angular/css/structure.css";
+@import "~@ionic/angular/css/typography.css";
+@import '~@ionic/angular/css/display.css';
+
+/* Optional CSS utils that can be commented out */
+@import "~@ionic/angular/css/padding.css";
+@import "~@ionic/angular/css/float-elements.css";
+@import "~@ionic/angular/css/text-alignment.css";
+@import "~@ionic/angular/css/text-transformation.css";
+@import "~@ionic/angular/css/flex-utils.css";
+
+ion-datetime {
+    --background: #ffffff;
+    --background-rgb: 255, 241, 242;
+    color: black;
+    border-radius: 16px;
+    box-shadow: rgba(var(--ion-color-rose-rgb), 0.3) 0px 10px 15px -3px;
+  }
+//   ion-content {
+//     // overwrite inline styles
+//     // --offset-bottom: auto!important;
+//     --overflow: hidden;
+//     overflow: auto;
+//     &::-webkit-scrollbar {
+//     //   display: none;
+//     width: 0px;
+//     }
+//   }
+ion-content{
+    ::-webkit-scrollbar {
+        width: 0px;
+    }
+}
+
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+p{
+    margin: 0;
+}
+
+.btn-primary{
+    --background: #3FBEB0;
+    border-radius: 4px;
+    font-family: 'Roboto', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 19px;
+    color: #FFFFFF;
+    text-transform: none;
+}
+
+.btn-yellow{
+    --background: #F1FC54;
+    --box-shadow: none;
+    text-transform: none;
+    font-family: 'Roboto',sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 19px;
+    color: #161616;
+    border-radius: 4px;
+    height: 50px;
+    width: 100%;
+}
+ion-list.sc-ion-select-popover-md ion-radio.sc-ion-select-popover-md{
+    opacity: 1;
+}
+ion-toolbar {
+    --background: transparent;
+    --border-color: transparent;
+    --border-style: none;
+    --border-width: 0px;
+    --border: none !important;
+}
+
+@font-face {
+    font-family: 'Soho Gothic Pro';
+    src: url('assets/fonts/SohoGothicPro-BoldItalic.woff2') format('woff2'),
+        url('assets/fonts/SohoGothicPro-BoldItalic.woff') format('woff'),
+        url('assets/fonts/SohoGothicPro-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Soho Gothic Pro';
+    src: url('assets/fonts/SohoGothicPro-Bold.woff2') format('woff2'),
+        url('assets/fonts/SohoGothicPro-Bold.woff') format('woff'),
+        url('assets/fonts/SohoGothicPro-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Trebuchet MS';
+    src: url('assets/fonts/TrebuchetMS-Italic.woff2') format('woff2'),
+        url('assets/fonts/TrebuchetMS-Italic.woff') format('woff'),
+        url('assets/fonts/TrebuchetMS-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+    font-display: swap;
+}
+
+
+@font-face {
+    font-family: 'Trebuchet MS';
+    src: url('assets/fonts/TrebuchetMS.woff2') format('woff2'),
+        url('assets/fonts/TrebuchetMS.woff') format('woff'),
+        url('assets/fonts/TrebuchetMS.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face{
+    font-family: 'Lato', sans-serif;
+    src: url('assets/fonts/Lato-Regular.ttf') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face{
+    font-family: 'Roboto', sans-serif;
+    src: url('assets/fonts/Roboto-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: 'Noto Sans', sans-serif;
+    src: url('assets/fonts/NotoSans-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}

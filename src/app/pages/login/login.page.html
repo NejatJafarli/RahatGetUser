@@ -1,0 +1,106 @@
+<ion-content>
+  <div *ngIf="step == 1">
+    <div class="login-page">
+      <app-headerbg [title]="'Daxil ol'" [image]="'/assets/img/login.png'" [paddingTop]=30></app-headerbg>
+      <div class="login-form">
+        <ion-list>
+          <ion-item lines="none">
+            <div class="item1">
+              <ion-text>Telefon</ion-text>
+              <div class="inputs">
+                <ion-label>+994</ion-label>
+                <span class="line">|</span>
+                <ion-input [(ngModel)]="loginPhone" class="ion-no-padding" type="number"
+                  placeholder="(99) 999 99 99"></ion-input>
+              </div>
+            </div>
+          </ion-item>
+          <ion-item lines="none">
+            <div class="item1">
+              <ion-text>Şifrə</ion-text>
+              <div class="inputs">
+                <ion-input [(ngModel)]="loginPassword" class="ion-no-padding" [type]="passwordType"
+                  placeholder="*********"></ion-input>
+                <a class="type-toggle" (click)="tooglePassword()">
+                  <ion-icon class="show-option" [hidden]="passwordShow" name="eye-off-outline"></ion-icon>
+                  <ion-icon class="hide-option" [hidden]="!passwordShow" name="eye-outline"></ion-icon>
+                </a>
+              </div>
+            </div>
+          </ion-item>
+        </ion-list>
+        <div class="register-switch">
+          <ion-text>Hesabınız yoxdur?</ion-text>
+          <ion-button class="ion-no-padding" (click)="loginstep2()">Qeydiyatdan kec</ion-button>
+        </div>
+        <ion-item lines="none">
+          <ion-button class="btn-primary login-button" expand="block" (click)="login()">Daxil ol</ion-button>
+        </ion-item>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="step == 2">
+    <div class="register-page">
+      <app-headerbg [title]="'Qeydiyatdan keç'" [paddingTop]=10></app-headerbg>
+      <div class="login-form register-form">
+        <ion-list>
+          <ion-item class="ion-padding-top" lines="none" class="">
+            <div class="item1">
+              <ion-text>Telefon</ion-text>
+              <div class="inputs">
+                <ion-label>+994</ion-label>
+                <span class="line">|</span>
+                <ion-input [(ngModel)]="registerPhone" class="ion-no-padding" type="number"
+                  placeholder="(99) 999 99 99"></ion-input>
+              </div>
+            </div>
+          </ion-item>
+          <ion-item class="ion-padding-top" lines="none">
+            <div class="item1">
+              <ion-text>Ad Soyad</ion-text>
+              <div class="inputs">
+                <ion-input [(ngModel)]="registerFullname" class="ion-no-padding" type="text"
+                  placeholder="Adınız Soyadınız"></ion-input>
+              </div>
+            </div>
+          </ion-item>
+          <ion-item class="ion-padding-top" lines="none">
+            <div class="item1">
+              <ion-text>Şifrə</ion-text>
+              <div class="inputs">
+                <ion-input [(ngModel)]="registerPassword" class="ion-no-padding" [type]="passwordType"
+                  placeholder="*********"></ion-input>
+                <a class="type-toggle" (click)="tooglePassword()">
+                  <ion-icon class="show-option" [hidden]="passwordShow" name="eye-off-outline"></ion-icon>
+                  <ion-icon class="hide-option" [hidden]="!passwordShow" name="eye-outline"></ion-icon>
+                </a>
+              </div>
+            </div>
+          </ion-item>
+        </ion-list>
+        <div class="register-switch">
+          <ion-text>Artığ hesabınız var?</ion-text>
+          <ion-button class="ion-no-padding" (click)="loginstep1()">Giriş edin</ion-button>
+        </div>
+        <ion-item lines="none">
+          <ion-button class="btn-primary login-button" expand="block" (click)="loginstep3()">Davam et</ion-button>
+        </ion-item>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="step == 3">
+    <div class="otpcode-page">
+      <app-headerbg [title]="'Kodu daxil et'"
+        [subtitle]="'Zəhmət olmasa +994'+this.registerPhone + ' nömrəsinə SMS ilə göndərilən doğrulama kodunu daxil edin'"
+        [image]="'../assets/img/fingerprint-security-outline.gif'" [paddingTop]=10></app-headerbg>
+      <app-otpcode (getCode)="getCode($event)"></app-otpcode>
+      <ion-item lines="none">
+        <ion-button class="btn-primary login-button" expand="block" routerLink="/transition">Kodu yoxlayın</ion-button>
+      </ion-item>
+      <div class="again" lines="none">
+        <ion-text class="resend-code">SMS Gəlmədi?</ion-text>
+        <ion-button class="sendagein">Yenidən göndər</ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>

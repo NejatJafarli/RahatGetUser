@@ -1,0 +1,94 @@
+<ion-content class="myaddress" *ngIf="step == 1">
+  <app-headerbg></app-headerbg>
+  <div class="myaddress-main">
+    <div class="title">
+      <ion-buttons slot="start" routerLink="/setting">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-buttons>
+      <ion-title slot="center">Ünvanlarım</ion-title>
+    </div>
+    <div class="card-list">
+      <div class="item" *ngFor="let item of addresses;let i=index">
+        <div class="left">
+          <ion-icon name="location-outline"></ion-icon>
+        </div>
+        <div class="text">
+          <p>{{item.name}}</p>
+          <span>{{item.location_name}}</span>
+        </div>
+        <div class="editpopover">
+          <ion-button id="click-trigger{{item.id}}" expand="block">
+            <ion-icon name="ellipsis-vertical"></ion-icon>
+          </ion-button>
+          <ion-popover [dismissOnSelect]="true" trigger="click-trigger{{item.id}}" triggerAction="click">
+            <ng-template>
+              <ion-content class="ion-padding">
+                <div class="btn-edit">
+                  <ion-button (click)="remove(item.id)">
+                    <ion-icon name="trash-outline"></ion-icon> Sil
+                  </ion-button>
+                  <ion-button (click)="editAddress(i)" >
+                    <ion-icon name="create-outline"></ion-icon> Düzəliş et
+                  </ion-button>
+                </div>
+              </ion-content>
+            </ng-template>
+          </ion-popover>
+        </div>
+      </div>
+    </div>
+    <div class="add-address">
+      <ion-button class="btn-primary" (click)="addNewLocation()">
+        <ion-icon name="add-outline"></ion-icon>
+        <p>Yeni ünvan əlavə edin</p>
+      </ion-button>
+    </div>
+  </div>
+</ion-content>
+<ion-content class="edit-addr" *ngIf="step == 2">
+  <div class="main">
+    <div class="head">
+      <app-headerbg></app-headerbg>
+    </div>
+    <div class="cont">
+      <div class="title">
+        <ion-buttons slot="start" (click)="backbtn()">
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </ion-buttons>
+        <ion-title slot="center">Ünvan əlavə edin</ion-title>
+      </div>
+      <div class="inputs">
+        <ion-item lines="none" class="ion-no-padding where">
+          <ion-input [(ngModel)]="selectedAddressJson.AddressName" (ionChange)="whereChange(selectedAddressJson.AddressName)" type="text"
+            placeholder="Ünvan" expand="block"></ion-input>
+          <ion-icon name="location-outline"></ion-icon>
+        </ion-item>
+      </div>
+      <ion-list class="ion-no-padding">
+        <ion-item class="ion-no-padding" lines="none" *ngFor="let result of addressTextResults;let i=index">
+          <ion-label>
+            <span></span>
+            <p (click)="resultClick(i)">{{result}}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+      <div class="foot">
+        <ion-button class="btn-primary" id="open-custom-dialog" >Ünvanı əlavə et</ion-button>
+        <ion-modal id="example-modal" #modal trigger="open-custom-dialog">
+          <ng-template>
+            <div class="wrapper">
+              <div class="closes">
+                <p>Rahat ünvan</p>
+                <ion-button (click)="modal.dismiss()" class="close" id="open-custom-dialog" expand="block"><ion-icon name="close-outline"></ion-icon></ion-button>
+              </div>
+              <ion-input [(ngModel)]="tempName" type="text" placeholder="Ünvan adı"></ion-input>
+              <div class="add">
+                <ion-button class="btn-primary" (click)="nameClick(tempName)" expand="block">Ünvanı əlavə et</ion-button>
+              </div>
+            </div>
+          </ng-template>
+        </ion-modal>
+      </div>
+    </div>
+  </div>
+</ion-content>
