@@ -17,7 +17,7 @@ export class MyService {
     localStorage.setItem('selectedApp',value);
   }
 
-
+  user;
   apiKey="AIzaSyBMqRoKxM1TmwA7PTM8sbWzrcCD5VQLSP0";
   ApiLink="http://rahatgetapi.test/api";
 

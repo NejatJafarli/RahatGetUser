@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-help',
@@ -8,12 +9,12 @@ import { Router } from '@angular/router';
 })
 export class HelpPage implements OnInit {
 
-  constructor(private router:Router) { }
+  constructor(private router:Router,private navCtrl:NavController) { }
 
   ngOnInit() {
   }
   close(){
-    this.router.navigateByUrl('/setting');
+    this.navCtrl.back();
   }
 
 }

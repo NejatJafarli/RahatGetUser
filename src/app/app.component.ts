@@ -22,6 +22,51 @@ export class AppComponent {
     this.service.selectedApp$.subscribe((data) => {
       this.selected = data;
     });
+
+    
+    //get token from local storage
+    let token = localStorage.getItem('token');
+    //check if user is logged in
+
+    //if token is not null
+    if (token != null) {
+      this.http
+        .get(this.service.ApiLink + '/user/checktoken', {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+          },
+        })
+        .toPromise()
+        .then((res) => {
+          if (res['message'] != 'success') {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+
+            //PROBLEM HERE
+
+            this.menuCtrl.close();
+            //PROBLEM HERE
+
+            this.service.setValueSelectedApp('');
+
+            this.navCtrl.navigateRoot(['./login']);
+          }
+        });
+    } else {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+
+      //PROBLEM HERE
+      this.menuCtrl.close();
+      //PROBLEM HERE
+
+      this.service.setValueSelectedApp('');
+
+      this.navCtrl.navigateRoot(['./login']);
+    }
+
+    this.service.user = JSON.parse(localStorage.getItem('user'));
+    
   }
 
   home() {
@@ -33,7 +78,7 @@ export class AppComponent {
     this.menuCtrl.close();
   }
   depatures() {
-    this.router.navigate(['/depatures']);
+    this.router.navigate(['/departures']);
     this.menuCtrl.close();
   }
   paymentmethods() {
@@ -122,7 +167,9 @@ export class AppComponent {
     //PROBLEM HERE
 
     this.menuCtrl.close();
-    document.getElementById('main-content').classList.remove('menu-content-open');
+    document
+      .getElementById('main-content')
+      .classList.remove('menu-content-open');
     //PROBLEM HERE
 
     this.service.setValueSelectedApp('');

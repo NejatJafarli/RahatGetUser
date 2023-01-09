@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 import { MyService } from 'src/app/envoriment/my-service';
 
 @Component({
@@ -22,7 +23,8 @@ export class MyaddressPage implements OnInit {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private myService: MyService
+    private myService: MyService,
+    private navCtrl:NavController
   ) {}
 
   async remove(id) {
@@ -52,6 +54,9 @@ export class MyaddressPage implements OnInit {
     this.crud = 'add';
   }
   User;
+  navBack(){
+    this.navCtrl.back();
+  }
   async ngOnInit() {
     let jsn = localStorage.getItem('user');
     this.User = JSON.parse(jsn);

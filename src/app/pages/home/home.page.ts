@@ -24,15 +24,14 @@ export class HomePage implements OnInit, AfterViewInit {
   @Input() modalinitialbreakpoint = 0.55;
   @ViewChild('modal') modal: IonModal;
 
-
   modalOpen: boolean = true;
   breakpoint: number = 1;
   step: number = 1;
   globalContext: any = this;
-  toggleDisplayForRezerv=false;
+  toggleDisplayForRezerv = false;
 
-  rezervChange(){
-    this.toggleDisplayForRezerv=!this.toggleDisplayForRezerv;
+  rezervChange() {
+    this.toggleDisplayForRezerv = !this.toggleDisplayForRezerv;
   }
 
   isModalOpen = false;
@@ -79,12 +78,43 @@ export class HomePage implements OnInit, AfterViewInit {
   WhereTextResults: any = [];
   WhereText: string = '';
   positionGeocod: string;
+  SelectedText = 1;
+  SavedLocationClick(i) {
+    this.WhereText = this.myAddresses[i].location_name;
+    this.WherePosition = {
+      lat: this.myAddresses[i].cordinates.split(',')[0],
+      lng: this.myAddresses[i].cordinates.split(',')[1],
+    };
+  }
   resultClick(value) {
-    this.WhereText = value;
-    this.WherePosition =
-      this.WherePositions[this.WhereTextResults.indexOf(value)];
+    if (this.SelectedText == 2) {
+      this.WhereText = value;
+      this.WherePosition =
+        this.WherePositions[this.WhereTextResults.indexOf(value)];
+    } else if (this.SelectedText == 1) {
+      this.positionGeocod = value;
+      this.position = this.WherePositions[this.WhereTextResults.indexOf(value)];
+      console.log(this.position);
+    }
     this.WhereTextResults = [];
     this.WherePositions = [];
+  }
+  ConfirmLocations() {
+    //check whereText is empty
+    if (this.WhereText == '') {
+      return;
+    }
+    //check wherePosition is empty
+    if (this.WherePosition == undefined) {
+      return;
+    }
+    //check positionGeocod is empty
+    if (this.positionGeocod == undefined) {
+      return;
+    }
+    if (this.position == null) {
+      return;
+    }
 
     this.modalCtrl.dismiss();
     this.step = 2;
@@ -95,7 +125,6 @@ export class HomePage implements OnInit, AfterViewInit {
 
     let url =
       '/places?query=' + encodeURI(value) + `&key=${this.service.apiKey}`;
-      
 
     this.http.get(url).subscribe((data) => {
       // console.log(data);
@@ -125,14 +154,27 @@ export class HomePage implements OnInit, AfterViewInit {
       }
     });
   }
-  SelectedPayment=1;
-  
+  SelectedPayment = 1;
+
   CardValue;
-  ngOnInit() {
-    this.CardValue="Kartla ödəniş"
+  async ngOnInit() {
+    let res = await this.http
+      .post(
+        this.service.ApiLink + '/user/getLocations',
+        {},
+        {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+          },
+        }
+      )
+      .toPromise();
+
+    this.myAddresses = res['data'];
+
+    this.CardValue = 'Kartla ödəniş';
 
     this.MyCards = [];
-
 
     let json = {
       Cardvalue: '**** **** **** 5755',
@@ -175,13 +217,14 @@ export class HomePage implements OnInit, AfterViewInit {
                 this.geoCodePosition(position);
               }
             );
+          } else {
+            navigator['app'].exitApp();
           }
         });
       }
     });
 
     // this.MyCards = [];
-
 
     // let json = {
     //   Cardvalue: '**** **** **** 5755',
@@ -196,10 +239,9 @@ export class HomePage implements OnInit, AfterViewInit {
     //   Cardvalue: '**** **** **** 1111',
     // };
     // this.MyCards.push(json);
-
   }
 
-
+  myAddresses;
   onWillDismiss(event: Event) {
     const ev = event as CustomEvent<OverlayEventDetail<string>>;
     // console.log(ev.detail.data);
@@ -208,7 +250,7 @@ export class HomePage implements OnInit, AfterViewInit {
       return;
     }
     this.CardValue = json['value'];
-    this.SelectedPayment=2;
+    this.SelectedPayment = 2;
   }
 
   ionViewDidEnter() {

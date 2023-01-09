@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-paymentmethods',
@@ -10,7 +11,7 @@ export class PaymentmethodsPage implements OnInit {
   
   step: number = 1;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) { }
+  constructor(private router: Router, private activatedRoute: ActivatedRoute, private navCtrl: NavController) { }
 
   ngOnInit() {
     this.activatedRoute.params.subscribe((params) => {
@@ -21,7 +22,9 @@ export class PaymentmethodsPage implements OnInit {
       }
     });
   }
-
+  navBack() {
+    this.navCtrl.back();
+  }
   addcart1() {
     this.step = 1;
   }

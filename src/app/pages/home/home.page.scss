@@ -63,6 +63,37 @@ ion-modal{
 
 .add-loc-modal{
     --border-radius: 0;
+    .add-loc-cont{
+        position: relative;
+        .confrm-btn{
+            position: absolute;
+            bottom: 30px;
+            left: 0;
+            width: 100%;
+            padding: 0 16px;
+            height: 40px;
+            ion-button{
+                width: 100%;
+                text-transform: none;
+                --background: #59C3B9;
+                --border-radius: 4px;
+                --box-shadow: none;
+                --padding-top: 0;
+                --padding-bottom: 0;
+                --padding-start: 0;
+                --padding-end: 0;
+                width: 100%;
+                height: 100%;
+                font-family: 'Roboto', sans-serif;
+                font-style: normal;
+                font-weight: 400;
+                font-size: 16px;
+                line-height: 24px;
+                letter-spacing: -0.25px;
+                color: #FFFFFF;
+            }
+        }
+    }
 }
 
 .enteraddress-component {

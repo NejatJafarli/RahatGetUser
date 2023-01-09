@@ -116,10 +116,11 @@ export class LoginPage implements OnInit {
     if (res['status']) {
       localStorage.setItem('token', res['token']);
       localStorage.setItem('user', JSON.stringify(res['user']));
+      this.service.user = JSON.parse(localStorage.getItem('user'));
       this.action = 'login';
       localStorage.removeItem('sendNewRequestEndDate');
-      this.loginPhone='';
-      this.loginPassword='';
+      this.loginPhone = '';
+      this.loginPassword = '';
       this.service.Toast('Login Success');
       this.router.navigate(['transition']);
     } else {

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-chatrg',
@@ -8,11 +9,11 @@ import { Router } from '@angular/router';
 })
 export class ChatrgPage implements OnInit {
 
-  constructor(private router:Router) { }
+  constructor(private router:Router,private navCtrl:NavController) { }
 
   ngOnInit() {
   }
   close(){
-    this.router.navigateByUrl('/home/5');
+    this.navCtrl.back();
   }
 }

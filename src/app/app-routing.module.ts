@@ -24,20 +24,12 @@ const routes: Routes = [
     loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
   },
   {
-    path: 'pickup-calls',
-    loadChildren: () => import('./pages/pickup-calls/pickup-calls.module').then( m => m.PickupCallsPageModule)
-  },
-  {
     path: 'transition',
     loadChildren: () => import('./pages/transition/transition.module').then( m => m.TransitionPageModule)
   },
   {
     path: 'setting',
     loadChildren: () => import('./pages/setting/setting.module').then( m => m.SettingPageModule)
-  },
-  {
-    path: 'addcar',
-    loadChildren: () => import('./pages/addcar/addcar.module').then( m => m.AddcarPageModule)
   },
   {
     path: 'chatrg',
@@ -110,7 +102,8 @@ const routes: Routes = [
   {
     path: 'evochat',
     loadChildren: () => import('./pages/evochat/evochat.module').then( m => m.EvochatPageModule)
-  },  {
+  },
+  {
     path: 'myreservation',
     loadChildren: () => import('./pages/myreservation/myreservation.module').then( m => m.MyreservationPageModule)
   },

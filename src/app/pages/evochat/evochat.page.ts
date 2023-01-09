@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-evochat',
@@ -8,13 +9,12 @@ import { Router } from '@angular/router';
 })
 export class EvochatPage implements OnInit {
 
-  constructor(private router:Router) { }
+  constructor(private router:Router,private navCtrl:NavController) { }
 
   ngOnInit() {
   }
 
   backevohome(){
-    //send evohome stepid 5
-    this.router.navigate([`/evohome/5`]);
+    this.navCtrl.back();
   }
 }

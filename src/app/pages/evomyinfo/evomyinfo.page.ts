@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-evomyinfo',
@@ -43,7 +44,7 @@ export class EvomyinfoPage implements OnInit {
       this.passwordShow2 = true;
     }
   }
-  constructor(private router: Router) { }
+  constructor(private router: Router,private navCtrl:NavController) { }
 
   ngOnInit() {
   }
@@ -59,7 +60,7 @@ export class EvomyinfoPage implements OnInit {
     this.step == 1 ? this.router.navigate(['/home']) : this.step = 1;
   }
   backevohome() {
-    this.router.navigate(['/evohome']);
+    this.navCtrl.back();
   }
 
 }

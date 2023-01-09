@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-evopaymentmethods',
@@ -10,7 +11,7 @@ export class EvopaymentmethodsPage implements OnInit {
 
   step: number = 1;
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) { }
+  constructor(private router: Router, private activatedRoute: ActivatedRoute,private navCtrl:NavController) { }
 
   ngOnInit() {
     this.activatedRoute.params.subscribe((params) => {
@@ -33,7 +34,7 @@ export class EvopaymentmethodsPage implements OnInit {
     this.step == 1 ? this.router.navigate(['/evohome']) : this.step = 1;
   }
   backevohome() {
-    this.router.navigate(['/evohome']);
+    this.navCtrl.back();
   }
 
 }
