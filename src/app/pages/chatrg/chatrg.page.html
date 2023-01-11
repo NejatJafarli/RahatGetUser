@@ -9,7 +9,7 @@
           </ion-avatar>
           <div class="name">
             <p>İlkin Qurbanov</p>
-            <span>Xətdə</span>
+            <!-- <span>Xətdə</span> -->
           </div>
         </div>
         <div class="right">
@@ -18,65 +18,17 @@
       </div>
     </div>
     <div class="cont">
-      <ion-list>
-        <ion-item class="me" lines="none">
-          <p slot="end">Salam</p>
+      <ion-list *ngFor="let msg of messages">
+        <ion-item class="{{msg.writer=='user'?'me':'you'}}" lines="none">
+          <p slot="{{msg.writer=='user'?'end':'start'}}">{{msg.message}}</p>
         </ion-item>
-        <ion-item class="you" lines="none">
+        <!-- <ion-item class="you" lines="none">
           <p slot="start">Alekum</p>
-        </ion-item>
-        <ion-item class="me" lines="none">
-          <p slot="end">Salam</p>
-        </ion-item>
-        <ion-item class="you" lines="none">
-          <p slot="start">Alekum</p>
-        </ion-item>
-        <ion-item class="me" lines="none">
-          <p slot="end">Salam</p>
-        </ion-item>
-        <ion-item class="you" lines="none">
-          <p slot="start">Alekum</p>
-        </ion-item>
-        <ion-item class="me" lines="none">
-          <p slot="end">Salam</p>
-        </ion-item>
-        <ion-item class="you" lines="none">
-          <p slot="start">Alekum</p>
-        </ion-item>
-        <ion-item class="me" lines="none">
-          <p slot="end">Salam</p>
-        </ion-item>
-        <ion-item class="you" lines="none">
-          <p slot="start">Alekum</p>
-        </ion-item>
-        <ion-item class="me" lines="none">
-          <p slot="end">Salam</p>
-        </ion-item>
-        <ion-item class="you" lines="none">
-          <p slot="start">Alekum</p>
-        </ion-item>
-        <ion-item class="me" lines="none">
-          <p slot="end">Salam</p>
-        </ion-item>
-        <ion-item class="you" lines="none">
-          <p slot="start">Alekum</p>
-        </ion-item>
-        <ion-item class="me" lines="none">
-          <p slot="end">Salam</p>
-        </ion-item>
-        <ion-item class="you" lines="none">
-          <p slot="start">Alekum</p>
-        </ion-item>
-        <ion-item class="me" lines="none">
-          <p slot="end">Salam</p>
-        </ion-item>
-        <ion-item class="you" lines="none">
-          <p slot="start">Alekum</p>
-        </ion-item>
+        </ion-item> -->
       </ion-list>
       <div class="foot">
-        <ion-textarea placeholder="Mesaj yazın" cols="1" rows="1"></ion-textarea>
-        <ion-button><ion-icon name="send"></ion-icon></ion-button>
+        <ion-textarea [(ngModel)]="msg" placeholder="Mesaj yazın" cols="1" rows="1"></ion-textarea>
+        <ion-button (click)="sendMsg()"><ion-icon name="send"></ion-icon></ion-button>
       </div>
     </div>
   </div>

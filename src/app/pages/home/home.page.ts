@@ -23,7 +23,8 @@ declare var google: any;
 export class HomePage implements OnInit, AfterViewInit {
   @Input() modalinitialbreakpoint = 0.55;
   @ViewChild('modal') modal: IonModal;
-
+  plate;
+  make;
   modalOpen: boolean = true;
   breakpoint: number = 1;
   step: number = 1;
@@ -158,20 +159,6 @@ export class HomePage implements OnInit, AfterViewInit {
 
   CardValue;
   async ngOnInit() {
-    let res = await this.http
-      .post(
-        this.service.ApiLink + '/user/getLocations',
-        {},
-        {
-          headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
-          },
-        }
-      )
-      .toPromise();
-
-    this.myAddresses = res['data'];
-
     this.CardValue = 'Kartla ödəniş';
 
     this.MyCards = [];
@@ -253,7 +240,10 @@ export class HomePage implements OnInit, AfterViewInit {
     this.SelectedPayment = 2;
   }
 
-  ionViewDidEnter() {
+  async ionViewDidEnter() {
+    let activeOrder=JSON.parse(localStorage.getItem('activeOrder'));
+    console.log("activeOrder", activeOrder);
+    
     this.activatedRoute.params.subscribe((params) => {
       if (params['stepid']) {
         this.step = parseInt(params['stepid']);
@@ -261,6 +251,19 @@ export class HomePage implements OnInit, AfterViewInit {
         this.step = 1;
       }
     });
+    let res = await this.http
+      .post(
+        this.service.ApiLink + '/user/getLocations',
+        {},
+        {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+          },
+        }
+      )
+      .toPromise();
+
+    this.myAddresses = res['data'];
     // let step_id = this.activatedRoute.paramMap.get('stepid');
     // if(step_id){
     //   this.step = parseInt(step_id);
@@ -297,7 +300,33 @@ export class HomePage implements OnInit, AfterViewInit {
 
   // }
 
-  home1() {
+  async home1() {
+    //cancel order
+    let activeOrder = JSON.parse(localStorage.getItem('activeOrder'));
+    if (activeOrder) {
+      let res = await this.http
+        .post(
+          this.service.ApiLink + '/user/cancelRideAyig',
+          {
+            rideId: activeOrder.rideId,
+          },
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          }
+        )
+        .toPromise();
+
+      if (!res['status']) this.service.Toast('Sifariş ləğv  olunmadı');
+      this.service.mySocket.emit('cancelOrder', {
+        OrderId: activeOrder.OrderId,
+      });
+
+      localStorage.removeItem('activeOrder');
+
+      
+    }
     this.step = 1;
   }
   home2() {
@@ -306,7 +335,54 @@ export class HomePage implements OnInit, AfterViewInit {
   }
   home3() {
     this.step = 3;
+    let pos = { lat: this.position.lat, lng: this.position.lng };
+    this.service.mySocket.emit('sendOrder', {
+      pos,
+      address: this.positionGeocod,
+      wherePos: this.WherePosition,
+      wherePosGeocod: this.WhereText,
+      make: this.make,
+      plate: this.plate,
+      payment: this.SelectedPayment == 1 ? 'cash' : 'card',
+      price: 10,
+      fullname: JSON.parse(localStorage.getItem('user')).fullname,
+      UserId: 'user' + JSON.parse(localStorage.getItem('user')).id,
+    });
+    console.log('sendOrder');
+    this.service.mySocket.once('OrderAccepted', (data) => {
+      console.log('OrderAccepted');
+      this.service.mySocket.once('ChatCreated', (data) => {
+        console.log('ChatCreated', data);
+        localStorage.setItem('chatId', data);
+      });
+      //save localstorage active order
+
+      let driverid = data.DriverId;
+      //Send Driverid to mysql and get him photo and set
+      this.step = 4;
+      setTimeout(() => {
+        
+        //this field coming from api
+
+        this.foundedDriverPhotoUrl = '/assets/img/p4.jpg';
+        this.FoundedDriverName = 'Məmməd';
+        this.FoundedDriverPhone = '055 555 55 55';
+
+        
+        this.DriverFound = false;
+        
+        setTimeout(() => {
+          this.DriverFound=true;
+          this.step = 6;
+          localStorage.setItem('activeOrder', JSON.stringify(data));
+        }, 2000);
+      }, 1000);
+    });
   }
+  DriverFound = true;
+  foundedDriverPhotoUrl = '/assets/img/p4.jpg';
+  FoundedDriverName;
+  FoundedDriverPhone;
   home4() {
     this.step = 4;
   }

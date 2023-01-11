@@ -73,8 +73,6 @@ export class MyaddressPage implements OnInit {
       )
       .toPromise();
 
-    console.log(res);
-
     this.addresses = res['data'];
   }
 
@@ -89,7 +87,6 @@ export class MyaddressPage implements OnInit {
   addressPositions;
   crud = '';
   async nameClick(value) {
-    console.log(this.selectedAddressJson.Cordinates);
 
     if (this.selectedAddressJson.Cordinates != '') {
       if (this.crud == 'add') {
@@ -120,7 +117,9 @@ export class MyaddressPage implements OnInit {
         this.selectedAddressJson.name = value;
 
         //get last id from address list
-        let lastId = this.addresses[this.addresses.length - 1].id;
+        let lastId = this.addresses[this.addresses.length - 1];
+        if (lastId != undefined) lastId = lastId.id;
+        else lastId = 0;
         this.addresses.push({
           id: lastId + 1,
           name: this.selectedAddressJson.name,
@@ -135,7 +134,6 @@ export class MyaddressPage implements OnInit {
 
         this.nextStep1();
       } else if (this.crud == 'edit') {
-        console.log(this.selectedAddressJson);
 
         //edit address in database
         //edit address in database
@@ -163,8 +161,6 @@ export class MyaddressPage implements OnInit {
         if (!res['status']) return this.myService.Toast(res['message']);
 
         this.myService.Toast(res['message']);
-
-        console.log(this.selectedAddressJson);
 
         for (let i = 0; i < this.addresses.length; i++) {
           if (this.addresses[i].name == this.selectedAddressJson.name) {
@@ -214,7 +210,6 @@ export class MyaddressPage implements OnInit {
       '&key=AIzaSyBMqRoKxM1TmwA7PTM8sbWzrcCD5VQLSP0';
 
     this.http.get(url).subscribe((data) => {
-      // console.log(data);
       data['results'].forEach((element) => {
         this.addressTextResults.push(element['name']);
         this.addressPositions.push(element['geometry']['location']);

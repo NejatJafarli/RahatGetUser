@@ -135,6 +135,34 @@ export class LoginPage implements OnInit {
     this.step = 2;
   }
   reqId;
+  async SendAgainOtp(){
+    if (localStorage.getItem('sendNewRequestEndDate')) {
+      // Y-m-d H:i:s
+      let endDate = localStorage.getItem('sendNewRequestEndDate');
+      let now: number = Date.now();
+      let end = new Date(endDate).getTime();
+      if (now < end) {
+        let second = Math.floor((end - now) / 1000);
+        this.service.Toast(
+          'Please wait ' + second + ' second to send new request'
+        );
+        return;
+      }
+    }
+
+    let res=await this.http.post(this.service.ApiLink + '/user/register/sendAgainOtpCode', {
+      requestId: this.reqId,
+    }).toPromise();
+
+    if (res['status']) {
+      this.service.Toast(res['success']);
+      localStorage.setItem('sendNewRequestEndDate', res['end_date']);
+    } else {
+      this.registerPassword = '';
+      this.service.Toast(res['error']);
+    }
+
+  }
   async loginstep3() {
     if (this.registerPhone[0] == '+') {
       this.registerPhone = this.registerPhone.substring(4);
@@ -151,6 +179,11 @@ export class LoginPage implements OnInit {
         );
         return;
       }
+    }
+    // registerPassword must be 6 character
+    if (this.registerPassword.length < 6) {
+      this.service.Toast('Password must be 6 character');
+      return;
     }
 
     let res = await this.http

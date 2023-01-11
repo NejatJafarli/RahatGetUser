@@ -23,8 +23,10 @@ export class AppComponent {
       this.selected = data;
     });
 
-    
     //get token from local storage
+    // console.log(localStorage.removeItem('activeOrder'));
+    // console.log(localStorage.removeItem('chatId'));
+    
     let token = localStorage.getItem('token');
     //check if user is logged in
 
@@ -38,37 +40,53 @@ export class AppComponent {
         })
         .toPromise()
         .then((res) => {
+          console.log(res);
+
           if (res['message'] != 'success') {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
 
-            //PROBLEM HERE
-
             this.menuCtrl.close();
-            //PROBLEM HERE
 
             this.service.setValueSelectedApp('');
 
             this.navCtrl.navigateRoot(['./login']);
+          } else if (res['message'] == 'success') {
+            this.service.mySocket.connect();
+            this.service.mySocket.emit('UserConnect', {
+              UserId: 'user' + JSON.parse(localStorage.getItem('user')).id,
+            });
           }
+        })
+        .catch((err) => {
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+
+          this.menuCtrl.close();
+
+          this.service.setValueSelectedApp('');
+
+          this.navCtrl.navigateRoot(['./login']);
         });
     } else {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
 
-      //PROBLEM HERE
       this.menuCtrl.close();
-      //PROBLEM HERE
-
       this.service.setValueSelectedApp('');
-
       this.navCtrl.navigateRoot(['./login']);
+      return
     }
-
     this.service.user = JSON.parse(localStorage.getItem('user'));
-    
-  }
 
+    //check if activeorder have send home page step 5
+    if (localStorage.getItem('activeOrder') != null) {
+      this.router.navigate(['/home/6']);
+    }
+    
+
+
+  }
   home() {
     this.router.navigate(['/home']);
     this.menuCtrl.close();

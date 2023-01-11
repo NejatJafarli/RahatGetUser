@@ -147,11 +147,11 @@
         </div>
         <ion-item lines="none">
           <ion-label position="stacked">Nəqliyatın Markası</ion-label>
-          <ion-input type="text" placeholder="BMW"></ion-input>
+          <ion-input [(ngModel)]="make" type="text" placeholder="BMW"></ion-input>
         </ion-item>
         <ion-item lines="none">
           <ion-label position="stacked">D.Nişanı</ion-label>
-          <ion-input type="text" placeholder="XX-XX-XXX"></ion-input>
+          <ion-input [(ngModel)]="plate" type="text" placeholder="XX-XX-XXX"></ion-input>
         </ion-item>
         <div class="payment-sections">
           <div class="left">
@@ -271,15 +271,15 @@
         </form>
       </div>
     </div>
-    <app-radar-search [isSearching]=true personPhoto="/assets/img/p4.jpg" personPhoto1="/assets/img/p1.jpg"
+    <app-radar-search [isSearching]="DriverFound" [personPhoto]="foundedDriverPhotoUrl" personPhoto1="/assets/img/p1.jpg"
       personPhoto2="/assets/img/p2.jpg" personPhoto3="/assets/img/p3.jpg" personPhoto4="/assets/img/p4.jpg"
       personPhoto5="/assets/img/p5.jpg">
     </app-radar-search>
-    <p class="name">İlkin</p>
+    <p class="name">{{FoundedDriverName}}</p>
     <ion-button (click)="home5()">Go</ion-button>
   </div>
 </ion-content>
-<ion-content *ngIf="step==5">
+<!-- <ion-content *ngIf="step==5">
   <div class="home4">
     <app-menu background="#59C3B9"></app-menu>
     <app-headerbg [heigth1]=150></app-headerbg>
@@ -378,7 +378,7 @@
     </ion-item>
 
   </div>
-</ion-content>
+</ion-content> -->
 <ion-content *ngIf="step==6">
   <div class="home4 home5">
     <app-menu background="#59C3B9"></app-menu>
@@ -492,7 +492,7 @@
       </div>
     </ion-item>
   </div>
-  <ion-button class="btn-primary" (click)="home7()">Təsdiqlə</ion-button>
+  <!-- <ion-button class="btn-primary" (click)="home7()">Təsdiqlə</ion-button> -->
 </ion-content>
 <ion-content *ngIf="step == 7">
   <div class="home6">
