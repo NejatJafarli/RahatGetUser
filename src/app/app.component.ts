@@ -1,14 +1,32 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, Input, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { MenuController, NavController } from '@ionic/angular';
+import { MenuController, NavController, Platform } from '@ionic/angular';
 import { MyService } from './envoriment/my-service';
+import OneSignal from 'onesignal-cordova-plugin';
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
+  OneSignalInit() {
+    // Uncomment to set OneSignal device logging to VERBOSE  
+    // OneSignal.setLogLevel(6, 0);
+  
+    // NOTE: Update the setAppId value below with your OneSignal AppId.
+    OneSignal.setAppId("2ea6c1f9-4174-4ee3-b8d6-b2f397629dc4");
+    OneSignal.setNotificationOpenedHandler(function(jsonData) {
+        console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
+    });
+  
+    // Prompts the user for notification permissions.
+    //    * Since this shows a generic native prompt, we recommend instead using an In-App Message to prompt for notification permission (See step 7) to better communicate to your users what notifications they will get.
+    OneSignal.promptForPushNotificationsWithUserResponse(function(accepted) {
+        console.log("User accepted notifications: " + accepted);
+    });
+  }
   selected;
   public appPages = [];
   @ViewChild('SplitPane') SplitPane;
@@ -18,14 +36,18 @@ export class AppComponent {
     public service: MyService,
     private http: HttpClient,
     private navCtrl: NavController
+    ,private platform:Platform
   ) {
+    // platform.ready().then(() => {
+    //   this.OneSignalInit();
+    // });
+    
     this.service.selectedApp$.subscribe((data) => {
       this.selected = data;
     });
 
-    //get token from local storage
+    // // // //get token from local storage
     // console.log(localStorage.removeItem('activeOrder'));
-    // console.log(localStorage.removeItem('chatId'));
     
     let token = localStorage.getItem('token');
     //check if user is logged in
@@ -40,7 +62,6 @@ export class AppComponent {
         })
         .toPromise()
         .then((res) => {
-          console.log(res);
 
           if (res['message'] != 'success') {
             localStorage.removeItem('token');
@@ -66,6 +87,7 @@ export class AppComponent {
 
           this.service.setValueSelectedApp('');
 
+
           this.navCtrl.navigateRoot(['./login']);
         });
     } else {
@@ -79,10 +101,10 @@ export class AppComponent {
     }
     this.service.user = JSON.parse(localStorage.getItem('user'));
 
-    //check if activeorder have send home page step 5
-    if (localStorage.getItem('activeOrder') != null) {
-      this.router.navigate(['/home/6']);
-    }
+    // //check if activeorder have send home page step 5
+    // if (localStorage.getItem('activeOrder') != null) {
+    //   this.router.navigate(['/home/'+JSON.parse(localStorage.getItem('activeOrder')).step]);
+    // }
     
 
 
@@ -181,6 +203,7 @@ export class AppComponent {
 
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    // OneSignal.setExternalUserId(null);
 
     //PROBLEM HERE
 

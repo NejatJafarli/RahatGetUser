@@ -12,6 +12,7 @@ import { IonModal, ModalController } from '@ionic/angular';
 import { OverlayEventDetail } from '@ionic/core/components';
 import { HttpClient } from '@angular/common/http';
 import { MyService } from 'src/app/envoriment/my-service';
+import { timeout } from 'rxjs';
 
 declare var google: any;
 
@@ -118,6 +119,7 @@ export class HomePage implements OnInit, AfterViewInit {
     }
 
     this.modalCtrl.dismiss();
+    this.setOpen(false);
     this.step = 2;
   }
   whereChange(value) {
@@ -241,9 +243,6 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   async ionViewDidEnter() {
-    let activeOrder=JSON.parse(localStorage.getItem('activeOrder'));
-    console.log("activeOrder", activeOrder);
-    
     this.activatedRoute.params.subscribe((params) => {
       if (params['stepid']) {
         this.step = parseInt(params['stepid']);
@@ -251,37 +250,108 @@ export class HomePage implements OnInit, AfterViewInit {
         this.step = 1;
       }
     });
-    let res = await this.http
-      .post(
-        this.service.ApiLink + '/user/getLocations',
-        {},
-        {
-          headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
-          },
-        }
-      )
-      .toPromise();
 
-    this.myAddresses = res['data'];
-    // let step_id = this.activatedRoute.paramMap.get('stepid');
-    // if(step_id){
-    //   this.step = parseInt(step_id);
-    // }
-    // console.log("step_id", step_id);
+    let activeOrder = JSON.parse(localStorage.getItem('activeOrder'));
+    if (activeOrder != null) {
+      this.activeOrder = activeOrder;
+      console.log(this.activeOrder);
+
+      let res = await this.http
+        .post(
+          this.service.ApiLink + '/user/getInfoAyigRide',
+          { rideId: this.activeOrder.RideId },
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          }
+        )
+        .toPromise();
+
+      if (!res['status']) return this.service.Toast(res['message']);
+
+      if (res['data']['status'] == 'Pending') {
+        this.service.Toast('Surucu Axtarilir');
+        activeOrder.OrderStatus = 'Pending';
+        activeOrder.step = 3;
+        localStorage.setItem('activeOrder', JSON.stringify(activeOrder));
+        this.roter.navigate(['/home/' + activeOrder.step]);
+        this.service.mySocket.on('OrderAccepted', async (AcceptedData) => {
+          let ress = await this.http
+            .post(
+              this.service.ApiLink + '/user/getDriverInfo',
+              {
+                driverId: AcceptedData.DriverId,
+              },
+              {
+                headers: {
+                  Authorization: 'Bearer ' + localStorage.getItem('token'),
+                },
+              }
+            )
+            .toPromise();
+
+          if (!ress['status']) return this.service.Toast(ress['message']);
+
+          AcceptedData.Driver = ress['data'];
+          AcceptedData.step = 6;
+          this.service.Toast('Sifariş qəbul edildi');
+
+          localStorage.setItem('activeOrder', JSON.stringify(AcceptedData));
+          this.activeOrder = AcceptedData;
+          this.step = 4;
+          setTimeout(async () => {
+            this.DriverFound = false;
+            setTimeout(() => {
+              this.DriverFound = true;
+              this.step = 6;
+            }, 2000);
+          }, 1000);
+        });
+
+        return;
+      } else if (res['data']['status'] == 'Accepted') {
+        this.service.Toast('Surucu Tapildi');
+        activeOrder.OrderStatus = 'Accepted';
+        activeOrder.step = 6;
+        activeOrder.DriverId = res['data']['AyigDriverId'];
+        let ress = await this.http
+          .post(
+            this.service.ApiLink + '/user/getDriverInfo',
+            {
+              driverId: activeOrder.DriverId,
+            },
+            {
+              headers: {
+                Authorization: 'Bearer ' + localStorage.getItem('token'),
+              },
+            }
+          )
+          .toPromise();
+        if (!ress['status']) return this.service.Toast(ress['message']);
+        activeOrder.Driver = ress['data'];
+        localStorage.setItem('activeOrder', JSON.stringify(activeOrder));
+        this.roter.navigate(['/home/' + activeOrder.step]);
+        return;
+      }
+    }
+
+    if (this.step == 1) {
+      let res = await this.http
+        .post(
+          this.service.ApiLink + '/user/getLocations',
+          {},
+          {
+            headers: {
+              Authorization: 'Bearer ' + localStorage.getItem('token'),
+            },
+          }
+        )
+        .toPromise();
+
+      this.myAddresses = res['data'];
+    }
   }
-  // ionViewDidEnter() {
-  //   this.step=1;
-  //   this.breakpoint = 1;
-  //   this.modalOpen= true;
-  //   this.modal.setCurrentBreakpoint(this.modalinitialbreakpoint);
-  //   console.log('ionViewDidEnter',this);
-  // }
-  // ionViewDidLeave(){
-  //   this.modalOpen = false;
-  //   // this.modalCtrl.dismiss();
-
-  // }
   imtina() {
     this.modalOpen = false;
     this.modalCtrl.dismiss();
@@ -300,15 +370,103 @@ export class HomePage implements OnInit, AfterViewInit {
 
   // }
 
-  async home1() {
-    //cancel order
-    let activeOrder = JSON.parse(localStorage.getItem('activeOrder'));
-    if (activeOrder) {
-      let res = await this.http
+  home1() {
+    this.step = 1;
+  }
+  home2() {
+    this.step = 2;
+    // this.modalCtrl.dismiss();
+  }
+  async home3() {
+    let pos = { lat: this.position.lat, lng: this.position.lng };
+    //get current datetime 2023-01-01 17:17:17
+    let date = new Date();
+    let getCurrentDate =
+      date.getFullYear() +
+      '-' +
+      (date.getMonth() + 1) +
+      '-' +
+      date.getDate() +
+      ' ' +
+      date.getHours() +
+      ':' +
+      date.getMinutes() +
+      ':' +
+      date.getSeconds();
+
+    let res = await this.http
+      .post(
+        this.service.ApiLink + '/user/CreateRideAyig',
+        {
+          takeLocation: pos.lat + ',' + pos.lng,
+          startLocationName: this.positionGeocod,
+          startDate: getCurrentDate,
+          endLocationName: this.WhereText,
+          endLocation: this.WherePosition.lat + ',' + this.WherePosition.lng,
+        },
+        {
+          headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+          },
+        }
+      )
+      .toPromise();
+
+    if (!res['status']) return this.service.Toast(res['message']);
+
+    let RideId = res['RideId'];
+    console.log(res);
+
+    // RideId: data.RideId,
+    // UserId: data.UserId,
+    // OrderData: data.OrderData,
+    this.step = 3;
+    this.setOpen(false);
+    let json = {
+      RideId: RideId,
+      UserId: 'user' + this.service.user.id,
+      OrderData: {
+        pos: pos,
+        address: this.positionGeocod,
+        wherePos: this.WherePosition,
+        wherePosGeocod: this.WhereText,
+        make: this.make,
+        plate: this.plate,
+        payment: this.SelectedPayment == 1 ? 'cash' : 'card',
+        price: 10,
+      },
+      UserData: {
+        fullname: this.service.user.fullname,
+        phone: this.service.user.phone,
+        photoUrl: this.service.user.photo,
+      },
+    };
+
+    this.service.mySocket.emit('SendOrderToDriver', json);
+    let json2 = {
+      RideId: RideId,
+      UserId: 'user' + this.service.user.id,
+      OrderData: {
+        pos: pos,
+        address: this.positionGeocod,
+        wherePos: this.WherePosition,
+        wherePosGeocod: this.WhereText,
+        make: this.make,
+        plate: this.plate,
+        payment: this.SelectedPayment == 1 ? 'cash' : 'card',
+        price: 10,
+      },
+      step: 3,
+    };
+    localStorage.setItem('activeOrder', JSON.stringify(json2));
+    this.activeOrder = json2;
+
+    this.service.mySocket.on('OrderAccepted', async (AcceptedData) => {
+      let ress = await this.http
         .post(
-          this.service.ApiLink + '/user/cancelRideAyig',
+          this.service.ApiLink + '/user/getDriverInfo',
           {
-            rideId: activeOrder.rideId,
+            driverId: AcceptedData.DriverId,
           },
           {
             headers: {
@@ -318,71 +476,122 @@ export class HomePage implements OnInit, AfterViewInit {
         )
         .toPromise();
 
-      if (!res['status']) this.service.Toast('Sifariş ləğv  olunmadı');
-      this.service.mySocket.emit('cancelOrder', {
-        OrderId: activeOrder.OrderId,
-      });
+      if (!ress['status']) return this.service.Toast(ress['message']);
 
-      localStorage.removeItem('activeOrder');
+      AcceptedData.Driver = ress['data'];
+      AcceptedData.step = 6;
+      this.service.Toast('Sifariş qəbul edildi');
 
-      
-    }
-    this.step = 1;
-  }
-  home2() {
-    this.step = 2;
-    // this.modalCtrl.dismiss();
-  }
-  home3() {
-    this.step = 3;
-    let pos = { lat: this.position.lat, lng: this.position.lng };
-    this.service.mySocket.emit('sendOrder', {
-      pos,
-      address: this.positionGeocod,
-      wherePos: this.WherePosition,
-      wherePosGeocod: this.WhereText,
-      make: this.make,
-      plate: this.plate,
-      payment: this.SelectedPayment == 1 ? 'cash' : 'card',
-      price: 10,
-      fullname: JSON.parse(localStorage.getItem('user')).fullname,
-      UserId: 'user' + JSON.parse(localStorage.getItem('user')).id,
-    });
-    console.log('sendOrder');
-    this.service.mySocket.once('OrderAccepted', (data) => {
-      console.log('OrderAccepted');
-      this.service.mySocket.once('ChatCreated', (data) => {
-        console.log('ChatCreated', data);
-        localStorage.setItem('chatId', data);
-      });
-      //save localstorage active order
-
-      let driverid = data.DriverId;
-      //Send Driverid to mysql and get him photo and set
+      localStorage.setItem('activeOrder', JSON.stringify(AcceptedData));
+      this.activeOrder = AcceptedData;
       this.step = 4;
-      setTimeout(() => {
-        
-        //this field coming from api
-
-        this.foundedDriverPhotoUrl = '/assets/img/p4.jpg';
-        this.FoundedDriverName = 'Məmməd';
-        this.FoundedDriverPhone = '055 555 55 55';
-
-        
+      setTimeout(async () => {
         this.DriverFound = false;
-        
         setTimeout(() => {
-          this.DriverFound=true;
+          this.DriverFound = true;
           this.step = 6;
-          localStorage.setItem('activeOrder', JSON.stringify(data));
         }, 2000);
       }, 1000);
+
+      // setTimeout(() => {
+      //   this.DriverFound = false;
+      //   setTimeout(() => {
+      //     this.DriverFound= true;
+      //     this.step = 6;
+      //     this.roter.navigate(['/home/' + this.step]);
+      //   }, 5000);
+      // }, 2500);
     });
   }
+  // async home3() {
+  //   let pos = { lat: this.position.lat, lng: this.position.lng };
+
+  //   if (!res['status']) return this.service.Toast('Sifariş yaradılmadı');
+  //   this.step = 3;
+  //   let json = {
+  //     rideId: res['rideId'],
+  //     pos,
+  //     address: this.positionGeocod,
+  //     wherePos: this.WherePosition,
+  //     wherePosGeocod: this.WhereText,
+  //     make: this.make,
+  //     plate: this.plate,
+  //     payment: this.SelectedPayment == 1 ? 'cash' : 'card',
+  //     price: 10,
+  //     fullname: JSON.parse(localStorage.getItem('user')).fullname,
+  //     UserId: 'user' + JSON.parse(localStorage.getItem('user')).id,
+  //   };
+  //   this.service.mySocket.emit('sendOrder', json);
+  //   localStorage.setItem(
+  //     'activeOrder',
+  //     JSON.stringify({ data: json, step: 3 })
+  //   );
+  //   console.log(JSON.parse(localStorage.getItem('activeOrder')));
+  //   this.activeOrder = JSON.parse(localStorage.getItem('activeOrder'));
+  //   console.log('sendOrder');
+  //   this.service.mySocket.once('OrderAccepted', async (data) => {
+  //     console.log('OrderAccepted', data);
+  //     let ress = await this.http
+  //       .post(
+  //         this.service.ApiLink + '/user/getInfoAyigRide',
+  //         {
+  //           rideId: data.data.rideId,
+  //         },
+  //         {
+  //           headers: {
+  //             Authorization: 'Bearer ' + localStorage.getItem('token'),
+  //           },
+  //         }
+  //       )
+  //       .toPromise();
+
+  //     if (!ress['status']) return this.service.Toast(ress['message']);
+  //     //save localstorage active order
+  //     let active = JSON.parse(localStorage.getItem('activeOrder'));
+  //     active.OrderId = ress['data']['OrderId'];
+  //     active.chatId = ress['data']['chatId'];
+  //     active.Driver = {};
+  //     active.Driver.id = ress['data']['AyigDriverId'];
+  //     //this field coming from api
+  //     let res = await this.http
+  //       .post(
+  //         this.service.ApiLink + '/user/getDriverInfo',
+  //         { driverId: active.Driver.id },
+  //         {
+  //           headers: {
+  //             Authorization: 'Bearer ' + localStorage.getItem('token'),
+  //           },
+  //         }
+  //       )
+  //       .toPromise();
+  //     if (!res['status']) return this.service.Toast(res['message']);
+  //     this.foundedDriverPhotoUrl = res['data']['photo'];
+  //     this.FoundedDriverName = res['data']['fullname'];
+  //     this.FoundedDriverPhone = res['data']['phone'];
+
+  //     active.Driver.foundedDriverPhotoUrl = res['data']['photo'];
+  //     active.Driver.FoundedDriverName = res['data']['fullname'];
+  //     active.Driver.FoundedDriverPhone = res['data']['phone'];
+  //     this.activeOrder = active;
+  //     localStorage.setItem('activeOrder', JSON.stringify(active));
+  //     //Send Driverid to mysql and get him photo and set
+  //     this.step = 4;
+  //     setTimeout(async () => {
+  //       this.DriverFound = false;
+
+  //       setTimeout(() => {
+  //         this.DriverFound = true;
+  //         this.step = 6;
+  //         let active = JSON.parse(localStorage.getItem('activeOrder'));
+  //         active.step = 6;
+  //         this.activeOrder = active;
+  //         localStorage.setItem('activeOrder', JSON.stringify(active));
+  //       }, 2000);
+  //     }, 1000);
+  //   });
+  // }
+  activeOrder = JSON.parse(localStorage.getItem('activeOrder'));
   DriverFound = true;
-  foundedDriverPhotoUrl = '/assets/img/p4.jpg';
-  FoundedDriverName;
-  FoundedDriverPhone;
   home4() {
     this.step = 4;
   }

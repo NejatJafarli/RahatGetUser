@@ -8,7 +8,7 @@
             <img src="/assets/img/p4.jpg">
           </ion-avatar>
           <div class="name">
-            <p>İlkin Qurbanov</p>
+            <p>{{activeOrder.Driver.fullname}}</p>
             <!-- <span>Xətdə</span> -->
           </div>
         </div>
@@ -18,8 +18,8 @@
       </div>
     </div>
     <div class="cont">
-      <ion-list *ngFor="let msg of messages">
-        <ion-item class="{{msg.writer=='user'?'me':'you'}}" lines="none">
+      <ion-list >
+        <ion-item *ngFor="let msg of messages" class="{{msg.writer=='user'?'me':'you'}}" lines="none">
           <p slot="{{msg.writer=='user'?'end':'start'}}">{{msg.message}}</p>
         </ion-item>
         <!-- <ion-item class="you" lines="none">

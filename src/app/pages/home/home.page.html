@@ -225,12 +225,12 @@
       </div>
       <form>
         <ion-item lines="none" class="ion-margin-bottom">
-          <ion-input type="text" [(ngModel)]="positionGeocod" [ngModelOptions]="{standalone: true}"
+          <ion-input type="text" [(ngModel)]="activeOrder.OrderData.address" [ngModelOptions]="{standalone: true}"
             placeholder="Hardan?" disabled="true"></ion-input>
           <ion-icon name="location-outline"></ion-icon>
         </ion-item>
         <ion-item lines="none">
-          <ion-input type="text" placeholder="Haraya?" [(ngModel)]="WhereText" [ngModelOptions]="{standalone: true}"
+          <ion-input type="text" placeholder="Haraya?" [(ngModel)]="activeOrder.OrderData.wherePosGeocod" [ngModelOptions]="{standalone: true}"
             expand="block" disabled="true"></ion-input>
           <ion-icon name="navigate-outline"></ion-icon>
         </ion-item>
@@ -259,23 +259,23 @@
         </div>
         <form>
           <ion-item lines="none" class="ion-margin-bottom">
-            <ion-input type="text" [(ngModel)]="positionGeocod" [ngModelOptions]="{standalone: true}"
+            <ion-input type="text" [(ngModel)]="activeOrder.OrderData.address" [ngModelOptions]="{standalone: true}"
               placeholder="Hardan?" disabled="true"></ion-input>
             <ion-icon name="location-outline"></ion-icon>
           </ion-item>
           <ion-item lines="none">
-            <ion-input type="text" placeholder="Haraya?" [(ngModel)]="WhereText" [ngModelOptions]="{standalone: true}"
+            <ion-input type="text" placeholder="Haraya?" [(ngModel)]="activeOrder.OrderData.wherePosGeocod" [ngModelOptions]="{standalone: true}"
               expand="block" disabled="true"></ion-input>
             <ion-icon name="navigate-outline"></ion-icon>
           </ion-item>
         </form>
       </div>
     </div>
-    <app-radar-search [isSearching]="DriverFound" [personPhoto]="foundedDriverPhotoUrl" personPhoto1="/assets/img/p1.jpg"
+    <app-radar-search [isSearching]="DriverFound" [personPhoto]="activeOrder.Driver.photo" personPhoto1="/assets/img/p1.jpg"
       personPhoto2="/assets/img/p2.jpg" personPhoto3="/assets/img/p3.jpg" personPhoto4="/assets/img/p4.jpg"
       personPhoto5="/assets/img/p5.jpg">
     </app-radar-search>
-    <p class="name">{{FoundedDriverName}}</p>
+    <p class="name">{{activeOrder.Driver.fullname}}</p>
     <ion-button (click)="home5()">Go</ion-button>
   </div>
 </ion-content>
@@ -388,8 +388,8 @@
         <img src="/assets/img/p4.jpg">
       </ion-avatar>
       <ion-text>
-        <p>İlkin <img src="/assets/icon/star.svg"><span>5</span></p>
-        <span class="phone">+994 00 000 00 00</span>
+        <p>{{activeOrder.Driver.fullname}} <img src="/assets/icon/star.svg"><span>5</span></p>
+        <span class="phone">{{activeOrder.Driver.phone}}</span>
       </ion-text>
     </div>
     <div class="options-btn">
@@ -422,12 +422,12 @@
       </div>
       <form>
         <ion-item lines="none" class="ion-margin-bottom">
-          <ion-input type="text" [(ngModel)]="positionGeocod" [ngModelOptions]="{standalone: true}"
+          <ion-input type="text" [(ngModel)]="activeOrder.OrderData.address" [ngModelOptions]="{standalone: true}"
             placeholder="Hardan?" disabled="true"></ion-input>
           <ion-icon name="location-outline"></ion-icon>
         </ion-item>
         <ion-item lines="none">
-          <ion-input type="text" placeholder="Haraya?" [(ngModel)]="WhereText" [ngModelOptions]="{standalone: true}"
+          <ion-input type="text" placeholder="Haraya?" [(ngModel)]="activeOrder.OrderData.wherePosGeocod" [ngModelOptions]="{standalone: true}"
             expand="block" disabled="true"></ion-input>
           <ion-icon name="navigate-outline"></ion-icon>
         </ion-item>
@@ -469,16 +469,16 @@
         </ion-row>
       </ion-grid>
     </div>
-    <div class="car-view">
+    <div class="car-view" *ngIf="activeOrder.OrderData.make!=null && activeOrder.OrderData.plate!=null">
       <p class="title">Nəqliyatım</p>
       <div class="conts">
         <div class="left">
-          <p class="left-text">Marka</p>
-          <p class="left-text">D.nişanı</p>
+          <p *ngIf="activeOrder.OrderData.make!=null" class="left-text">Marka</p>
+          <p *ngIf="activeOrder.OrderData.plate!=null"class="left-text">D.nişanı</p>
         </div>
         <div class="right">
-          <p class="right-text">BMW</p>
-          <p class="right-text">77-zz-777</p>
+          <p *ngIf="activeOrder.OrderData.make!=null" class="right-text">{{activeOrder.OrderData.make}}</p>
+          <p *ngIf="activeOrder.OrderData.plate!=null" class="right-text">{{activeOrder.OrderData.plate}}</p>
         </div>
       </div>
     </div>

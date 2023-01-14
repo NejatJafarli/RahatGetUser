@@ -31,8 +31,9 @@
     "@ionic/cli-plugin-proxy": "^1.5.8",
     "ionicons": "^6.0.3",
     "ng-socket-io": "^0.2.4",
-    "ngx-socket-io": "^4.4.0",
-    "rxjs": "~6.6.0",
+    "ngx-socket-io": "^4.3.0",
+    "onesignal-cordova-plugin": "^3.3.0",
+    "rxjs": "^7.4.0",
     "tslib": "^2.2.0",
     "zone.js": "~0.11.4"
   },

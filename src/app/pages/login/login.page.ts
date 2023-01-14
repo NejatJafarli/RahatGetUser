@@ -3,6 +3,7 @@ import { Component, ContentChild, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonInput } from '@ionic/angular';
+import OneSignal from 'onesignal-cordova-plugin';
 import { MyService } from 'src/app/envoriment/my-service';
 // import { LoginPageForm } from './login.page.form';
 
@@ -122,6 +123,11 @@ export class LoginPage implements OnInit {
       this.loginPhone = '';
       this.loginPassword = '';
       this.service.Toast('Login Success');
+      this.service.mySocket.connect();
+      this.service.mySocket.emit('UserConnect', {
+        UserId: 'user' + JSON.parse(localStorage.getItem('user')).id,
+      });
+      // OneSignal.setExternalUserId(res['user']['id']);
       this.router.navigate(['transition']);
     } else {
       this.loginPassword = '';

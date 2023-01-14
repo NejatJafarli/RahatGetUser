@@ -17,19 +17,20 @@ export class ChatrgPage implements OnInit {
   ngOnInit() {
 
   }
+  activeOrder=JSON.parse(localStorage.getItem('activeOrder'));
   ionViewDidEnter() {
-    this.ChatId = localStorage.getItem('chatId');
-    this.myService.mySocket.emit('getMessages', this.ChatId);
-    this.myService.mySocket.on('getMessages', (data) => {
+    console.log(this.activeOrder);
+    this.myService.mySocket.emit('getMessages', this.activeOrder.OrderId);
+    this.myService.mySocket.once('getMessages', (data) => {
       this.messages = data;
     });
-    this.myService.mySocket.on('Messages', (data) => {
+    this.myService.mySocket.on('NewMessage', (data) => {
       this.messages.push(data);
     });
   }
   sendMsg(){
-    this.myService.mySocket.emit('Message', {
-      chatId: this.ChatId,
+    this.myService.mySocket.emit('SendMessage', {
+      OrderId: this.activeOrder.OrderId,
       message: this.msg,
       writer: 'user',
     });
