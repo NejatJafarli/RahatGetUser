@@ -12,9 +12,11 @@ import { Camera } from '@awesome-cordova-plugins/camera/ngx';
 
 //import socket.io-client
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
+import * as cordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
+import { IonicStorageModule } from '@ionic/storage-angular';
+import { ApiService } from './services/api.service';
+import { StorageService } from './services/storage.service';
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
-
-
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -23,10 +25,17 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
+    IonicStorageModule.forRoot({
+      name: '__AyigDriver',
+      driverOrder: [cordovaSQLiteDriver._driver, Drivers.IndexedDB, Drivers.LocalStorage],
+    }),
+    
   ],
   providers: [
     Camera,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    ApiService,
+    StorageService
   ],
   bootstrap: [AppComponent],
 })

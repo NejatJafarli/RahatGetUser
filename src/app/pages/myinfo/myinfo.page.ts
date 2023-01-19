@@ -3,7 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
 import { identity } from 'rxjs/internal/util/identity';
-import { MyService } from 'src/app/envoriment/my-service';
+import { ApiService } from 'src/app/services/api.service';
+import { MyService } from 'src/app/services/my-service';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-myinfo',
@@ -52,37 +54,29 @@ export class MyinfoPage implements OnInit {
     private router: Router,
     private http: HttpClient,
     private myService: MyService,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private apiService: ApiService,
+    private local: StorageService
   ) {}
   navBack() {
     this.navCtrl.back();
   }
-  ngOnInit() {
-    this.User = JSON.parse(localStorage.getItem('user'));
+  async ngOnInit() {
+    this.User = JSON.parse(await this.local.get('user'));
   }
   async Save() {
-    let res = await this.http
-      .post(
-        this.myService.ApiLink + '/user/updateAccount',
-        {
-          fullname: this.User.fullname,
-          phone: this.User.phone,
-          age: this.User.age,
-        },
-        {
-          headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
-          },
-        }
-      )
-      .toPromise();
+    let res = await this.apiService.updateAccount(
+      this.User.fullname,
+      this.User.phone,
+      this.User.age
+    );
     if (!res['status']) {
       this.myService.Toast(res['message']);
       return;
     }
     this.User = res['data'];
     this.myService.Toast(res['message']);
-    localStorage.setItem('user', JSON.stringify(this.User));
+    this.local.set('user', JSON.stringify(this.User));
     this.router.navigate(['/home']);
   }
   OldPass;
@@ -100,20 +94,7 @@ export class MyinfoPage implements OnInit {
       this.myService.Toast('Password not match');
       return;
     }
-    let res = await this.http
-      .post(
-        this.myService.ApiLink + '/user/updatePassword',
-        {
-          old_password: this.OldPass,
-          new_password: this.NewPass,
-        },
-        {
-          headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
-          },
-        }
-      )
-      .toPromise();
+    let res = await this.apiService.updatePassword(this.OldPass, this.NewPass);
     if (!res['status']) {
       this.myService.Toast(res['message']);
       return;

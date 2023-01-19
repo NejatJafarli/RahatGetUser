@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { MyService } from 'src/app/envoriment/my-service';
+import { MyService } from 'src/app/services/my-service';
 
 @Component({
   selector: 'app-transition',

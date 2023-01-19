@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Camera } from '@awesome-cordova-plugins/camera/ngx';
-import { MyService } from 'src/app/envoriment/my-service';
+import { MyService } from 'src/app/services/my-service';
 
 @Component({
   selector: 'app-setting',

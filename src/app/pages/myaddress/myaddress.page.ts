@@ -2,7 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
-import { MyService } from 'src/app/envoriment/my-service';
+import { ApiService } from 'src/app/services/api.service';
+import { MyService } from 'src/app/services/my-service';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-myaddress',
@@ -24,22 +26,14 @@ export class MyaddressPage implements OnInit {
     private router: Router,
     private http: HttpClient,
     private myService: MyService,
-    private navCtrl:NavController
+    private navCtrl: NavController,
+    private apiService: ApiService,
+    private local:StorageService
   ) {}
 
   async remove(id) {
     //remove from database WITH API  Backend
-    let res = await this.http
-      .post(
-        this.myService.ApiLink + '/user/removeLocation',
-        { id: id },
-        {
-          headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
-          },
-        }
-      )
-      .toPromise();
+    let res = await this.apiService.removeLocation(id);
 
     if (!res['status']) {
       this.myService.Toast(res['message']);
@@ -54,24 +48,14 @@ export class MyaddressPage implements OnInit {
     this.crud = 'add';
   }
   User;
-  navBack(){
+  navBack() {
     this.navCtrl.back();
   }
   async ngOnInit() {
-    let jsn = localStorage.getItem('user');
+    let jsn = await this.local.get('user');
     this.User = JSON.parse(jsn);
 
-    let res = await this.http
-      .post(
-        this.myService.ApiLink + '/user/getLocations',
-        {},
-        {
-          headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
-          },
-        }
-      )
-      .toPromise();
+    let res = await this.apiService.getLocations();
 
     this.addresses = res['data'];
   }
@@ -87,30 +71,20 @@ export class MyaddressPage implements OnInit {
   addressPositions;
   crud = '';
   async nameClick(value) {
-
     if (this.selectedAddressJson.Cordinates != '') {
       if (this.crud == 'add') {
         //SEND API REQUEST TO APPEND NEW ADDRESS TO DATABASE
         //SEND API REQUEST TO APPEND NEW ADDRESS TO DATABASE
         //SEND API REQUEST TO APPEND NEW ADDRESS TO DATABASE
-        let res = await this.http
-          .post(
-            this.myService.ApiLink + '/user/addLocation',
-            {
-              name: value,
-              cordinates:
-                this.selectedAddressJson.Cordinates['lat'] +
-                ',' +
-                this.selectedAddressJson.Cordinates['lng'],
-              location_name: this.selectedAddressJson.AddressName,
-            },
-            {
-              headers: {
-                Authorization: 'Bearer ' + localStorage.getItem('token'),
-              },
-            }
-          )
-          .toPromise();
+        let cordinates =
+          this.selectedAddressJson.Cordinates['lat'] +
+          ',' +
+          this.selectedAddressJson.Cordinates['lng'];
+        let res = await this.apiService.addLocation(
+          value,
+          cordinates,
+          this.selectedAddressJson.AddressName
+        );
 
         this.myService.Toast(res['message']);
 
@@ -134,30 +108,20 @@ export class MyaddressPage implements OnInit {
 
         this.nextStep1();
       } else if (this.crud == 'edit') {
+        //edit address in database
+        //edit address in database
+        //edit address in database
+        let cord =
+          this.selectedAddressJson.Cordinates['lat'] +
+          ',' +
+          this.selectedAddressJson.Cordinates['lng'];
+        let res = this.apiService.updateLocation(
+          this.selectedAddressJson.id,
+          value,
+          cord,
+          this.selectedAddressJson.AddressName
+        );
 
-        //edit address in database
-        //edit address in database
-        //edit address in database
-
-        let res = await this.http
-          .post(
-            this.myService.ApiLink + '/user/updateLocation',
-            {
-              id: this.selectedAddressJson.id,
-              name: value,
-              cordinates:
-                this.selectedAddressJson.Cordinates['lat'] +
-                ',' +
-                this.selectedAddressJson.Cordinates['lng'],
-              location_name: this.selectedAddressJson.AddressName,
-            },
-            {
-              headers: {
-                Authorization: 'Bearer ' + localStorage.getItem('token'),
-              },
-            }
-          )
-          .toPromise();
         if (!res['status']) return this.myService.Toast(res['message']);
 
         this.myService.Toast(res['message']);

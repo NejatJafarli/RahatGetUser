@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Geolocation as MyGeo, PermissionStatus } from '@capacitor/geolocation';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MyService } from 'src/app/envoriment/my-service';
+import { MyService } from 'src/app/services/my-service';
 import { HttpClient } from '@angular/common/http';
 import { OverlayEventDetail } from '@ionic/core';
 import { IonModal, MenuController, ModalController } from '@ionic/angular';

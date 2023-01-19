@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavController } from '@ionic/angular';
-import { MyService } from 'src/app/envoriment/my-service';
+import { MyService } from 'src/app/services/my-service';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-chatrg',
@@ -10,23 +11,23 @@ import { MyService } from 'src/app/envoriment/my-service';
 })
 export class ChatrgPage implements OnInit {
 
-  constructor(private router:Router,private navCtrl:NavController,private myService:MyService) { }
+  constructor(private router:Router,private local:StorageService,private navCtrl:NavController,private myService:MyService) { }
   ChatId;
   messages = [];
   msg;
-  ngOnInit() {
-
-  }
-  activeOrder=JSON.parse(localStorage.getItem('activeOrder'));
-  ionViewDidEnter() {
+ async ngOnInit() {
+    this.activeOrder=JSON.parse(await this.local.get('activeOrder'));
     console.log(this.activeOrder);
-    this.myService.mySocket.emit('getMessages', this.activeOrder.OrderId);
+    this.myService.mySocket.emit('GetMessages', this.activeOrder.OrderId);
     this.myService.mySocket.once('getMessages', (data) => {
       this.messages = data;
     });
     this.myService.mySocket.on('NewMessage', (data) => {
       this.messages.push(data);
     });
+  }
+  activeOrder
+  ionViewDidEnter() {
   }
   sendMsg(){
     this.myService.mySocket.emit('SendMessage', {
@@ -39,8 +40,7 @@ export class ChatrgPage implements OnInit {
   close(){
     // this.navCtrl.back();
     //send home step 6
-    this.router.navigate(['/home/6']);
+    this.router.navigate(['/home/'+this.activeOrder.step]);
 
-     
   }
 }

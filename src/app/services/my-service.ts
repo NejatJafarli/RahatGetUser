@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ToastController } from '@ionic/angular';
 import { Socket } from 'ngx-socket-io';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,20 +11,24 @@ export class MyService {
   public mySocket;
   constructor(
     private ToastController: ToastController,
-    private Socket: Socket
+    private Socket: Socket,
+    private local: StorageService
   ) {
     this.mySocket = Socket;
+    this.init();
   }
-
+  async init() {
+    this.selectedApp ==
+      new BehaviorSubject<string>(await this.local.get('selectedApp'));
+    this.selectedApp$ = this.selectedApp.asObservable();
+  }
   //observable for selected app
-  private selectedApp = new BehaviorSubject<string>(
-    localStorage.getItem('selectedApp')
-  );
-  selectedApp$ = this.selectedApp.asObservable();
+  private selectedApp;
+  selectedApp$;
 
-  setValueSelectedApp(value) {
+   setValueSelectedApp(value) {
     this.selectedApp.next(value);
-    localStorage.setItem('selectedApp', value);
+    this.local.set('selectedApp', value);
   }
 
   user;

@@ -4,7 +4,9 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IonInput } from '@ionic/angular';
 import OneSignal from 'onesignal-cordova-plugin';
-import { MyService } from 'src/app/envoriment/my-service';
+import { ApiService } from 'src/app/services/api.service';
+import { MyService } from 'src/app/services/my-service';
+import { StorageService } from 'src/app/services/storage.service';
 // import { LoginPageForm } from './login.page.form';
 
 @Component({
@@ -32,7 +34,9 @@ export class LoginPage implements OnInit {
   constructor(
     private router: Router,
     private http: HttpClient,
-    private service: MyService
+    private service: MyService,
+    private apiService: ApiService,
+    private local:StorageService
   ) {}
   codePhone;
   action;
@@ -57,7 +61,7 @@ export class LoginPage implements OnInit {
         },
         {
           headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token'),
+            Authorization: 'Bearer ' + local.,
           },
         }
       )
@@ -74,21 +78,15 @@ export class LoginPage implements OnInit {
     // this.form = new LoginPageForm(this.formBuilder).createForm();
     // console.log(this.form);
 
-    let token = localStorage.getItem('token');
+    let token = this.local.getToken();
     //check if user is logged in
     if (token) {
-      let mes = await this.http
-        .get(this.service.ApiLink + '/user/checktoken', {
-          headers: {
-            Authorization: 'Bearer ' + token,
-          },
-        })
-        .toPromise();
+      let mes = await this.apiService.checkToken();
       if (mes['message'] == 'success') {
         this.router.navigate(['transition']);
       } else {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
+        this.local.remove('token');
+        this.local.remove('user');
       }
     }
   }
@@ -115,17 +113,17 @@ export class LoginPage implements OnInit {
     console.log(res);
 
     if (res['status']) {
-      localStorage.setItem('token', res['token']);
-      localStorage.setItem('user', JSON.stringify(res['user']));
-      this.service.user = JSON.parse(localStorage.getItem('user'));
+      this.local.set('token', res['token']);
+      this.local.set('user', JSON.stringify(res['user']));
+      this.service.user = JSON.parse(await this.local.get('user'));
       this.action = 'login';
-      localStorage.removeItem('sendNewRequestEndDate');
+      this.local.remove('sendNewRequestEndDate');
       this.loginPhone = '';
       this.loginPassword = '';
       this.service.Toast('Login Success');
       this.service.mySocket.connect();
       this.service.mySocket.emit('UserConnect', {
-        UserId: 'user' + JSON.parse(localStorage.getItem('user')).id,
+        UserId: 'user' + JSON.parse(await this.local.get('user')).id,
       });
       // OneSignal.setExternalUserId(res['user']['id']);
       this.router.navigate(['transition']);
@@ -142,9 +140,9 @@ export class LoginPage implements OnInit {
   }
   reqId;
   async SendAgainOtp(){
-    if (localStorage.getItem('sendNewRequestEndDate')) {
+    if (await this.local.get('sendNewRequestEndDate')) {
       // Y-m-d H:i:s
-      let endDate = localStorage.getItem('sendNewRequestEndDate');
+      let endDate = await this.local.get('sendNewRequestEndDate');
       let now: number = Date.now();
       let end = new Date(endDate).getTime();
       if (now < end) {
@@ -162,7 +160,7 @@ export class LoginPage implements OnInit {
 
     if (res['status']) {
       this.service.Toast(res['success']);
-      localStorage.setItem('sendNewRequestEndDate', res['end_date']);
+      this.local.set('sendNewRequestEndDate', res['end_date']);
     } else {
       this.registerPassword = '';
       this.service.Toast(res['error']);
@@ -173,9 +171,9 @@ export class LoginPage implements OnInit {
     if (this.registerPhone[0] == '+') {
       this.registerPhone = this.registerPhone.substring(4);
     }
-    if (localStorage.getItem('sendNewRequestEndDate')) {
+    let endDate=await this.local.get('sendNewRequestEndDate');
+    if (endDate) {
       // Y-m-d H:i:s
-      let endDate = localStorage.getItem('sendNewRequestEndDate');
       let now: number = Date.now();
       let end = new Date(endDate).getTime();
       if (now < end) {
@@ -208,7 +206,7 @@ export class LoginPage implements OnInit {
       this.action = 'register';
       this.service.Toast(res['success']);
       this.reqId = res['requestId'];
-      localStorage.setItem('sendNewRequestEndDate', res['end_date']);
+      this.local.set('sendNewRequestEndDate', res['end_date']);
       this.step = 3;
     } else {
       this.registerPassword = '';
