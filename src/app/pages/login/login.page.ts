@@ -61,7 +61,7 @@ export class LoginPage implements OnInit {
         },
         {
           headers: {
-            Authorization: 'Bearer ' + local.,
+            Authorization: 'Bearer ' + await this.local.getToken(),
           },
         }
       )
@@ -78,17 +78,6 @@ export class LoginPage implements OnInit {
     // this.form = new LoginPageForm(this.formBuilder).createForm();
     // console.log(this.form);
 
-    let token = this.local.getToken();
-    //check if user is logged in
-    if (token) {
-      let mes = await this.apiService.checkToken();
-      if (mes['message'] == 'success') {
-        this.router.navigate(['transition']);
-      } else {
-        this.local.remove('token');
-        this.local.remove('user');
-      }
-    }
   }
   loginPhone;
   loginPassword;
@@ -113,9 +102,10 @@ export class LoginPage implements OnInit {
     console.log(res);
 
     if (res['status']) {
-      this.local.set('token', res['token']);
-      this.local.set('user', JSON.stringify(res['user']));
-      this.service.user = JSON.parse(await this.local.get('user'));
+      await this.local.setToken(res['token']);
+      
+      await this.local.set('user', JSON.stringify(res['user']));
+      this.service.user = res['user'];
       this.action = 'login';
       this.local.remove('sendNewRequestEndDate');
       this.loginPhone = '';
@@ -123,7 +113,7 @@ export class LoginPage implements OnInit {
       this.service.Toast('Login Success');
       this.service.mySocket.connect();
       this.service.mySocket.emit('UserConnect', {
-        UserId: 'user' + JSON.parse(await this.local.get('user')).id,
+        UserId: 'user' + res['user']['id'],
       });
       // OneSignal.setExternalUserId(res['user']['id']);
       this.router.navigate(['transition']);

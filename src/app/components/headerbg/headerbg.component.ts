@@ -1,9 +1,16 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
 
 @Component({
   selector: 'app-headerbg',
   templateUrl: './headerbg.component.html',
   styleUrls: ['./headerbg.component.scss'],
+  standalone: true,
+  imports:[
+    IonicModule,
+    CommonModule
+  ]
 })
 export class HeaderbgComponent implements OnInit {
   

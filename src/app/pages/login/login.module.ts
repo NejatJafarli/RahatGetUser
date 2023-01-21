@@ -17,11 +17,11 @@ import { OtpcodeComponent } from 'src/app/components/otpcode/otpcode.component';
     IonicModule,
     LoginPageRoutingModule,
     ReactiveFormsModule ,
+    HeaderbgComponent
   ],
   declarations: [
     OtpcodeComponent,
     LoginPage,
-    HeaderbgComponent,
   ],
 
 

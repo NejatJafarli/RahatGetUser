@@ -19,7 +19,8 @@ export class MyaddressPage implements OnInit {
     id: 0,
     name: '',
     AddressName: '',
-    Cordinates: {},
+    lat:'',
+    long:'',
   };
 
   constructor(
@@ -71,15 +72,15 @@ export class MyaddressPage implements OnInit {
   addressPositions;
   crud = '';
   async nameClick(value) {
-    if (this.selectedAddressJson.Cordinates != '') {
+    if (this.selectedAddressJson.lat != '' && this.selectedAddressJson.long != '') {
       if (this.crud == 'add') {
         //SEND API REQUEST TO APPEND NEW ADDRESS TO DATABASE
         //SEND API REQUEST TO APPEND NEW ADDRESS TO DATABASE
         //SEND API REQUEST TO APPEND NEW ADDRESS TO DATABASE
         let cordinates =
-          this.selectedAddressJson.Cordinates['lat'] +
+          this.selectedAddressJson.lat+
           ',' +
-          this.selectedAddressJson.Cordinates['lng'];
+          this.selectedAddressJson.long;
         let res = await this.apiService.addLocation(
           value,
           cordinates,
@@ -94,6 +95,7 @@ export class MyaddressPage implements OnInit {
         let lastId = this.addresses[this.addresses.length - 1];
         if (lastId != undefined) lastId = lastId.id;
         else lastId = 0;
+        
         this.addresses.push({
           id: lastId + 1,
           name: this.selectedAddressJson.name,
@@ -102,7 +104,8 @@ export class MyaddressPage implements OnInit {
 
         this.selectedAddressJson.name = '';
         this.selectedAddressJson.AddressName = '';
-        this.selectedAddressJson.Cordinates = '';
+        this.selectedAddressJson.lat = '';
+        this.selectedAddressJson.long = '';
         this.modal.dismiss();
         this.tempName = '';
 
@@ -112,9 +115,9 @@ export class MyaddressPage implements OnInit {
         //edit address in database
         //edit address in database
         let cord =
-          this.selectedAddressJson.Cordinates['lat'] +
+          this.selectedAddressJson.lat+
           ',' +
-          this.selectedAddressJson.Cordinates['lng'];
+          this.selectedAddressJson.long;
         let res = this.apiService.updateLocation(
           this.selectedAddressJson.id,
           value,
@@ -137,7 +140,8 @@ export class MyaddressPage implements OnInit {
 
         this.selectedAddressJson.name = '';
         this.selectedAddressJson.AddressName = '';
-        this.selectedAddressJson.Cordinates = '';
+        this.selectedAddressJson.lat = '';
+        this.selectedAddressJson.long = '';
         this.modal.dismiss();
         this.tempName = '';
 
@@ -161,7 +165,10 @@ export class MyaddressPage implements OnInit {
   }
   resultClick(i) {
     this.selectedAddressJson.AddressName = this.addressTextResults[i];
-    this.selectedAddressJson.Cordinates = this.addressPositions[i];
+    let lat=this.addressPositions[i].split(',')[0];
+    let lng=this.addressPositions[i].split(',')[1];
+    this.selectedAddressJson.lat =  lat;
+    this.selectedAddressJson.long = lng;
   }
   whereChange(value) {
     this.addressTextResults = [];

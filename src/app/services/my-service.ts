@@ -1,32 +1,38 @@
 import { Injectable } from '@angular/core';
-import { ToastController } from '@ionic/angular';
+import { MenuController, NavController, ToastController } from '@ionic/angular';
 import { Socket } from 'ngx-socket-io';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ApiService } from './api.service';
 import { StorageService } from './storage.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MyService {
-  public mySocket;
   constructor(
     private ToastController: ToastController,
-    private Socket: Socket,
-    private local: StorageService
-  ) {
-    this.mySocket = Socket;
-    this.init();
-  }
+    public mySocket: Socket,
+    private local: StorageService,
+    private apiService: ApiService,
+    private menuCtrl: MenuController,
+    private navCtrl: NavController
+  ) {}
   async init() {
-    this.selectedApp ==
-      new BehaviorSubject<string>(await this.local.get('selectedApp'));
+    this.selectedApp = new BehaviorSubject<string>(
+      await this.local.get('selectedApp')
+    );
+
     this.selectedApp$ = this.selectedApp.asObservable();
+    this.user = JSON.parse(await this.local.get('user'));
   }
   //observable for selected app
+  public connected=false;
   private selectedApp;
   selectedApp$;
-
-   setValueSelectedApp(value) {
+  getValueSelectedApp() {
+    return this.selectedApp.getValue();
+  }
+  setValueSelectedApp(value) {
     this.selectedApp.next(value);
     this.local.set('selectedApp', value);
   }

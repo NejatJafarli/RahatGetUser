@@ -22,7 +22,7 @@ export class EvohomePage implements OnInit {
   selectedIcon: string;
   CardValue: string;
   selectedRadio;
-  SelectedPayment=1;
+  SelectedPayment = 1;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -49,10 +49,9 @@ export class EvohomePage implements OnInit {
       }, 100);
     }
     this.SelectedAccidents = 'accident';
-    this.CardValue="Kartla ödəniş"
+    this.CardValue = 'Kartla ödəniş';
 
     this.MyCards = [];
-
 
     let json = {
       Cardvalue: '**** **** **** 5755',
@@ -90,7 +89,7 @@ export class EvohomePage implements OnInit {
       return;
     }
     this.CardValue = json['value'];
-    this.SelectedPayment=2;
+    this.SelectedPayment = 2;
   }
   position;
   positionGeocod;
@@ -193,36 +192,33 @@ export class EvohomePage implements OnInit {
   WhereTextResults;
   WherePositions;
   WherePosition;
-  WherePositionTwo
+  WherePositionTwo;
   whereText;
-  whereTextTwo
+  whereTextTwo;
   openModal() {
     //this.modal2
-    this.modal2. present();
+    this.modal2.present();
   }
   closeModal(event) {
     if (this.selectedData == null || this.selectedDataTwo == null) {
       this.service.Toast('Məkan seçilməyib');
     } else {
-      if(this.selectedSearchOne==""){
-        this.selectedSearchOne=this.selectedData.name;
+      if (this.selectedSearchOne == '') {
+        this.selectedSearchOne = this.selectedData.name;
         this.service.Toast('Mekan Secin');
-      }
-      else if(this.selectedSearchTwo==""){
-        this.selectedSearchTwo=this.selectedDataTwo.name;
+      } else if (this.selectedSearchTwo == '') {
+        this.selectedSearchTwo = this.selectedDataTwo.name;
         this.service.Toast('Mekan Secin');
-      }
-      else{
+      } else {
         this.modal2.dismiss();
         this.WherePosition = this.selectedData.position;
         this.whereText = this.selectedData.name;
-        this.selectedPositionGeoCode=this.selectedData.name;
-        
+        this.selectedPositionGeoCode = this.selectedData.name;
+
         this.WherePositionTwo = this.selectedDataTwo.position;
         this.whereTextTwo = this.selectedDataTwo.name;
-        this.selectedPositionGeoCodeTwo=this.selectedDataTwo.name;
+        this.selectedPositionGeoCodeTwo = this.selectedDataTwo.name;
       }
-        
     }
   }
   changeText(value) {
@@ -230,9 +226,15 @@ export class EvohomePage implements OnInit {
     this.WherePositions = [];
 
     let url =
-      '/places?query=' + encodeURI(value) + `&key=${this.service.apiKey}`;
+      'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/textsearch/json?query=' +
+      encodeURI(value) +
+      `&key=${this.service.apiKey}`;
 
-    this.http.get(url).subscribe((data) => {
+    this.http.get(url,{
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+    }).subscribe((data) => {
       // console.log(data);
       data['results'].forEach((element) => {
         this.WhereTextResults.push(element['name']);
@@ -246,10 +248,9 @@ export class EvohomePage implements OnInit {
   selectedSearchTwo;
 
   resultClick(value) {
-    if(this.textOne){
+    if (this.textOne) {
       this.selectedSearchOne = value;
-    }
-    else if(this.textTwo){
+    } else if (this.textTwo) {
       this.selectedSearchTwo = value;
     }
 
@@ -257,18 +258,17 @@ export class EvohomePage implements OnInit {
     this.WherePosition =
       this.WherePositions[this.WhereTextResults.indexOf(value)];
 
-      if(this.textOne){
-        this.selectedData = {
-          position: this.WherePosition,
-          name:value,
-        };
-      }
-      else if(this.textTwo){
-        this.selectedDataTwo = {
-          position: this.WherePosition,
-          name:value,
-        };
-      }
+    if (this.textOne) {
+      this.selectedData = {
+        position: this.WherePosition,
+        name: value,
+      };
+    } else if (this.textTwo) {
+      this.selectedDataTwo = {
+        position: this.WherePosition,
+        name: value,
+      };
+    }
     this.WhereTextResults = [];
     this.WherePositions = [];
   }
@@ -283,7 +283,7 @@ export class EvohomePage implements OnInit {
         position: this.position,
         map: this.map,
         draggable: false,
-        animation: google.maps.Animation.DROP
+        animation: google.maps.Animation.DROP,
       });
 
       this.map.setCenter(this.position);

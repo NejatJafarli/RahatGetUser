@@ -55,7 +55,7 @@ export class HomePage implements OnInit, AfterViewInit {
     private http: HttpClient,
     private service: MyService,
     private apiService: ApiService,
-    private local:StorageService
+    private local: StorageService
   ) {
     let temp = this.roter.getCurrentNavigation()?.extras.state;
 
@@ -88,8 +88,8 @@ export class HomePage implements OnInit, AfterViewInit {
   SavedLocationClick(i) {
     this.WhereText = this.myAddresses[i].location_name;
     this.WherePosition = {
-      lat: this.myAddresses[i].cordinates.split(',')[0],
-      lng: this.myAddresses[i].cordinates.split(',')[1],
+      lat: this.myAddresses[i].lat,
+      lng: this.myAddresses[i].long
     };
   }
   resultClick(value) {
@@ -130,7 +130,7 @@ export class HomePage implements OnInit, AfterViewInit {
   whereChange(value) {
     this.WhereTextResults = [];
     this.WherePositions = [];
-
+    
     let url =
       '/places?query=' + encodeURI(value) + `&key=${this.service.apiKey}`;
 
@@ -166,7 +166,7 @@ export class HomePage implements OnInit, AfterViewInit {
 
   CardValue;
   async ngOnInit() {
-    this.activeOrder= JSON.parse(await this.local.get('activeOrder'));
+    this.activeOrder = JSON.parse(await this.local.get('activeOrder'));
     this.CardValue = 'Kartla ödəniş';
 
     this.MyCards = [];
@@ -507,10 +507,7 @@ export class HomePage implements OnInit, AfterViewInit {
           this.service.mySocket.once('OrderCompletedConfirm', async (data) => {
             this.activeOrder.OrderStatus = 'Completed';
             this.activeOrder.step = 7;
-            this.local.set(
-              'activeOrder',
-              JSON.stringify(this.activeOrder)
-            );
+            this.local.set('activeOrder', JSON.stringify(this.activeOrder));
             this.step = 7;
           });
         });
@@ -629,7 +626,7 @@ export class HomePage implements OnInit, AfterViewInit {
   //     }, 1000);
   //   });
   // }
-  activeOrder
+  activeOrder;
   DriverFound = true;
   home4() {
     this.step = 4;
@@ -643,7 +640,13 @@ export class HomePage implements OnInit, AfterViewInit {
   home7() {
     this.step = 7;
   }
+  comment;
   home8() {
+    this.apiService.sendReytingToDriver(
+      this.activeOrder.Driver.id,
+      this.rating,
+      this.comment
+    );
     this.step = 8;
     // save rating and comment to mysql
 

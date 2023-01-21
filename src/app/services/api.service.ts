@@ -12,8 +12,8 @@ export class ApiService {
   constructor(private http: HttpClient, private local: StorageService) {
     this.init();
   }
-  init() {
-    this._token = this.local.getToken();
+  async init() {
+    this._token = await this.local.getToken();
   }
   async login(json) {
     //convert to promise
@@ -23,8 +23,13 @@ export class ApiService {
           phone: '+994' + json.loginPhone,
           password: json.loginPassword,
         })
-        .subscribe((data) => {
-          this.local.setToken(data['token']);
+        .subscribe(async (data) => {
+          await this.local.setToken(data['token']);
+          console.log('lging');
+          
+          console.log(data['token']);
+          
+          this._token = data['token'];
           resolve(data);
         });
     });
@@ -40,22 +45,30 @@ export class ApiService {
         })
         .subscribe((data) => {
           this._token = null;
+          this.local.remove('token');
+          this.local.remove('user');
           resolve(data);
         });
     });
   }
   async checkToken() {
+    console.log('checkToken');
+    this._token=  await this.local.getToken();
     return await new Promise((resolve, reject) => {
       this.http
         .get(environment.ApiLink + '/user/checktoken', {
           headers: {
-            Authorization: 'Bearer ' + this.local.getToken(),
+            Authorization: 'Bearer ' + this._token,
           },
         })
-        .subscribe((data) => {
-          if (data['message'] == 'success') this.local.setToken(data['token']);
-          resolve(data);
-        });
+        .subscribe(
+          (data) => {
+            resolve(data);
+          },
+          (error) => {
+            resolve(error);
+          }
+        );
     });
   }
 
@@ -71,9 +84,14 @@ export class ApiService {
             },
           }
         )
-        .subscribe((data) => {
-          resolve(data);
-        });
+        .subscribe(
+          (data) => {
+            resolve(data);
+          },
+          (error) => {
+            resolve(error);
+          }
+        );
     });
   }
   async getDriverInfo(RideID) {
@@ -114,7 +132,7 @@ export class ApiService {
           {},
           {
             headers: {
-              Authorization: 'Bearer ' + this.local.getToken(),
+              Authorization: 'Bearer ' +this._token,
             },
           }
         )
@@ -261,6 +279,33 @@ export class ApiService {
         .subscribe((data) => {
           resolve(data);
         });
+    });
+  }
+
+  async sendReytingToDriver(driverId, ratign, comment) {
+    return new Promise((resolve, reject) => {
+      this.http
+        .post(
+          environment.ApiLink + '/user/giveRatingToDriver',
+          {
+            driverId: driverId,
+            startCount: ratign,
+            comment: comment,
+          },
+          {
+            headers: {
+              Authorization: 'Bearer ' + this._token,
+            },
+          }
+        )
+        .subscribe(
+          (data) => {
+            resolve(data);
+          }
+          // , (error) => {
+          //   reject(error);
+          // }
+        );
     });
   }
 }

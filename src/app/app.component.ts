@@ -6,6 +6,7 @@ import { MyService } from './services/my-service';
 import OneSignal from 'onesignal-cordova-plugin';
 import { ApiService } from './services/api.service';
 import { StorageService } from './services/storage.service';
+import { runInThisContext } from 'vm';
 
 @Component({
   selector: 'app-root',
@@ -40,73 +41,25 @@ export class AppComponent {
     private navCtrl: NavController,
     private platform: Platform,
     private apiService: ApiService,
-    private local:StorageService
-  ) {
-    
-  }
+    private local: StorageService
+  ) {}
   //ng on init
   async ngOnInit() {
+    await this.local.init();
+    await this.service.init();
+
     // platform.ready().then(() => {
     //   this.OneSignalInit();
     // });
-
-    this.service.selectedApp$.subscribe((data) => {
-      this.selected = data;
-    });
-
-    // // // //get token from local storage
-    // console.log(localStorage.removeItem('activeOrder'));
-
-    let token = await this.local.getToken();
-    //check if user is logged in
-
-    //if token is not null
-    if (token != null) {
-      this.apiService
-        .checkToken()
-        .then(async (res) => {
-          if (res['message'] != 'success') {
-            this.local.remove('token');
-            this.local.remove('user');
-
-            this.menuCtrl.close();
-
-            this.service.setValueSelectedApp('');
-
-            this.navCtrl.navigateRoot(['./login']);
-          } else if (res['message'] == 'success') {
-            this.service.mySocket.connect();
-            let user=
-            this.service.mySocket.emit('UserConnect', {
-              UserId: 'user' + JSON.parse(await this.local.get('user')).id,
-            });
-          }
-        })
-        .catch((err) => {
-          this.local.remove('token');
-          this.local.remove('user');
-
-          this.menuCtrl.close();
-
-          this.service.setValueSelectedApp('');
-
-          this.navCtrl.navigateRoot(['./login']);
-        });
-    } else {
-      this.local.remove('token');
-      this.local.remove('user');
-
-      this.menuCtrl.close();
-      this.service.setValueSelectedApp('');
-      this.navCtrl.navigateRoot(['./login']);
-      return;
-    }
-    this.service.user = JSON.parse(await this.local.get('user'));
 
     // //check if activeorder have send home page step 5
     // if (localStorage.getItem('activeOrder') != null) {
     //   this.router.navigate(['/home/'+JSON.parse(localStorage.getItem('activeOrder')).step]);
     // }
+    //get value selectedapp
+    this.service.selectedApp$.subscribe((data) => {
+      this.selected = data;
+    });
   }
   home() {
     this.router.navigate(['/home']);
@@ -192,10 +145,7 @@ export class AppComponent {
   }
   async logout() {
     //send logout request
-    this.apiService.logout();
-
-    this.local.remove('token');
-    this.local.remove('user');
+    await this.apiService.logout();
     // OneSignal.setExternalUserId(null);
 
     //PROBLEM HERE

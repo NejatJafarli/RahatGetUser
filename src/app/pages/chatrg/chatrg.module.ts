@@ -14,11 +14,12 @@ import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.componen
     CommonModule,
     FormsModule,
     IonicModule,
-    ChatrgPageRoutingModule
+    ChatrgPageRoutingModule,
+    HeaderbgComponent
+
   ],
   declarations: [
     ChatrgPage,
-    HeaderbgComponent
   ]
 })
 export class ChatrgPageModule {}

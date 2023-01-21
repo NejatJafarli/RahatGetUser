@@ -15,11 +15,12 @@ import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.componen
     CommonModule,
     FormsModule,
     IonicModule,
-    HelpPageRoutingModule
+    HelpPageRoutingModule,
+    HeaderbgComponent
+
   ],
   declarations: [
     HelpPage,
-    HeaderbgComponent
   ]
 })
 export class HelpPageModule {}

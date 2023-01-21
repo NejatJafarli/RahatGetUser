@@ -14,11 +14,12 @@ import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.componen
     CommonModule,
     FormsModule,
     IonicModule,
-    NotificationPageRoutingModule
+    NotificationPageRoutingModule,
+    HeaderbgComponent
+
   ],
   declarations: [
     NotificationPage,
-    HeaderbgComponent
   ]
 })
 export class NotificationPageModule {}

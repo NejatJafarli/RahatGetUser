@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  ApiLink: 'http://localhost:3000',
+  ApiLink: 'http://rahatgetapi.test/api',
 };
 
 /*

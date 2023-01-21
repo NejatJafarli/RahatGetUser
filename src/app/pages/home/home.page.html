@@ -388,7 +388,7 @@
         <img src="/assets/img/p4.jpg">
       </ion-avatar>
       <ion-text>
-        <p>{{activeOrder.Driver.fullname}} <img src="/assets/icon/star.svg"><span>5</span></p>
+        <p>{{activeOrder.Driver.fullname}} <img src="/assets/icon/star.svg"><span>{{activeOrder.Driver.reyting}}</span></p>
         <span class="phone">{{activeOrder.Driver.phone}}</span>
       </ion-text>
     </div>
@@ -504,7 +504,7 @@
           <img src="/assets/img/p4.jpg">
         </ion-avatar>
         <ion-text>
-          <p>{{activeOrder.Driver.fullname}} <img src="/assets/icon/star.svg"><span>5</span></p>
+          <p>{{activeOrder.Driver.fullname}} <img src="/assets/icon/star.svg"><span>{{activeOrder.Driver.reyting}}</span></p>
           <span class="phone">{{activeOrder.Driver.phone}}</span>
         </ion-text>
       </div>
@@ -519,7 +519,7 @@
         </div>
         <div class="comment">
           <ion-item lines="none">
-            <ion-textarea placeholder="Şərh yazın" rows="1"></ion-textarea>
+            <ion-textarea [(ngModel)]="comment" placeholder="Şərh yazın" rows="1"></ion-textarea>
           </ion-item>
         </div>
       </div>

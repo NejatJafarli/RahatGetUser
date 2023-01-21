@@ -16,6 +16,9 @@ import * as cordovaSQLiteDriver from 'localforage-cordovasqlitedriver';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { ApiService } from './services/api.service';
 import { StorageService } from './services/storage.service';
+import { Drivers } from '@ionic/storage';
+import { AuthService } from './services/auth.service';
+import { AuthGuardGuard } from './auth-guard.guard';
 const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
 @NgModule({
   declarations: [AppComponent],
@@ -35,7 +38,9 @@ const config: SocketIoConfig = { url: 'http://localhost:3000', options: {} };
     Camera,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     ApiService,
-    StorageService
+    StorageService,
+    AuthService,
+    AuthGuardGuard
   ],
   bootstrap: [AppComponent],
 })

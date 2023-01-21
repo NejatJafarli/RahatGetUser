@@ -17,14 +17,14 @@ import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.componen
     CommonModule,
     FormsModule,
     IonicModule,
-    HomePageRoutingModule
+    HomePageRoutingModule,
+    HeaderbgComponent
   ],
   declarations: [
     HomePage,
     MenuComponent,
     RadarSearchComponent,
-    EnteraddressComponent,
-    HeaderbgComponent
+    EnteraddressComponent
   ]
 })
 export class HomePageModule {}

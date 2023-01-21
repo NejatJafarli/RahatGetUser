@@ -14,11 +14,12 @@ import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.componen
     CommonModule,
     FormsModule,
     IonicModule,
-    MyreservationPageRoutingModule
+    MyreservationPageRoutingModule,
+    HeaderbgComponent
+    
   ],
   declarations: [
     MyreservationPage,
-    HeaderbgComponent
   ]
 })
 export class MyreservationPageModule {}

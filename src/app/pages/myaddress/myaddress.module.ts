@@ -17,10 +17,10 @@ import { BrowserModule } from '@angular/platform-browser'
     FormsModule,
     IonicModule,
     MyaddressPageRoutingModule,
+    HeaderbgComponent
   ],
   declarations: [
-    MyaddressPage,
-    HeaderbgComponent
+    MyaddressPage
   ]
 })
 export class MyaddressPageModule {}

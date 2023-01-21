@@ -14,11 +14,12 @@ import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.componen
     CommonModule,
     FormsModule,
     IonicModule,
-    PromocodePageRoutingModule
+    PromocodePageRoutingModule,
+    HeaderbgComponent
+
   ],
   declarations: [
     PromocodePage,
-    HeaderbgComponent
   ]
 })
 export class PromocodePageModule {}

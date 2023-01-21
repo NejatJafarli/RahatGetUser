@@ -14,11 +14,12 @@ import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.componen
     CommonModule,
     FormsModule,
     IonicModule,
-    SettingPageRoutingModule
+    SettingPageRoutingModule,
+    HeaderbgComponent
+
   ],
   declarations: [
     SettingPage,
-    HeaderbgComponent
   ]
 })
 export class SettingPageModule {}

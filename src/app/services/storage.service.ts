@@ -9,7 +9,7 @@ const TTL = 120;
 export class StorageService {
   private _storage: Storage | null = null;
   constructor(private storage:Storage) {
-    
+    this.init()
   }
   isInit(){
     return this._storage != null;
@@ -19,7 +19,7 @@ export class StorageService {
     await this.storage.defineDriver(cordovaSQLiteDriver);
     const storage = await this.storage.create();
     this._storage = storage;
-    
+
   }
   
   public set(key:string, value:any){
@@ -27,11 +27,11 @@ export class StorageService {
   }
 
   public get(key:string){
-    return this._storage?.get(key);
+    return this._storage?.get(key) ? this._storage?.get(key) : null ;
   }
 
   public getToken(){
-    return this._storage?.get('token');
+    return this._storage?.get('token') ? this._storage?.get('token') : null ;
   }
 
   public setToken(token:string){

@@ -14,11 +14,12 @@ import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.componen
     CommonModule,
     FormsModule,
     IonicModule,
-    PaymentmethodsPageRoutingModule
+    PaymentmethodsPageRoutingModule,
+    HeaderbgComponent
+
   ],
   declarations: [
     PaymentmethodsPage,
-    HeaderbgComponent
   ]
 })
 export class PaymentmethodsPageModule {}
