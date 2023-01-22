@@ -89,7 +89,7 @@ export class HomePage implements OnInit, AfterViewInit {
     this.WhereText = this.myAddresses[i].location_name;
     this.WherePosition = {
       lat: this.myAddresses[i].lat,
-      lng: this.myAddresses[i].long
+      lng: this.myAddresses[i].long,
     };
   }
   resultClick(value) {
@@ -127,22 +127,25 @@ export class HomePage implements OnInit, AfterViewInit {
     this.setOpen(false);
     this.step = 2;
   }
-  whereChange(value) {
+  async whereChange(value) {
+    if(this.currentLocation){
+      this.currentLocation = false;
+      return;
+    }
+    
     this.WhereTextResults = [];
     this.WherePositions = [];
-    
-    let url =
-      '/places?query=' + encodeURI(value) + `&key=${this.service.apiKey}`;
 
-    this.http.get(url).subscribe((data) => {
-      // console.log(data);
-      data['results'].forEach((element) => {
-        this.WhereTextResults.push(element['name']);
-        this.WherePositions.push(element['geometry']['location']);
-      });
+    let res = await this.apiService.getTextSearch(value);
+    console.log(res);
+
+    // console.log(data);
+    res['results'].forEach((element) => {
+      this.WhereTextResults.push(element['name']);
+      this.WherePositions.push(element['geometry']['location']);
     });
   }
-
+  currentLocation = true;
   geoCodePosition(position) {
     let geocoder = new google.maps.Geocoder();
     let latlng = new google.maps.LatLng(
@@ -195,6 +198,7 @@ export class HomePage implements OnInit, AfterViewInit {
               lat: position.coords.latitude,
               lng: position.coords.longitude,
             };
+            console.log(this.positionGeocod);
             this.geoCodePosition(position);
           }
         );

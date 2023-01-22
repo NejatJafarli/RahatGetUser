@@ -27,13 +27,11 @@ describe('HomePage', () => {
 
   it('should go to pickup-calls on see all', () => {
     spyOn(router, 'navigate');
-    component.goToPickupCalls();
     expect(router.navigate).toHaveBeenCalledWith('pickup-calls');
   });
 
   it('should go to pickup-call on create pickup call', () => {
     spyOn(router, 'navigate');
-    component.goToPickupCall();
     expect(router.navigate).toHaveBeenCalledWith('pickup-call');
   });
 });

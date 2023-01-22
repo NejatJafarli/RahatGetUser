@@ -5,6 +5,7 @@ import { MyService } from 'src/app/services/my-service';
 import { HttpClient } from '@angular/common/http';
 import { OverlayEventDetail } from '@ionic/core';
 import { IonModal, MenuController, ModalController } from '@ionic/angular';
+import { ApiService } from 'src/app/services/api.service';
 declare var google;
 @Component({
   selector: 'app-evohome',
@@ -30,7 +31,8 @@ export class EvohomePage implements OnInit {
     private menuCtrl: MenuController,
     private service: MyService,
     private http: HttpClient,
-    private modalCtrl: ModalController
+    private modalCtrl: ModalController,
+    private apiService: ApiService
   ) {
     this.activatedRoute.params.subscribe((params) => {
       if (params['stepid']) {
@@ -221,25 +223,18 @@ export class EvohomePage implements OnInit {
       }
     }
   }
-  changeText(value) {
+  async changeText(value) {
     this.WhereTextResults = [];
     this.WherePositions = [];
-
-    let url =
-      'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/textsearch/json?query=' +
-      encodeURI(value) +
-      `&key=${this.service.apiKey}`;
-
-    this.http.get(url,{
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-      },
-    }).subscribe((data) => {
-      // console.log(data);
-      data['results'].forEach((element) => {
-        this.WhereTextResults.push(element['name']);
-        this.WherePositions.push(element['geometry']['location']);
-      });
+    let res = await this.apiService.getTextSearch(value);
+    // let url =
+    //   'https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/textsearch/json?query=' +
+    //   encodeURI(value) +
+    //   `&key=${this.service.apiKey}`;
+    // console.log(data);
+    res['results'].forEach((element) => {
+      this.WhereTextResults.push(element['name']);
+      this.WherePositions.push(element['geometry']['location']);
     });
   }
   textOne = false;

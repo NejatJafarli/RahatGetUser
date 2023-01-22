@@ -26,12 +26,37 @@ export class ApiService {
         .subscribe(async (data) => {
           await this.local.setToken(data['token']);
           console.log('lging');
-          
+
           console.log(data['token']);
-          
+
           this._token = data['token'];
           resolve(data);
         });
+    });
+  }
+  async getTextSearch(query) {
+    let myQuery=encodeURIComponent(query);
+    return await new Promise((resolve, reject) => {
+      this.http
+        .post(
+          environment.ApiLink + '/user/TextSearch',
+          {
+            MyQuery: myQuery,
+          },
+          {
+            headers: {
+              Authorization: 'Bearer ' + this._token,
+            },
+          }
+        )
+        .subscribe(
+          (data) => {
+            resolve(data);
+          },
+          (error) => {
+            resolve(error);
+          }
+        );
     });
   }
 
@@ -53,7 +78,7 @@ export class ApiService {
   }
   async checkToken() {
     console.log('checkToken');
-    this._token=  await this.local.getToken();
+    this._token = await this.local.getToken();
     return await new Promise((resolve, reject) => {
       this.http
         .get(environment.ApiLink + '/user/checktoken', {
@@ -132,7 +157,7 @@ export class ApiService {
           {},
           {
             headers: {
-              Authorization: 'Bearer ' +this._token,
+              Authorization: 'Bearer ' + this._token,
             },
           }
         )
