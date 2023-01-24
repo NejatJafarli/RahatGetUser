@@ -59,7 +59,7 @@
       </div>
       <div class="inputs">
         <ion-item lines="none" class="ion-no-padding where">
-          <ion-input [(ngModel)]="selectedAddressJson.AddressName" (ionChange)="whereChange(selectedAddressJson.AddressName)" type="text"
+          <ion-input [(ngModel)]="selectedAddressJson.AddressName" debounce="300" (ionChange)="whereChange(selectedAddressJson.AddressName)" type="text"
             placeholder="Ünvan" expand="block"></ion-input>
           <ion-icon name="location-outline"></ion-icon>
         </ion-item>

@@ -115,7 +115,7 @@ export class LoginPage implements OnInit {
       this.service.mySocket.emit('UserConnect', {
         UserId: 'user' + res['user']['id'],
       });
-      // OneSignal.setExternalUserId(res['user']['id']);
+      OneSignal.setExternalUserId(res['user']['id']);
       this.router.navigate(['transition']);
     } else {
       this.loginPassword = '';

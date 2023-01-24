@@ -128,16 +128,17 @@ export class HomePage implements OnInit, AfterViewInit {
     this.step = 2;
   }
   async whereChange(value) {
-    if(this.currentLocation){
+    if (this.currentLocation) {
       this.currentLocation = false;
       return;
     }
-    
+    // trim value
+    if (value.trim() == '') return;
+
     this.WhereTextResults = [];
     this.WherePositions = [];
 
     let res = await this.apiService.getTextSearch(value);
-    console.log(res);
 
     // console.log(data);
     res['results'].forEach((element) => {
@@ -262,6 +263,8 @@ export class HomePage implements OnInit, AfterViewInit {
     });
 
     let activeOrder = JSON.parse(await this.local.get('activeOrder'));
+    console.log(activeOrder);
+
     if (activeOrder != null) {
       this.activeOrder = activeOrder;
       console.log(this.activeOrder);
@@ -316,10 +319,32 @@ export class HomePage implements OnInit, AfterViewInit {
         });
         this.service.mySocket.once('WaitingCustomer', async (data) => {
           console.log('WaitingCustomer', data);
+
           if (data.OrderId != this.activeOrder.OrderId) return;
           this.OnWay = 'Sizi Gözləyir';
+
           this.activeOrder.OrderStatus = 'Waiting Customer';
+          this.activeOrder.RemainingTime = data.RemainingTime;
+
+          console.log('listening for OrderStarted');
+          this.service.mySocket.once('OrderStarted', async (data) => {
+            this.OnWay = 'Yolda';
+            this.activeOrder.OrderStatus = 'Started';
+            this.activeOrder.RemainingTime = data.RemainingTime;
+            this.local.set('activeOrder', JSON.stringify(this.activeOrder));
+            this.service.mySocket.once(
+              'OrderCompletedConfirm',
+              async (data) => {
+                this.activeOrder.OrderStatus = 'Completed';
+                this.activeOrder.step = 7;
+                this.local.set('activeOrder', JSON.stringify(this.activeOrder));
+                this.step = 7;
+          this.roter.navigate(['/home/' + activeOrder.step]);
+        }
+            );
+          });
           this.local.set('activeOrder', JSON.stringify(this.activeOrder));
+          this.roter.navigate(['/home/' + activeOrder.step]);
         });
         this.roter.navigate(['/home/' + activeOrder.step]);
         return;
@@ -343,18 +368,26 @@ export class HomePage implements OnInit, AfterViewInit {
         this.local.set('activeOrder', JSON.stringify(activeOrder));
         this.activeOrder = activeOrder;
         this.roter.navigate(['/home/' + activeOrder.step]);
-      } else if (res['data']['status'] == 'Started') {
-        this.OnWay = 'Yolda';
-        this.activeOrder.OrderStatus = 'Started';
-        this.activeOrder.RemainingTime = 0;
-        this.local.set('activeOrder', JSON.stringify(this.activeOrder));
         this.service.mySocket.once('OrderCompletedConfirm', async (data) => {
           this.activeOrder.OrderStatus = 'Completed';
           this.activeOrder.step = 7;
           this.local.set('activeOrder', JSON.stringify(this.activeOrder));
           this.step = 7;
+          this.roter.navigate(['/home/' + activeOrder.step]);
         });
+      } else if (res['data']['status'] == 'Started') {
+        this.OnWay = 'Yolda';
+        this.activeOrder.OrderStatus = 'Started';
+        this.activeOrder.RemainingTime = 0;
+        this.local.set('activeOrder', JSON.stringify(this.activeOrder));
         this.roter.navigate(['/home/' + activeOrder.step]);
+        this.service.mySocket.once('OrderCompletedConfirm', async (data) => {
+          this.activeOrder.OrderStatus = 'Completed';
+          this.activeOrder.step = 7;
+          this.local.set('activeOrder', JSON.stringify(this.activeOrder));
+          this.step = 7;
+          this.roter.navigate(['/home/' + activeOrder.step]);
+        });
         //finished
       } else if (res['data']['status'] == 'Completed') {
         this.activeOrder.OrderStatus = 'Completed';
@@ -503,6 +536,7 @@ export class HomePage implements OnInit, AfterViewInit {
         this.activeOrder.OrderStatus = 'Waiting Customer';
         this.activeOrder.RemainingTime = data.RemainingTime;
 
+        console.log('listening for OrderStarted');
         this.service.mySocket.once('OrderStarted', async (data) => {
           this.OnWay = 'Yolda';
           this.activeOrder.OrderStatus = 'Started';
@@ -653,8 +687,11 @@ export class HomePage implements OnInit, AfterViewInit {
     );
     this.step = 8;
     // save rating and comment to mysql
-
     this.local.remove('activeOrder');
+    setTimeout(() => {
+      this.step = 1;
+      this.roter.navigate(['/home/1']);
+    }, 2000);
   }
   chatclick() {
     this.roter.navigate(['/chat']);

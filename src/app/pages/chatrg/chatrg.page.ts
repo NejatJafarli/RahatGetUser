@@ -10,13 +10,28 @@ import { StorageService } from 'src/app/services/storage.service';
   styleUrls: ['./chatrg.page.scss'],
 })
 export class ChatrgPage implements OnInit {
-
-  constructor(private router:Router,private local:StorageService,private navCtrl:NavController,private myService:MyService) { }
+  constructor(
+    private router: Router,
+    private local: StorageService,
+    private navCtrl: NavController,
+    private myService: MyService
+  ) {
+    this.activeOrder={
+      Driver:{}
+    };
+    this.local.get('activeOrder').then((data) => {
+      this.activeOrder = JSON.parse(data);
+      console.log(this.activeOrder);
+    });
+  }
   ChatId;
   messages = [];
   msg;
- async ngOnInit() {
-    this.activeOrder=JSON.parse(await this.local.get('activeOrder'));
+  async ngOnInit() {
+    this.activeOrder = JSON.parse(await this.local.get('activeOrder'));
+  }
+  activeOrder;
+  async ionViewDidEnter() {
     console.log(this.activeOrder);
     this.myService.mySocket.emit('GetMessages', this.activeOrder.OrderId);
     this.myService.mySocket.once('getMessages', (data) => {
@@ -26,10 +41,7 @@ export class ChatrgPage implements OnInit {
       this.messages.push(data);
     });
   }
-  activeOrder
-  ionViewDidEnter() {
-  }
-  sendMsg(){
+  sendMsg() {
     this.myService.mySocket.emit('SendMessage', {
       OrderId: this.activeOrder.OrderId,
       message: this.msg,
@@ -37,10 +49,9 @@ export class ChatrgPage implements OnInit {
     });
     this.msg = '';
   }
-  close(){
+  close() {
     // this.navCtrl.back();
     //send home step 6
-    this.router.navigate(['/home/'+this.activeOrder.step]);
-
+    this.router.navigate(['/home/' + this.activeOrder.step]);
   }
 }

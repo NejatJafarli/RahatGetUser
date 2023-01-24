@@ -60,6 +60,29 @@ export class ApiService {
     });
   }
 
+  async getRides(){
+    return await new Promise((resolve, reject) => {
+      this.http
+        .post(
+          environment.ApiLink + '/user/getRides',
+          {},
+          {
+            headers: {
+              Authorization: 'Bearer ' + this._token,
+            },
+          }
+        )
+        .subscribe(
+          (data) => {
+            resolve(data);
+          },
+          (error) => {
+            resolve(error);
+          }
+        );
+    });
+  }
+
   async logout() {
     return await new Promise((resolve, reject) => {
       this.http
@@ -119,7 +142,9 @@ export class ApiService {
         );
     });
   }
-  async getDriverInfo(RideID) {
+  async getDriverInfo(driverid) {
+    console.log(driverid);
+    
     let cache = await this.local.getCachedRequests(
       environment.ApiLink + '/user/getDriverInfo'
     );
@@ -130,7 +155,7 @@ export class ApiService {
         this.http
           .post(
             environment.ApiLink + '/user/getDriverInfo',
-            { rideId: RideID },
+            { driverId: driverid },
             {
               headers: {
                 Authorization: 'Bearer ' + this._token,
@@ -285,6 +310,7 @@ export class ApiService {
     });
   }
   async updateLocation(id, name, cordinates, location_name) {
+    
     return await new Promise((resolve, reject) => {
       this.http
         .post(

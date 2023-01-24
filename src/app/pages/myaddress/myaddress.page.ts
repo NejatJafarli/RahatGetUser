@@ -19,8 +19,8 @@ export class MyaddressPage implements OnInit {
     id: 0,
     name: '',
     AddressName: '',
-    lat:'',
-    long:'',
+    lat: '',
+    long: '',
   };
 
   constructor(
@@ -29,7 +29,7 @@ export class MyaddressPage implements OnInit {
     private myService: MyService,
     private navCtrl: NavController,
     private apiService: ApiService,
-    private local:StorageService
+    private local: StorageService
   ) {}
 
   async remove(id) {
@@ -59,6 +59,7 @@ export class MyaddressPage implements OnInit {
     let res = await this.apiService.getLocations();
 
     this.addresses = res['data'];
+    
   }
 
   nextStep1() {
@@ -72,15 +73,16 @@ export class MyaddressPage implements OnInit {
   addressPositions;
   crud = '';
   async nameClick(value) {
-    if (this.selectedAddressJson.lat != '' && this.selectedAddressJson.long != '') {
+    if (
+      this.selectedAddressJson.lat != '' &&
+      this.selectedAddressJson.long != ''
+    ) {
       if (this.crud == 'add') {
         //SEND API REQUEST TO APPEND NEW ADDRESS TO DATABASE
         //SEND API REQUEST TO APPEND NEW ADDRESS TO DATABASE
         //SEND API REQUEST TO APPEND NEW ADDRESS TO DATABASE
         let cordinates =
-          this.selectedAddressJson.lat+
-          ',' +
-          this.selectedAddressJson.long;
+          this.selectedAddressJson.lat + ',' + this.selectedAddressJson.long;
         let res = await this.apiService.addLocation(
           value,
           cordinates,
@@ -95,7 +97,7 @@ export class MyaddressPage implements OnInit {
         let lastId = this.addresses[this.addresses.length - 1];
         if (lastId != undefined) lastId = lastId.id;
         else lastId = 0;
-        
+
         this.addresses.push({
           id: lastId + 1,
           name: this.selectedAddressJson.name,
@@ -115,10 +117,8 @@ export class MyaddressPage implements OnInit {
         //edit address in database
         //edit address in database
         let cord =
-          this.selectedAddressJson.lat+
-          ',' +
-          this.selectedAddressJson.long;
-        let res = this.apiService.updateLocation(
+          this.selectedAddressJson.lat + ',' + this.selectedAddressJson.long;
+        let res = await this.apiService.updateLocation(
           this.selectedAddressJson.id,
           value,
           cord,
@@ -158,33 +158,38 @@ export class MyaddressPage implements OnInit {
     //   Lat: this.addresses[index].cordinates.split(',')[0],
     //   Lng: this.addresses[index].cordinates.split(',')[1],
     // };
+    console.log(this.addresses[index]);
+    
     this.selectedAddressJson.name = this.addresses[index].name;
+    this.selectedAddressJson.long = this.addresses[index].long;
+    this.selectedAddressJson.lat = this.addresses[index].lat;
     this.tempName = this.addresses[index].name;
     this.nextStep2();
     this.crud = 'edit';
   }
   resultClick(i) {
     this.selectedAddressJson.AddressName = this.addressTextResults[i];
-    let lat=this.addressPositions[i].split(',')[0];
-    let lng=this.addressPositions[i].split(',')[1];
-    this.selectedAddressJson.lat =  lat;
+    
+    let lat = this.addressPositions[i].lat;
+    let lng = this.addressPositions[i].lng;
+    this.selectedAddressJson.lat = lat;
     this.selectedAddressJson.long = lng;
+    console.log(this.selectedAddressJson);
+    
   }
-  whereChange(value) {
+  async whereChange(value) {
     this.addressTextResults = [];
     this.addressPositions = [];
 
-    // let url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${value}&key=AIzaSyBMqRoKxM1TmwA7PTM8sbWzrcCD5VQLSP0`;
-    let url =
-      '/places?query=' +
-      encodeURI(value) +
-      '&key=AIzaSyBMqRoKxM1TmwA7PTM8sbWzrcCD5VQLSP0';
+    if (value.length < 1) return;
 
-    this.http.get(url).subscribe((data) => {
-      data['results'].forEach((element) => {
-        this.addressTextResults.push(element['name']);
-        this.addressPositions.push(element['geometry']['location']);
-      });
+    // let url = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=${value}&key=AIzaSyBMqRoKxM1TmwA7PTM8sbWzrcCD5VQLSP0`;
+    let res = await this.apiService.getTextSearch(value);
+    console.log(res['results']);
+    
+    res['results'].forEach((element) => {
+      this.addressTextResults.push(element['name']);
+      this.addressPositions.push(element['geometry']['location']);
     });
   }
 

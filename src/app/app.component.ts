@@ -48,9 +48,9 @@ export class AppComponent {
     await this.local.init();
     await this.service.init();
 
-    // platform.ready().then(() => {
-    //   this.OneSignalInit();
-    // });
+    this.platform.ready().then(() => {
+      this.OneSignalInit();
+    });
 
     // //check if activeorder have send home page step 5
     // if (localStorage.getItem('activeOrder') != null) {
@@ -146,7 +146,7 @@ export class AppComponent {
   async logout() {
     //send logout request
     await this.apiService.logout();
-    // OneSignal.setExternalUserId(null);
+    OneSignal.setExternalUserId(null);
 
     //PROBLEM HERE
 
