@@ -2,7 +2,7 @@ import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'az.flegri.rahatget',
-  appName: 'reciclica-app',
+  appName: 'RahatGet',
   webDir: 'www',
   bundledWebRuntime: false,
   plugins: {

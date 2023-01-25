@@ -103,7 +103,6 @@ export class LoginPage implements OnInit {
 
     if (res['status']) {
       await this.local.setToken(res['token']);
-      
       await this.local.set('user', JSON.stringify(res['user']));
       this.service.user = res['user'];
       this.action = 'login';
@@ -112,10 +111,11 @@ export class LoginPage implements OnInit {
       this.loginPassword = '';
       this.service.Toast('Login Success');
       this.service.mySocket.connect();
+      let userid='user'+res['user']['id'];
       this.service.mySocket.emit('UserConnect', {
-        UserId: 'user' + res['user']['id'],
+        UserId: userid,
       });
-      OneSignal.setExternalUserId(res['user']['id']);
+      OneSignal.setExternalUserId(userid);
       this.router.navigate(['transition']);
     } else {
       this.loginPassword = '';

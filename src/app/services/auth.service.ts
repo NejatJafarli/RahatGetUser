@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MenuController, NavController } from '@ionic/angular';
+import OneSignal from 'onesignal-cordova-plugin';
 import { ApiService } from './api.service';
 import { MyService } from './my-service';
 import { StorageService } from './storage.service';
@@ -28,8 +29,11 @@ export class AuthService {
         if (!this.myService.connected) {
           this.myService.connected = true;
           this.myService.mySocket.connect();
-          let user = this.myService.mySocket.emit('UserConnect', {
-            UserId: 'user' + JSON.parse(await this.local.get('user')).id,
+          let userid = 'user' + JSON.parse(await this.local.get('user')).id;
+          OneSignal.setExternalUserId(userid);
+
+          this.myService.mySocket.emit('UserConnect', {
+            UserId: userid,
           });
           this.myService.user = JSON.parse(await this.local.get('user'));
         }
@@ -37,6 +41,7 @@ export class AuthService {
       } else {
         this.local.remove('token');
         this.local.remove('user');
+        OneSignal.setExternalUserId(null);
 
         this.myService.connected = false;
 
@@ -48,8 +53,9 @@ export class AuthService {
     } else {
       this.local.remove('token');
       this.local.remove('user');
-      
+
       this.myService.connected = false;
+      OneSignal.setExternalUserId(null);
 
       this.menuCtrl.close();
       this.myService.setValueSelectedApp('');
