@@ -7,6 +7,7 @@ import OneSignal from 'onesignal-cordova-plugin';
 import { ApiService } from './services/api.service';
 import { StorageService } from './services/storage.service';
 import { runInThisContext } from 'vm';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -41,7 +42,8 @@ export class AppComponent {
     private navCtrl: NavController,
     private platform: Platform,
     private apiService: ApiService,
-    private local: StorageService
+    private local: StorageService,
+    private auth:AuthService
   ) {}
   //ng on init
   async ngOnInit() {
@@ -49,9 +51,8 @@ export class AppComponent {
     await this.service.init();
 
     this.platform.ready().then(() => {
-      this.OneSignalInit();
+      // this.OneSignalInit();
     });
-
     // //check if activeorder have send home page step 5
     // if (localStorage.getItem('activeOrder') != null) {
     //   this.router.navigate(['/home/'+JSON.parse(localStorage.getItem('activeOrder')).step]);
@@ -60,6 +61,13 @@ export class AppComponent {
     this.service.selectedApp$.subscribe((data) => {
       this.selected = data;
     });
+    
+    let loggedin=await this.auth.isloggedIn();
+    if(loggedin){
+      this.router.navigate(['/transition']);
+    }
+
+    
   }
   home() {
     this.router.navigate(['/home']);
@@ -146,7 +154,7 @@ export class AppComponent {
   async logout() {
     //send logout request
     await this.apiService.logout();
-    OneSignal.setExternalUserId(null);
+    // OneSignal.setExternalUserId(null);
 
     //PROBLEM HERE
 

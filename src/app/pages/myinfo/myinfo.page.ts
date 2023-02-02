@@ -1,11 +1,20 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { NavController } from '@ionic/angular';
+import {
+  Camera,
+  Photo,
+  CameraResultType,
+  CameraSource,
+} from '@capacitor/camera';
+import { Filesystem } from '@capacitor/filesystem';
+import { NavController, Platform } from '@ionic/angular';
 import { identity } from 'rxjs/internal/util/identity';
 import { ApiService } from 'src/app/services/api.service';
 import { MyService } from 'src/app/services/my-service';
 import { StorageService } from 'src/app/services/storage.service';
+import { Directory } from '@capacitor/filesystem/dist/esm/definitions';
+const IMAGE_DIR = 'stored_images';
 
 @Component({
   selector: 'app-myinfo',
@@ -56,20 +65,116 @@ export class MyinfoPage implements OnInit {
     private myService: MyService,
     private navCtrl: NavController,
     private apiService: ApiService,
-    private local: StorageService
+    private local: StorageService,
+    private platform: Platform
   ) {}
   navBack() {
     this.navCtrl.back();
   }
   async ngOnInit() {
-    this.User = JSON.parse(await this.local.get('user'));
+    this.User = this.myService.user;
   }
+  async selectImage1() {
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.Uri,
+      source: CameraSource.Prompt,
+    });
+    console.log(image);
+    if (image) {
+      await this.saveImage(image);
+      const readFile1 = await Filesystem.readFile({
+        path: this.myPhoto.path,
+        directory: Directory.Data,
+      });
+      console.log(readFile1);
+      
+      this.myPhoto.data = `data:image/jpeg;base64,${readFile1.data}`;
+      console.log(this.myPhoto);
+    }
+  }
+  async SentImg() {
+    const readFile1 = await Filesystem.readFile({
+      path: this.myPhoto.path,
+      directory: Directory.Data,
+    });
+    this.myPhoto.data = `data:image/jpeg;base64,${readFile1.data}`;
+    const response1 = await fetch(this.myPhoto.data);
+    const blob1 = await response1.blob();
+    return blob1;
+  }
+  myPhoto={
+    path: '',
+    data: '',
+    name: '',
+  };
+
+  async saveImage(photo: Photo) {
+    const base64Data = await this.readAsBase64(photo);
+    console.log(base64Data);
+    const fileName = new Date().getTime() + '.jpeg';
+    const savedFileImage = await Filesystem.writeFile({
+      directory: Directory.Data,
+      path: `${IMAGE_DIR}/${fileName}`,
+      data: base64Data,
+      recursive: true,
+    });
+
+    this.myPhoto = {
+      path: `${IMAGE_DIR}/${fileName}`,
+      data: base64Data,
+      name: fileName,
+    };
+    
+    console.log('saved ', savedFileImage);
+  }
+
+  async readAsBase64(photo: Photo) {
+    if (this.platform.is('hybrid')) {
+      const file = await Filesystem.readFile({
+        path: photo.path,
+      });
+      return file.data;
+    } else {
+      const response = await fetch(photo.webPath);
+      const blob = await response.blob();
+      return (await this.convertBlobToBase64(blob)) as string;
+    }
+  }
+
+  convertBlobToBase64 = (blob: Blob) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.readAsDataURL(blob);
+    });
+
   async Save() {
-    let res = await this.apiService.updateAccount(
-      this.User.fullname,
-      this.User.phone,
-      this.User.age
-    );
+    let imgData = null;
+    if (this.myPhoto.name.length > 0) {
+      imgData = await this.SentImg();
+    }
+    let res;
+    if (imgData == null) {
+      res = await this.apiService.updateAccount(
+        this.User.fullname,
+        this.User.phone,
+        this.User.age
+      );
+    }
+    else{
+      res = await this.apiService.updateAccount(
+        this.User.fullname,
+        this.User.phone,
+        this.User.age,
+        imgData
+      );
+    }
+
     if (!res['status']) {
       this.myService.Toast(res['message']);
       return;

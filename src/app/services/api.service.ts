@@ -15,6 +15,22 @@ export class ApiService {
   async init() {
     this._token = await this.local.getToken();
   }
+  // async uploadImage(formData){
+  //   return await new Promise((resolve, reject) => {
+  //     this.http
+  //       .post(environment.ApiLink + '/user/uploadImage', formData)
+  //       .subscribe(
+  //         (data) => {
+  //           resolve(data);
+  //         },
+  //         (error) => {
+  //           resolve(error);
+  //         }
+  //       );
+
+  //   });
+  // }
+
   async login(json) {
     //convert to promise
     return await new Promise((resolve, reject) => {
@@ -35,7 +51,7 @@ export class ApiService {
     });
   }
   async getTextSearch(query) {
-    let myQuery=encodeURIComponent(query);
+    let myQuery = encodeURIComponent(query);
     return await new Promise((resolve, reject) => {
       this.http
         .post(
@@ -60,7 +76,7 @@ export class ApiService {
     });
   }
 
-  async getRides(){
+  async getRides() {
     return await new Promise((resolve, reject) => {
       this.http
         .post(
@@ -80,6 +96,19 @@ export class ApiService {
             resolve(error);
           }
         );
+    });
+  }
+
+  async downloadImage(url: string) {
+    return await new Promise((resolve, reject) => {
+      const imageBlob = this.http.get(url, { responseType: 'blob' }).subscribe(
+        (data) => {
+          resolve(data);
+        },
+        (error) => {
+          resolve(error);
+        }
+      );
     });
   }
 
@@ -144,7 +173,7 @@ export class ApiService {
   }
   async getDriverInfo(driverid) {
     console.log(driverid);
-    
+
     let cache = await this.local.getCachedRequests(
       environment.ApiLink + '/user/getDriverInfo'
     );
@@ -245,25 +274,32 @@ export class ApiService {
     });
   }
 
-  async updateAccount(fullname, phone, age) {
+  async updateAccount(fullname, phone, age, img = null) {
+    let formData = new FormData();
+    formData.append('fullname', fullname);
+    formData.append('phone', phone);
+    formData.append('age', age);
+    if (img != null) {
+      formData.append('photo', img, 'photo');
+    }
     return await new Promise((resolve, reject) => {
+      // environment.ApiLink + '/user/updateAccount',
       this.http
-        .post(
-          environment.ApiLink + '/user/updateAccount',
-          {
-            fullname: fullname,
-            phone: phone,
-            age: age,
+        .post(environment.ApiLink + '/user/updateAccount', formData, {
+          headers: {
+            Authorization: 'Bearer ' + this._token,
+            ContentType: 'multipart/form-data',
+            Accept: 'application/json',
           },
-          {
-            headers: {
-              Authorization: 'Bearer ' + this._token,
-            },
+        })
+        .subscribe(
+          (data) => {
+            resolve(data);
+          },
+          (error) => {
+            resolve(error);
           }
-        )
-        .subscribe((data) => {
-          resolve(data);
-        });
+        );
     });
   }
 
@@ -310,7 +346,6 @@ export class ApiService {
     });
   }
   async updateLocation(id, name, cordinates, location_name) {
-    
     return await new Promise((resolve, reject) => {
       this.http
         .post(

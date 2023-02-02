@@ -10,7 +10,8 @@
     <div class="form">
       <ion-list>
         <ion-item lines="none">
-          <ion-button>
+          <ion-button (click)="selectImage1()">
+            <ion-img class="img" [src]="User.photo"></ion-img>
             <p>Öz şəklinizi yükləyin</p>
           </ion-button>
         </ion-item>

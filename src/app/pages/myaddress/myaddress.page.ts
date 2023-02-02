@@ -93,16 +93,7 @@ export class MyaddressPage implements OnInit {
 
         this.selectedAddressJson.name = value;
 
-        //get last id from address list
-        let lastId = this.addresses[this.addresses.length - 1];
-        if (lastId != undefined) lastId = lastId.id;
-        else lastId = 0;
-
-        this.addresses.push({
-          id: lastId + 1,
-          name: this.selectedAddressJson.name,
-          location_name: this.selectedAddressJson.AddressName,
-        });
+        this.addresses.push(res['data']);
 
         this.selectedAddressJson.name = '';
         this.selectedAddressJson.AddressName = '';
@@ -152,6 +143,8 @@ export class MyaddressPage implements OnInit {
     }
   }
   editAddress(index) {
+    console.log(index);
+    
     this.selectedAddressJson.id = this.addresses[index].id;
     this.selectedAddressJson.AddressName = this.addresses[index].location_name;
     // this.selectedAddressJson.Cordinates =  {

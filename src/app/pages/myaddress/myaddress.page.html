@@ -73,7 +73,7 @@
         </ion-item>
       </ion-list>
       <div class="foot">
-        <ion-button class="btn-primary" id="open-custom-dialog" >Ünvanı əlavə et</ion-button>
+        <ion-button class="btn-primary" id="open-custom-dialog" >Ünvanı Adini Qeyd Et</ion-button>
         <ion-modal id="example-modal" #modal trigger="open-custom-dialog">
           <ng-template>
             <div class="wrapper">
@@ -83,7 +83,7 @@
               </div>
               <ion-input [(ngModel)]="tempName" type="text" placeholder="Ünvan adı"></ion-input>
               <div class="add">
-                <ion-button class="btn-primary" (click)="nameClick(tempName)" expand="block">Ünvanı əlavə et</ion-button>
+                <ion-button class="btn-primary" (click)="nameClick(tempName)" expand="block">Ünvanı Yadda Saxla</ion-button>
               </div>
             </div>
           </ng-template>

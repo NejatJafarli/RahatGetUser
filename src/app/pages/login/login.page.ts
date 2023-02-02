@@ -5,8 +5,10 @@ import { Router } from '@angular/router';
 import { IonInput } from '@ionic/angular';
 import OneSignal from 'onesignal-cordova-plugin';
 import { ApiService } from 'src/app/services/api.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { MyService } from 'src/app/services/my-service';
 import { StorageService } from 'src/app/services/storage.service';
+import { environment } from 'src/environments/environment';
 // import { LoginPageForm } from './login.page.form';
 
 @Component({
@@ -36,7 +38,8 @@ export class LoginPage implements OnInit {
     private http: HttpClient,
     private service: MyService,
     private apiService: ApiService,
-    private local:StorageService
+    private local: StorageService,
+    private auth: AuthService
   ) {}
   codePhone;
   action;
@@ -51,7 +54,6 @@ export class LoginPage implements OnInit {
       this.codePhone = this.loginPhone;
     }
     if (this.codePhone[0] == '+') this.codePhone = this.codePhone.substring(4);
-
     let res = await this.http
       .post(
         this.service.ApiLink + url,
@@ -61,7 +63,7 @@ export class LoginPage implements OnInit {
         },
         {
           headers: {
-            Authorization: 'Bearer ' + await this.local.getToken(),
+            Authorization: 'Bearer ' + (await this.local.getToken()),
           },
         }
       )
@@ -77,7 +79,6 @@ export class LoginPage implements OnInit {
   async ngOnInit() {
     // this.form = new LoginPageForm(this.formBuilder).createForm();
     // console.log(this.form);
-
   }
   loginPhone;
   loginPassword;
@@ -103,18 +104,30 @@ export class LoginPage implements OnInit {
 
     if (res['status']) {
       await this.local.setToken(res['token']);
-      await this.local.set('user', JSON.stringify(res['user']));
-      this.service.user = res['user'];
+      let user = res['user'];
+      // http://user.rahatget.az/uploads/users/
+      let url =  res['user']['photo'];
+      console.log(url);
+      
+      //download image and save to local
+      let image = await this.apiService.downloadImage(url);
+      let img = await URL.createObjectURL(image as Blob);
+      // user['photo'] = img;
+      user.photo = img;
+      //image is blob how can i show it in img tag
+      await this.local.set('user', JSON.stringify(user));
+      this.service.user = user;
       this.action = 'login';
       this.local.remove('sendNewRequestEndDate');
       this.loginPhone = '';
       this.loginPassword = '';
       this.service.Toast('Login Success');
       this.service.mySocket.connect();
-      let userid='user'+res['user']['id'];
+      let userid = 'user' + res['user']['id'];
       this.service.mySocket.emit('UserConnect', {
         UserId: userid,
       });
+
       OneSignal.setExternalUserId(userid);
       this.router.navigate(['transition']);
     } else {
@@ -129,7 +142,7 @@ export class LoginPage implements OnInit {
     this.step = 2;
   }
   reqId;
-  async SendAgainOtp(){
+  async SendAgainOtp() {
     if (await this.local.get('sendNewRequestEndDate')) {
       // Y-m-d H:i:s
       let endDate = await this.local.get('sendNewRequestEndDate');
@@ -144,9 +157,11 @@ export class LoginPage implements OnInit {
       }
     }
 
-    let res=await this.http.post(this.service.ApiLink + '/user/register/sendAgainOtpCode', {
-      requestId: this.reqId,
-    }).toPromise();
+    let res = await this.http
+      .post(this.service.ApiLink + '/user/register/sendAgainOtpCode', {
+        requestId: this.reqId,
+      })
+      .toPromise();
 
     if (res['status']) {
       this.service.Toast(res['success']);
@@ -155,13 +170,12 @@ export class LoginPage implements OnInit {
       this.registerPassword = '';
       this.service.Toast(res['error']);
     }
-
   }
   async loginstep3() {
     if (this.registerPhone[0] == '+') {
       this.registerPhone = this.registerPhone.substring(4);
     }
-    let endDate=await this.local.get('sendNewRequestEndDate');
+    let endDate = await this.local.get('sendNewRequestEndDate');
     if (endDate) {
       // Y-m-d H:i:s
       let now: number = Date.now();

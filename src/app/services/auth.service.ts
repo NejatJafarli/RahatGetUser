@@ -30,7 +30,7 @@ export class AuthService {
           this.myService.connected = true;
           this.myService.mySocket.connect();
           let userid = 'user' + JSON.parse(await this.local.get('user')).id;
-          OneSignal.setExternalUserId(userid);
+          // OneSignal.setExternalUserId(userid);
 
           this.myService.mySocket.emit('UserConnect', {
             UserId: userid,
@@ -41,7 +41,7 @@ export class AuthService {
       } else {
         this.local.remove('token');
         this.local.remove('user');
-        OneSignal.setExternalUserId(null);
+        // OneSignal.setExternalUserId(null);
 
         this.myService.connected = false;
 
@@ -55,7 +55,7 @@ export class AuthService {
       this.local.remove('user');
 
       this.myService.connected = false;
-      OneSignal.setExternalUserId(null);
+      // OneSignal.setExternalUserId(null);
 
       this.menuCtrl.close();
       this.myService.setValueSelectedApp('');
