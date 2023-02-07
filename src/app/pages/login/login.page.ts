@@ -2,15 +2,16 @@ import { HttpClient } from '@angular/common/http';
 import { Component, ContentChild, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
+import { Directory, Filesystem } from '@capacitor/filesystem';
 import { IonInput } from '@ionic/angular';
 import OneSignal from 'onesignal-cordova-plugin';
 import { ApiService } from 'src/app/services/api.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { ImageService } from 'src/app/services/image.service';
 import { MyService } from 'src/app/services/my-service';
 import { StorageService } from 'src/app/services/storage.service';
 import { environment } from 'src/environments/environment';
 // import { LoginPageForm } from './login.page.form';
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -39,7 +40,8 @@ export class LoginPage implements OnInit {
     private service: MyService,
     private apiService: ApiService,
     private local: StorageService,
-    private auth: AuthService
+    private auth: AuthService,
+    private imageService: ImageService
   ) {}
   codePhone;
   action;
@@ -106,15 +108,7 @@ export class LoginPage implements OnInit {
       await this.local.setToken(res['token']);
       let user = res['user'];
       // http://user.rahatget.az/uploads/users/
-      let url =  res['user']['photo'];
-      console.log(url);
-      
-      //download image and save to local
-      let image = await this.apiService.downloadImage(url);
-      let img = await URL.createObjectURL(image as Blob);
-      // user['photo'] = img;
-      user.photo = img;
-      //image is blob how can i show it in img tag
+      user.photo = `data:image/jpeg;base64,${res['user']['photo']}`;
       await this.local.set('user', JSON.stringify(user));
       this.service.user = user;
       this.action = 'login';
@@ -128,7 +122,7 @@ export class LoginPage implements OnInit {
         UserId: userid,
       });
 
-      OneSignal.setExternalUserId(userid);
+      // OneSignal.setExternalUserId(userid);
       this.router.navigate(['transition']);
     } else {
       this.loginPassword = '';

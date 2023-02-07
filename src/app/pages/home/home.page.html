@@ -120,7 +120,7 @@
                   <ion-datetime-button datetime="datetime"></ion-datetime-button>
                   <ion-modal class="datetime-modal" [keepContentsMounted]="true">
                     <ng-template>
-                      <ion-datetime id="datetime" presentation="date" [showDefaultButtons]="true"></ion-datetime>
+                      <ion-datetime [(ngModel)]="RezervDate" id="datetime" presentation="date" [showDefaultButtons]="true"></ion-datetime>
                     </ng-template>
                   </ion-modal>
                 </div>
@@ -133,7 +133,7 @@
                   <ion-datetime-button datetime="datetime1"></ion-datetime-button>
                   <ion-modal class="datetime-modal" [keepContentsMounted]="true">
                     <ng-template>
-                      <ion-datetime id="datetime1" presentation="time" [showDefaultButtons]="true"></ion-datetime>
+                      <ion-datetime [(ngModel)]="RezervTime" id="datetime1" presentation="time" [showDefaultButtons]="true"></ion-datetime>
                     </ng-template>
                   </ion-modal>
                 </div>
@@ -444,7 +444,7 @@
               <ion-datetime-button disabled="true" datetime="datetime"></ion-datetime-button>
               <ion-modal class="datetime-modal" [keepContentsMounted]="true">
                 <ng-template>
-                  <ion-datetime id="datetime" presentation="date" [showDefaultButtons]="true"></ion-datetime>
+                  <ion-datetime [(ngModel)]="RezervDate" id="datetime" presentation="date" [showDefaultButtons]="true"></ion-datetime>
                 </ng-template>
               </ion-modal>
             </div>
@@ -457,7 +457,7 @@
               <ion-datetime-button disabled="true" datetime="datetime1"></ion-datetime-button>
               <ion-modal class="datetime-modal" [keepContentsMounted]="true">
                 <ng-template>
-                  <ion-datetime id="datetime1" presentation="time" [showDefaultButtons]="true"></ion-datetime>
+                  <ion-datetime [(ngModel)]="RezervTime" id="datetime1" presentation="time" [showDefaultButtons]="true"></ion-datetime>
                 </ng-template>
               </ion-modal>
             </div>

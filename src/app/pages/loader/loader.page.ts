@@ -7,8 +7,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./loader.page.scss'],
 })
 export class LoaderPage implements OnInit {
-  
-  constructor(private router: Router) { }
+  constructor(private router: Router) {}
 
   ngOnInit() {
     setTimeout(() => {
@@ -16,5 +15,4 @@ export class LoaderPage implements OnInit {
       this.router.navigate(['login']);
     }, 1000);
   }
-
 }

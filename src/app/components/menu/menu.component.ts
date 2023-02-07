@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonToolbar } from '@ionic/angular';
+import { MyService } from 'src/app/services/my-service';
 
 @Component({
   selector: 'app-menu',
@@ -12,7 +13,7 @@ export class MenuComponent implements OnInit {
 
   @Input() background: string = '#fff';
   backgroundCss:string  = '--background: #fff';
-  constructor(private router: Router) { }
+  constructor(private router: Router,public service:MyService) { }
 
   ngOnInit() {
     // console.log(this.background);

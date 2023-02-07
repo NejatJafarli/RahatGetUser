@@ -39,8 +39,8 @@ export class MyService {
 
   user;
   apiKey = 'AIzaSyBMqRoKxM1TmwA7PTM8sbWzrcCD5VQLSP0';
-  ApiLink = 'http://user.rahatget.az/api';
-
+  ApiLink = 'https://user.rahatget.az/api';
+  TokenCheck=false;
   async Toast(message) {
     const toast = await this.ToastController.create({
       message: message,

@@ -19,7 +19,7 @@ import { StorageService } from './services/storage.service';
 import { Drivers } from '@ionic/storage';
 import { AuthService } from './services/auth.service';
 import { AuthGuardGuard } from './auth-guard.guard';
-const config: SocketIoConfig = { url: 'http://io.rahatget.az', options: {} };
+const config: SocketIoConfig = { url: 'https://io.rahatget.az', options: {} };
 
 @NgModule({
   declarations: [AppComponent],

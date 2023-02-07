@@ -15,6 +15,7 @@ export class ApiService {
   async init() {
     this._token = await this.local.getToken();
   }
+
   // async uploadImage(formData){
   //   return await new Promise((resolve, reject) => {
   //     this.http
@@ -99,19 +100,6 @@ export class ApiService {
     });
   }
 
-  async downloadImage(url: string) {
-    return await new Promise((resolve, reject) => {
-      const imageBlob = this.http.get(url, { responseType: 'blob' }).subscribe(
-        (data) => {
-          resolve(data);
-        },
-        (error) => {
-          resolve(error);
-        }
-      );
-    });
-  }
-
   async logout() {
     return await new Promise((resolve, reject) => {
       this.http
@@ -149,6 +137,44 @@ export class ApiService {
     });
   }
 
+  async createRezerv(json) {
+    return new Promise((resolve, reject) => {
+      this.http
+        .post(environment.ApiLink + '/user/CreateRideAyigRezerv', json, {
+          headers: {
+            Authorization: 'Bearer ' + this._token,
+          },
+        })
+        .subscribe((data) => {
+          resolve(data);
+        }, (error) => {
+          resolve(error);
+        });
+    });
+  }
+
+  async checkActiveRezerv() {
+    return await new Promise((resolve, reject) => {
+      this.http
+        .post(
+          environment.ApiLink + '/user/checkActiveRezerv',
+          {},
+          {
+            headers: {
+              Authorization: 'Bearer ' + this._token,
+            },
+          }
+        )
+        .subscribe(
+          (data) => {
+            resolve(data);
+          },
+          (error) => {
+            resolve(error);
+          }
+        );
+    });
+  }
   async getInfoAyigRide(RideId) {
     return await new Promise((resolve, reject) => {
       this.http
@@ -252,6 +278,8 @@ export class ApiService {
         })
         .subscribe((data) => {
           resolve(data);
+        }, (error) => {
+          resolve(error);
         });
     });
   }

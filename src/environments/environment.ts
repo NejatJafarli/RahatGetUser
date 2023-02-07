@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  ApiLink: 'http://user.rahatget.az/api',
+  ApiLink: 'https://user.rahatget.az/api',
 };
 
 /*

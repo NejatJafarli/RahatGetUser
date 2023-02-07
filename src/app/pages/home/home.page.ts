@@ -48,6 +48,8 @@ export class HomePage implements OnInit, AfterViewInit {
     this.rating = value;
   }
   temp;
+  RezervDate;
+  RezervTime;
   constructor(
     private roter: Router,
     private modalCtrl: ModalController,
@@ -56,7 +58,7 @@ export class HomePage implements OnInit, AfterViewInit {
     private service: MyService,
     private apiService: ApiService,
     private local: StorageService,
-    private platform:Platform
+    private platform: Platform
   ) {
     let temp = this.roter.getCurrentNavigation()?.extras.state;
 
@@ -174,6 +176,9 @@ export class HomePage implements OnInit, AfterViewInit {
     this.activeOrder = JSON.parse(await this.local.get('activeOrder'));
     this.CardValue = 'Kartla ödəniş';
 
+    this.RezervDate = new Date().toISOString();
+    this.RezervTime = new Date().toISOString();
+
     this.MyCards = [];
 
     let json = {
@@ -192,7 +197,7 @@ export class HomePage implements OnInit, AfterViewInit {
     // this.CardValue="Kartla ödəniş"
     //check permission
     console.log('check permission for location');
-    
+
     MyGeo.checkPermissions().then((res) => {
       if (res.location === 'granted') {
         //get current location
@@ -264,6 +269,21 @@ export class HomePage implements OnInit, AfterViewInit {
         this.step = 1;
       }
     });
+    //get activeRezevr
+    let activeRezerv = JSON.parse(await this.local.get('activeRezerv'));
+    if (activeRezerv != null) {
+      //check ExpireDate
+      let date = new Date();
+      let expireDate = new Date(activeRezerv.ExpireDate);
+      console.log(expireDate);
+      
+      if (date > expireDate) {
+        await this.local.remove('activeRezerv');
+        console.log('activeRezerv ExpireDate');
+        //remove activeRezerv add it activeOrder and go to step 3
+        await this.local.set('activeOrder', JSON.stringify(activeRezerv));
+      }
+    }
 
     let activeOrder = JSON.parse(await this.local.get('activeOrder'));
     console.log(activeOrder);
@@ -342,8 +362,8 @@ export class HomePage implements OnInit, AfterViewInit {
                 this.activeOrder.step = 7;
                 this.local.set('activeOrder', JSON.stringify(this.activeOrder));
                 this.step = 7;
-          this.roter.navigate(['/home/' + activeOrder.step]);
-        }
+                this.roter.navigate(['/home/' + activeOrder.step]);
+              }
             );
           });
           this.local.set('activeOrder', JSON.stringify(this.activeOrder));
@@ -409,141 +429,148 @@ export class HomePage implements OnInit, AfterViewInit {
 
     //when platform resume
     this.platform.resume.subscribe(async () => {
-       let activeOrder = JSON.parse(await this.local.get('activeOrder'));
-    console.log(activeOrder);
+      let activeOrder = JSON.parse(await this.local.get('activeOrder'));
+      console.log(activeOrder);
 
-    if (activeOrder != null) {
-      this.activeOrder = activeOrder;
-      console.log(this.activeOrder);
-      let res = await this.apiService.getInfoAyigRide(this.activeOrder.RideId);
-
-      if (!res['status']) return this.service.Toast(res['message']);
-
-      if (res['data']['status'] == 'Pending') {
-        this.service.Toast('Surucu Axtarilir');
-        activeOrder.OrderStatus = 'Pending';
-        activeOrder.step = 3;
-        this.local.set('activeOrder', JSON.stringify(activeOrder));
-        this.roter.navigate(['/home/' + activeOrder.step]);
-        this.service.mySocket.on('OrderAccepted', async (AcceptedData) => {
-          let ress = await this.apiService.getDriverInfo(AcceptedData.DriverId);
-
-          if (!ress['status']) return this.service.Toast(ress['message']);
-
-          AcceptedData.Driver = ress['data'];
-          AcceptedData.step = 6;
-          this.service.Toast('Sifariş qəbul edildi');
-
-          this.local.set('activeOrder', JSON.stringify(AcceptedData));
-          this.activeOrder = AcceptedData;
-          this.step = 4;
-          setTimeout(async () => {
-            this.DriverFound = false;
-            setTimeout(() => {
-              this.DriverFound = true;
-              this.step = 6;
-            }, 2000);
-          }, 1000);
-        });
-
-        return;
-      } else if (res['data']['status'] == 'Accepted') {
-        activeOrder.OrderStatus = 'Accepted';
-        activeOrder.step = 6;
-        activeOrder.DriverId = 'driver' + res['data']['AyigDriverId'];
-        activeOrder.OrderId = res['data']['OrderId'];
-        let ress = await this.apiService.getDriverInfo(
-          res['data']['AyigDriverId']
-        );
-        if (!ress['status']) return this.service.Toast(ress['message']);
-        activeOrder.Driver = ress['data'];
-        this.local.set('activeOrder', JSON.stringify(activeOrder));
+      if (activeOrder != null) {
         this.activeOrder = activeOrder;
+        console.log(this.activeOrder);
+        let res = await this.apiService.getInfoAyigRide(
+          this.activeOrder.RideId
+        );
 
-        this.service.mySocket.on('DriverLocationChanged', (data) => {
-          this.activeOrder.RemainingTime = data.RemainingTime;
-          this.local.set('activeOrder', JSON.stringify(this.activeOrder));
-        });
-        this.service.mySocket.once('WaitingCustomer', async (data) => {
-          console.log('WaitingCustomer', data);
+        if (!res['status']) return this.service.Toast(res['message']);
 
-          if (data.OrderId != this.activeOrder.OrderId) return;
+        if (res['data']['status'] == 'Pending') {
+          this.service.Toast('Surucu Axtarilir');
+          activeOrder.OrderStatus = 'Pending';
+          activeOrder.step = 3;
+          this.local.set('activeOrder', JSON.stringify(activeOrder));
+          this.roter.navigate(['/home/' + activeOrder.step]);
+          this.service.mySocket.on('OrderAccepted', async (AcceptedData) => {
+            let ress = await this.apiService.getDriverInfo(
+              AcceptedData.DriverId
+            );
+
+            if (!ress['status']) return this.service.Toast(ress['message']);
+
+            AcceptedData.Driver = ress['data'];
+            AcceptedData.step = 6;
+            this.service.Toast('Sifariş qəbul edildi');
+
+            this.local.set('activeOrder', JSON.stringify(AcceptedData));
+            this.activeOrder = AcceptedData;
+            this.step = 4;
+            setTimeout(async () => {
+              this.DriverFound = false;
+              setTimeout(() => {
+                this.DriverFound = true;
+                this.step = 6;
+              }, 2000);
+            }, 1000);
+          });
+
+          return;
+        } else if (res['data']['status'] == 'Accepted') {
+          activeOrder.OrderStatus = 'Accepted';
+          activeOrder.step = 6;
+          activeOrder.DriverId = 'driver' + res['data']['AyigDriverId'];
+          activeOrder.OrderId = res['data']['OrderId'];
+          let ress = await this.apiService.getDriverInfo(
+            res['data']['AyigDriverId']
+          );
+          if (!ress['status']) return this.service.Toast(ress['message']);
+          activeOrder.Driver = ress['data'];
+          this.local.set('activeOrder', JSON.stringify(activeOrder));
+          this.activeOrder = activeOrder;
+
+          this.service.mySocket.on('DriverLocationChanged', (data) => {
+            this.activeOrder.RemainingTime = data.RemainingTime;
+            this.local.set('activeOrder', JSON.stringify(this.activeOrder));
+          });
+          this.service.mySocket.once('WaitingCustomer', async (data) => {
+            console.log('WaitingCustomer', data);
+
+            if (data.OrderId != this.activeOrder.OrderId) return;
+            this.OnWay = 'Sizi Gözləyir';
+
+            this.activeOrder.OrderStatus = 'Waiting Customer';
+            this.activeOrder.RemainingTime = data.RemainingTime;
+
+            console.log('listening for OrderStarted');
+            this.service.mySocket.once('OrderStarted', async (data) => {
+              this.OnWay = 'Yolda';
+              this.activeOrder.OrderStatus = 'Started';
+              this.activeOrder.RemainingTime = data.RemainingTime;
+              this.local.set('activeOrder', JSON.stringify(this.activeOrder));
+              this.service.mySocket.once(
+                'OrderCompletedConfirm',
+                async (data) => {
+                  this.activeOrder.OrderStatus = 'Completed';
+                  this.activeOrder.step = 7;
+                  this.local.set(
+                    'activeOrder',
+                    JSON.stringify(this.activeOrder)
+                  );
+                  this.step = 7;
+                  this.roter.navigate(['/home/' + activeOrder.step]);
+                }
+              );
+            });
+            this.local.set('activeOrder', JSON.stringify(this.activeOrder));
+            this.roter.navigate(['/home/' + activeOrder.step]);
+          });
+          this.roter.navigate(['/home/' + activeOrder.step]);
+          return;
+        } else if (res['data']['status'] == 'Waiting Customer') {
+          activeOrder.OrderStatus = 'Waiting Customer';
           this.OnWay = 'Sizi Gözləyir';
-
-          this.activeOrder.OrderStatus = 'Waiting Customer';
-          this.activeOrder.RemainingTime = data.RemainingTime;
-
-          console.log('listening for OrderStarted');
+          activeOrder.step = 6;
+          activeOrder.DriverId = 'driver' + res['data']['AyigDriverId'];
+          activeOrder.OrderId = res['data']['OrderId'];
+          let ress = await this.apiService.getDriverInfo(
+            res['data']['AyigDriverId']
+          );
+          if (!ress['status']) return this.service.Toast(ress['message']);
           this.service.mySocket.once('OrderStarted', async (data) => {
             this.OnWay = 'Yolda';
             this.activeOrder.OrderStatus = 'Started';
             this.activeOrder.RemainingTime = data.RemainingTime;
             this.local.set('activeOrder', JSON.stringify(this.activeOrder));
-            this.service.mySocket.once(
-              'OrderCompletedConfirm',
-              async (data) => {
-                this.activeOrder.OrderStatus = 'Completed';
-                this.activeOrder.step = 7;
-                this.local.set('activeOrder', JSON.stringify(this.activeOrder));
-                this.step = 7;
-          this.roter.navigate(['/home/' + activeOrder.step]);
-        }
-            );
           });
-          this.local.set('activeOrder', JSON.stringify(this.activeOrder));
+          activeOrder.Driver = ress['data'];
+          this.local.set('activeOrder', JSON.stringify(activeOrder));
+          this.activeOrder = activeOrder;
           this.roter.navigate(['/home/' + activeOrder.step]);
-        });
-        this.roter.navigate(['/home/' + activeOrder.step]);
-        return;
-      } else if (res['data']['status'] == 'Waiting Customer') {
-        activeOrder.OrderStatus = 'Waiting Customer';
-        this.OnWay = 'Sizi Gözləyir';
-        activeOrder.step = 6;
-        activeOrder.DriverId = 'driver' + res['data']['AyigDriverId'];
-        activeOrder.OrderId = res['data']['OrderId'];
-        let ress = await this.apiService.getDriverInfo(
-          res['data']['AyigDriverId']
-        );
-        if (!ress['status']) return this.service.Toast(ress['message']);
-        this.service.mySocket.once('OrderStarted', async (data) => {
+          this.service.mySocket.once('OrderCompletedConfirm', async (data) => {
+            this.activeOrder.OrderStatus = 'Completed';
+            this.activeOrder.step = 7;
+            this.local.set('activeOrder', JSON.stringify(this.activeOrder));
+            this.step = 7;
+            this.roter.navigate(['/home/' + activeOrder.step]);
+          });
+        } else if (res['data']['status'] == 'Started') {
           this.OnWay = 'Yolda';
           this.activeOrder.OrderStatus = 'Started';
-          this.activeOrder.RemainingTime = data.RemainingTime;
+          this.activeOrder.RemainingTime = 0;
           this.local.set('activeOrder', JSON.stringify(this.activeOrder));
-        });
-        activeOrder.Driver = ress['data'];
-        this.local.set('activeOrder', JSON.stringify(activeOrder));
-        this.activeOrder = activeOrder;
-        this.roter.navigate(['/home/' + activeOrder.step]);
-        this.service.mySocket.once('OrderCompletedConfirm', async (data) => {
+          this.roter.navigate(['/home/' + activeOrder.step]);
+          this.service.mySocket.once('OrderCompletedConfirm', async (data) => {
+            this.activeOrder.OrderStatus = 'Completed';
+            this.activeOrder.step = 7;
+            this.local.set('activeOrder', JSON.stringify(this.activeOrder));
+            this.step = 7;
+            this.roter.navigate(['/home/' + activeOrder.step]);
+          });
+          //finished
+        } else if (res['data']['status'] == 'Completed') {
           this.activeOrder.OrderStatus = 'Completed';
           this.activeOrder.step = 7;
           this.local.set('activeOrder', JSON.stringify(this.activeOrder));
           this.step = 7;
           this.roter.navigate(['/home/' + activeOrder.step]);
-        });
-      } else if (res['data']['status'] == 'Started') {
-        this.OnWay = 'Yolda';
-        this.activeOrder.OrderStatus = 'Started';
-        this.activeOrder.RemainingTime = 0;
-        this.local.set('activeOrder', JSON.stringify(this.activeOrder));
-        this.roter.navigate(['/home/' + activeOrder.step]);
-        this.service.mySocket.once('OrderCompletedConfirm', async (data) => {
-          this.activeOrder.OrderStatus = 'Completed';
-          this.activeOrder.step = 7;
-          this.local.set('activeOrder', JSON.stringify(this.activeOrder));
-          this.step = 7;
-          this.roter.navigate(['/home/' + activeOrder.step]);
-        });
-        //finished
-      } else if (res['data']['status'] == 'Completed') {
-        this.activeOrder.OrderStatus = 'Completed';
-        this.activeOrder.step = 7;
-        this.local.set('activeOrder', JSON.stringify(this.activeOrder));
-        this.step = 7;
-        this.roter.navigate(['/home/' + activeOrder.step]);
+        }
       }
-    }
     });
   }
   imtina() {
@@ -587,137 +614,218 @@ export class HomePage implements OnInit, AfterViewInit {
   }
   HomeThreeDisable = false;
   async home3() {
-    let pos = { lat: this.position.lat, lng: this.position.lng };
-    this.HomeThreeDisable = true;
-    setTimeout(() => {
-      this.HomeThreeDisable = false;
-    }, 5000);
-    //get current datetime 2023-01-01 17:17:17
-    let date = new Date();
-    let getCurrentDate =
-      date.getFullYear() +
-      '-' +
-      (date.getMonth() + 1) +
-      '-' +
-      date.getDate() +
-      ' ' +
-      date.getHours() +
-      ':' +
-      date.getMinutes() +
-      ':' +
-      date.getSeconds();
+    if (this.toggleDisplayForRezerv == true) {
+      //check if user has active rezerv in local storage
+      let activeRezerv = await this.local.get('activeRezerv');
+      if (activeRezerv) return this.service.Toast('Sizdə aktiv rezerv var');
+      //check if user has active rezerv in server
+      let res = await this.apiService.checkActiveRezerv();
 
-    let res = await this.apiService.CreateRideAyig({
-      takeLocation: pos.lat + ',' + pos.lng,
-      startLocationName: this.positionGeocod,
-      startDate: getCurrentDate,
-      endLocationName: this.WhereText,
-      endLocation: this.WherePosition.lat + ',' + this.WherePosition.lng,
-    });
+      if (res['status']) return this.service.Toast(res['message']);
+      //create rezerv
+      let pos = { lat: this.position.lat, lng: this.position.lng };
+      this.HomeThreeDisable = true;
 
-    if (!res['status']) return this.service.Toast(res['message']);
+      // this.RezervDate 2023-02-07T09:16:56.644Z
+      //get date from rezerv date
+      let date = this.RezervDate.split('T')[0];
+      // rezerv time 2023-02-07T16:24:00+04:00:32 get 16:24:00 from rezerv time
+      let datetime = this.RezervTime.split('+')[0].split('T')[1];
+      //remove last 3 char from datetime
+      datetime = datetime.substring(0, datetime.length - 3);
 
-    let RideId = res['RideId'];
-    console.log(res);
+      let getCurrentDate = date + ' ' + datetime;
+      //get current seconds append to getCurrentDate
+      let seconds = new Date().getSeconds();
+      getCurrentDate += ':' + seconds;
+      console.log(getCurrentDate);
 
-    // RideId: data.RideId,
-    // UserId: data.UserId,
-    // OrderData: data.OrderData,
-    this.step = 3;
-    this.setOpen(false);
-    let json = {
-      RideId: RideId,
-      UserId: 'user' + this.service.user.id,
-      OrderData: {
-        pos: pos,
-        address: this.positionGeocod,
-        wherePos: this.WherePosition,
-        wherePosGeocod: this.WhereText,
-        make: this.make,
-        plate: this.plate,
-        payment: this.SelectedPayment == 1 ? 'cash' : 'card',
-        price: 10,
-      },
-      UserData: {
-        fullname: this.service.user.fullname,
-        phone: this.service.user.phone,
-        photoUrl: this.service.user.photo,
-      },
-    };
+      res = await this.apiService.createRezerv({
+        takeLocation: pos.lat + ',' + pos.lng,
+        startLocationName: this.positionGeocod,
+        startDate: getCurrentDate,
+        endLocationName: this.WhereText,
+        endLocation: this.WherePosition.lat + ',' + this.WherePosition.lng,
+      });
+      console.log(res);
 
-    this.service.mySocket.emit('SendOrderToDriver', json);
-    let json2 = {
-      RideId: RideId,
-      UserId: 'user' + this.service.user.id,
-      OrderData: {
-        pos: pos,
-        address: this.positionGeocod,
-        wherePos: this.WherePosition,
-        wherePosGeocod: this.WhereText,
-        make: this.make,
-        plate: this.plate,
-        payment: this.SelectedPayment == 1 ? 'cash' : 'card',
-        price: 10,
-      },
-      step: 3,
-    };
-    this.local.set('activeOrder', JSON.stringify(json2));
-    this.activeOrder = json2;
+      if (!res['status']) return this.service.Toast(res['message']);
 
-    this.service.mySocket.on('OrderAccepted', async (AcceptedData) => {
-      let ress = await this.apiService.getDriverInfo(AcceptedData.DriverId);
+      this.toggleDisplayForRezerv = false;
+      this.HomeThreeDisable = true;
+      this.service.Toast(
+        'Rezerv yaradıldı və Gedisler səhifəsindən göstəriləcək'
+      );
+      let newdate = new Date(getCurrentDate);
+      newdate.setMinutes(newdate.getMinutes() - 30);
+      let expireDate =
+        newdate.getFullYear() +
+        '-' +
+        newdate.getMonth() +
+        '-' +
+        newdate.getDate() +
+        ' ' +
+        newdate.getHours() +
+        ':' +
+        newdate.getMinutes() +
+        ':' +
+        newdate.getSeconds();
 
-      if (!ress['status']) return this.service.Toast(ress['message']);
+      let json = {
+        RideId: res['RideId'],
+        UserId: 'user' + this.service.user.id,
+        OrderData: {
+          pos: pos,
+          address: this.positionGeocod,
+          wherePos: this.WherePosition,
+          wherePosGeocod: this.WhereText,
+          make: this.make,
+          plate: this.plate,
+          payment: this.SelectedPayment == 1 ? 'cash' : 'card',
+          price: 10,
+        },
+        step: 1,
+        ExpireDate: expireDate,
+      };
+      this.local.set('activeRezerv', JSON.stringify(json));
 
-      this.service.mySocket.once('WaitingCustomer', async (data) => {
-        console.log('WaitingCustomer', data);
+      //return step 1
+      this.step = 1;
+      this.roter.navigate(['/home/1']);
+    } else {
+      let pos = { lat: this.position.lat, lng: this.position.lng };
+      this.HomeThreeDisable = true;
+      //get current datetime 2023-01-01 17:17:17
+      let date = new Date();
+      let getCurrentDate =
+        date.getFullYear() +
+        '-' +
+        date.getMonth() +
+        '-' +
+        date.getDate() +
+        ' ' +
+        date.getHours() +
+        ':' +
+        date.getMinutes() +
+        ':' +
+        date.getSeconds();
 
-        if (data.OrderId != this.activeOrder.OrderId) return;
-        this.OnWay = 'Sizi Gözləyir';
-
-        this.activeOrder.OrderStatus = 'Waiting Customer';
-        this.activeOrder.RemainingTime = data.RemainingTime;
-
-        console.log('listening for OrderStarted');
-        this.service.mySocket.once('OrderStarted', async (data) => {
-          this.OnWay = 'Yolda';
-          this.activeOrder.OrderStatus = 'Started';
-          this.activeOrder.RemainingTime = data.RemainingTime;
-          this.local.set('activeOrder', JSON.stringify(this.activeOrder));
-          this.service.mySocket.once('OrderCompletedConfirm', async (data) => {
-            this.activeOrder.OrderStatus = 'Completed';
-            this.activeOrder.step = 7;
-            this.local.set('activeOrder', JSON.stringify(this.activeOrder));
-            this.step = 7;
-          });
-        });
-        this.local.set('activeOrder', JSON.stringify(this.activeOrder));
+      let res = await this.apiService.CreateRideAyig({
+        takeLocation: pos.lat + ',' + pos.lng,
+        startLocationName: this.positionGeocod,
+        startDate: getCurrentDate,
+        endLocationName: this.WhereText,
+        endLocation: this.WherePosition.lat + ',' + this.WherePosition.lng,
       });
 
-      AcceptedData.Driver = ress['data'];
-      AcceptedData.step = 6;
-      this.service.Toast('Sifariş qəbul edildi');
+      if (!res['status']) return this.service.Toast(res['message']);
 
-      this.local.set('activeOrder', JSON.stringify(AcceptedData));
-      this.activeOrder = AcceptedData;
-      this.step = 4;
-      setTimeout(async () => {
-        this.DriverFound = false;
-        setTimeout(() => {
-          this.DriverFound = true;
-          this.step = 6;
-        }, 2000);
-      }, 1000);
+      let RideId = res['RideId'];
+      console.log(res);
+      // RideId: data.RideId,
+      // UserId: data.UserId,
+      // OrderData: data.OrderData,
+      this.step = 3;
 
-      // setTimeout(() => {
-      //   this.DriverFound = false;
-      //   setTimeout(() => {
-      //     this.DriverFound= true;
-      //     this.step = 6;
-      //     this.roter.navigate(['/home/' + this.step]);
-      //   }, 5000);
-      // }, 2500);
-    });
+      this.setOpen(false);
+      let json = {
+        RideId: RideId,
+        UserId: 'user' + this.service.user.id,
+        OrderData: {
+          pos: pos,
+          address: this.positionGeocod,
+          wherePos: this.WherePosition,
+          wherePosGeocod: this.WhereText,
+          make: this.make,
+          plate: this.plate,
+          payment: this.SelectedPayment == 1 ? 'cash' : 'card',
+          price: 10,
+        },
+        UserData: {
+          fullname: this.service.user.fullname,
+          phone: this.service.user.phone,
+          photoUrl: this.service.user.photo,
+        },
+      };
+
+      this.service.mySocket.emit('SendOrderToDriver', json);
+      let json2 = {
+        RideId: RideId,
+        UserId: 'user' + this.service.user.id,
+        OrderData: {
+          pos: pos,
+          address: this.positionGeocod,
+          wherePos: this.WherePosition,
+          wherePosGeocod: this.WhereText,
+          make: this.make,
+          plate: this.plate,
+          payment: this.SelectedPayment == 1 ? 'cash' : 'card',
+          price: 10,
+        },
+        step: 3,
+      };
+      this.local.set('activeOrder', JSON.stringify(json2));
+      this.HomeThreeDisable = false;
+      this.activeOrder = json2;
+
+      this.service.mySocket.on('OrderAccepted', async (AcceptedData) => {
+        let ress = await this.apiService.getDriverInfo(AcceptedData.DriverId);
+
+        if (!ress['status']) return this.service.Toast(ress['message']);
+
+        this.service.mySocket.once('WaitingCustomer', async (data) => {
+          console.log('WaitingCustomer', data);
+
+          if (data.OrderId != this.activeOrder.OrderId) return;
+          this.OnWay = 'Sizi Gözləyir';
+
+          this.activeOrder.OrderStatus = 'Waiting Customer';
+          this.activeOrder.RemainingTime = data.RemainingTime;
+
+          console.log('listening for OrderStarted');
+          this.service.mySocket.once('OrderStarted', async (data) => {
+            this.OnWay = 'Yolda';
+            this.activeOrder.OrderStatus = 'Started';
+            this.activeOrder.RemainingTime = data.RemainingTime;
+            this.local.set('activeOrder', JSON.stringify(this.activeOrder));
+            this.service.mySocket.once(
+              'OrderCompletedConfirm',
+              async (data) => {
+                this.activeOrder.OrderStatus = 'Completed';
+                this.activeOrder.step = 7;
+                this.local.set('activeOrder', JSON.stringify(this.activeOrder));
+                this.step = 7;
+              }
+            );
+          });
+          this.local.set('activeOrder', JSON.stringify(this.activeOrder));
+        });
+
+        AcceptedData.Driver = ress['data'];
+        AcceptedData.step = 6;
+        this.service.Toast('Sifariş qəbul edildi');
+
+        this.local.set('activeOrder', JSON.stringify(AcceptedData));
+        this.activeOrder = AcceptedData;
+        this.step = 4;
+        setTimeout(async () => {
+          this.DriverFound = false;
+          setTimeout(() => {
+            this.DriverFound = true;
+            this.step = 6;
+          }, 2000);
+        }, 1000);
+
+        // setTimeout(() => {
+        //   this.DriverFound = false;
+        //   setTimeout(() => {
+        //     this.DriverFound= true;
+        //     this.step = 6;
+        //     this.roter.navigate(['/home/' + this.step]);
+        //   }, 5000);
+        // }, 2500);
+      });
+    }
   }
   // async home3() {
   //   let pos = { lat: this.position.lat, lng: this.position.lng };

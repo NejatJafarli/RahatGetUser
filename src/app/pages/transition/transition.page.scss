@@ -2,15 +2,18 @@
     --background: #000000;
     ion-item{
         --background: transparent;
+        .rahatget{
+            --background: linear-gradient(180deg, #3FBEB0 0%, #B2F49E 100%);
+        }
+        .evakutor{
+            --background: #CAF17C;
+        }
         ion-button{
             // height: 357px;
             height: calc(50vh - 10px);
             border-radius: 15px;
             width: 100%;
-            --background: transparent;
-            background-size: cover;
-            background-repeat: no-repeat;
-            background-position: center;
+            
             p{
                 font-family: 'Roboto', sans-serif;
                 font-style: normal;

@@ -50,6 +50,21 @@ export class AppComponent {
     await this.local.init();
     await this.service.init();
 
+    //remove
+// let active=await this.local.get('activeRezerv');
+
+console.log( JSON.parse(await this.local.get('activeOrder')));
+console.log( JSON.parse(await this.local.get('activeRezerv')));
+// let date=new Date(active.ExpireDate);
+// console.log(date);
+
+
+    
+   await this.local.remove('activeRezerv');
+   await this.local.remove('activeOrder');
+
+   console.log('app component');
+   
     this.platform.ready().then(() => {
       // this.OneSignalInit();
     });
