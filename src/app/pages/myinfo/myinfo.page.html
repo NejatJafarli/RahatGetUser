@@ -11,9 +11,13 @@
       <ion-list>
         <ion-item lines="none">
           <ion-button (click)="selectImage1()">
-            <ion-img class="img" [src]="User.photo"></ion-img>
-            <p>Öz şəklinizi yükləyin</p>
-          </ion-button>
+              <ion-img class="img" [src]="User.photo">
+              </ion-img>
+              <!-- <p>Öz şəklinizi yükləyin</p> -->
+              <div class="edit-icon">
+                <ion-icon name="camera-outline"></ion-icon>
+              </div>
+            </ion-button>
         </ion-item>
         <ion-item lines="none">
           <ion-label position="stacked">Ad Soyad</ion-label>
@@ -21,7 +25,7 @@
         </ion-item>
         <ion-item lines="none">
           <ion-label position="stacked">Yaş</ion-label>
-          <ion-input  [(ngModel)]="User.age" type="number" placeholder="Yaş"></ion-input>
+          <ion-input [(ngModel)]="User.age" type="number" placeholder="Yaş"></ion-input>
         </ion-item>
         <ion-item lines="none">
           <ion-label position="stacked">Telefon</ion-label>
@@ -49,7 +53,8 @@
         <ion-item lines="none">
           <ion-label position="stacked">Köhnə parol</ion-label>
           <div class="inputs">
-            <ion-input class="ion-no-padding" [(ngModel)]="OldPass" [type]="passwordType2" placeholder="*********"></ion-input>
+            <ion-input class="ion-no-padding" [(ngModel)]="OldPass" [type]="passwordType2"
+              placeholder="*********"></ion-input>
             <a class="type-toggle" (click)="tooglePassword2()">
               <ion-icon class="show-option" [hidden]="passwordShow2" name="eye-off-outline"></ion-icon>
               <ion-icon class="hide-option" [hidden]="!passwordShow2" name="eye-outline"></ion-icon>
@@ -59,7 +64,8 @@
         <ion-item lines="none">
           <ion-label position="stacked">Yeni parol</ion-label>
           <div class="inputs">
-            <ion-input class="ion-no-padding"[(ngModel)]="NewPass" [type]="passwordType" placeholder="*********"></ion-input>
+            <ion-input class="ion-no-padding" [(ngModel)]="NewPass" [type]="passwordType"
+              placeholder="*********"></ion-input>
             <a class="type-toggle" (click)="tooglePassword()">
               <ion-icon class="show-option" [hidden]="passwordShow" name="eye-off-outline"></ion-icon>
               <ion-icon class="hide-option" [hidden]="!passwordShow" name="eye-outline"></ion-icon>
@@ -69,7 +75,8 @@
         <ion-item lines="none">
           <ion-label position="stacked">Yeni parolu təkrar edin</ion-label>
           <div class="inputs">
-            <ion-input class="ion-no-padding" [(ngModel)]="ConfirmPass" [type]="passwordType1" placeholder="*********"></ion-input>
+            <ion-input class="ion-no-padding" [(ngModel)]="ConfirmPass" [type]="passwordType1"
+              placeholder="*********"></ion-input>
             <a class="type-toggle" (click)="tooglePassword1()">
               <ion-icon class="show-option" [hidden]="passwordShow1" name="eye-off-outline"></ion-icon>
               <ion-icon class="hide-option" [hidden]="!passwordShow1" name="eye-outline"></ion-icon>

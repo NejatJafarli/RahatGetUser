@@ -145,11 +145,14 @@ export class ApiService {
             Authorization: 'Bearer ' + this._token,
           },
         })
-        .subscribe((data) => {
-          resolve(data);
-        }, (error) => {
-          resolve(error);
-        });
+        .subscribe(
+          (data) => {
+            resolve(data);
+          },
+          (error) => {
+            resolve(error);
+          }
+        );
     });
   }
 
@@ -199,6 +202,12 @@ export class ApiService {
   }
   async getDriverInfo(driverid) {
     console.log(driverid);
+    //create new string
+    let str = String(driverid);
+    //replace driver ""
+    str = str.replace('driver', '');
+    //convert to number
+    let driverId = Number(str);
 
     let cache = await this.local.getCachedRequests(
       environment.ApiLink + '/user/getDriverInfo'
@@ -210,7 +219,7 @@ export class ApiService {
         this.http
           .post(
             environment.ApiLink + '/user/getDriverInfo',
-            { driverId: driverid },
+            { driverId: driverId },
             {
               headers: {
                 Authorization: 'Bearer ' + this._token,
@@ -276,11 +285,36 @@ export class ApiService {
             Authorization: 'Bearer ' + this._token,
           },
         })
-        .subscribe((data) => {
-          resolve(data);
-        }, (error) => {
-          resolve(error);
-        });
+        .subscribe(
+          (data) => {
+            resolve(data);
+          },
+          (error) => {
+            resolve(error);
+          }
+        );
+    });
+  }
+  async updateRezerv(rideId, OrderId) {
+    return new Promise((resolve, reject) => {
+      this.http
+        .post(
+          environment.ApiLink + '/user/updateRezerv',
+          { rideId: rideId, OrderId: OrderId },
+          {
+            headers: {
+              Authorization: 'Bearer ' + this._token,
+            },
+          }
+        )
+        .subscribe(
+          (data) => {
+            resolve(data);
+          },
+          (error) => {
+            resolve(error);
+          }
+        );
     });
   }
 
@@ -331,6 +365,28 @@ export class ApiService {
     });
   }
 
+  async getNotifications() {
+    return await new Promise((resolve, reject) => {
+      this.http
+        .post(
+          environment.ApiLink + '/user/getNotifications',
+          {},
+          {
+            headers: {
+              Authorization: 'Bearer ' + this._token,
+            },
+          }
+        )
+        .subscribe(
+          (data) => {
+            resolve(data);
+          },
+          (error) => {
+            resolve(error);
+          }
+        );
+    });
+  }
   async updatePassword(oldPassword, newPassword) {
     return await new Promise((resolve, reject) => {
       this.http

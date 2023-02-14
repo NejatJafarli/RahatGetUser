@@ -239,7 +239,7 @@
       personPhoto2="/assets/img/p2.jpg" personPhoto3="/assets/img/p3.jpg" personPhoto4="/assets/img/p4.jpg"
       personPhoto5="/assets/img/p5.jpg">
     </app-radar-search>
-    <ion-button (click)="home4()">Sürücü axtarılır</ion-button>
+    <!-- <ion-button (click)="home4()">Sürücü axtarılır</ion-button> -->
   </div>
 </ion-content>
 <ion-content *ngIf="step == 4">
@@ -272,7 +272,7 @@
       personPhoto5="/assets/img/p5.jpg">
     </app-radar-search>
     <p class="name">{{activeOrder.Driver.fullname}}</p>
-    <ion-button (click)="home5()">Go</ion-button>
+    <!-- <ion-button (click)="home5()">Go</ion-button> -->
   </div>
 </ion-content>
 <!-- <ion-content *ngIf="step==5">
@@ -381,7 +381,7 @@
     <app-headerbg [heigth1]=150></app-headerbg>
     <div class="head-img">
       <ion-avatar>
-        <img src="/assets/img/p4.jpg">
+        <img src="{{activeOrder.Driver.photo}}">
       </ion-avatar>
       <ion-text>
         <p>{{activeOrder.Driver.fullname}} <img src="/assets/icon/star.svg"><span>{{activeOrder.Driver.reyting}}</span></p>
@@ -436,7 +436,7 @@
     <div class="reservation-date">
       <ion-grid>
         <ion-row>
-          <ion-col>
+          <!-- <ion-col>
             <div class="date-times">
               <ion-label>
                 <p>Tarix</p>
@@ -461,7 +461,7 @@
                 </ng-template>
               </ion-modal>
             </div>
-          </ion-col>
+          </ion-col> -->
         </ion-row>
       </ion-grid>
     </div>
@@ -497,7 +497,7 @@
     <div class="const">
       <div class="head-img">
         <ion-avatar>
-          <img src="/assets/img/p4.jpg">
+          <img src="{{activeOrder.Driver.photo}}">
         </ion-avatar>
         <ion-text>
           <p>{{activeOrder.Driver.fullname}} <img src="/assets/icon/star.svg"><span>{{activeOrder.Driver.reyting}}</span></p>

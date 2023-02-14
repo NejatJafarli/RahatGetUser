@@ -29,9 +29,6 @@ export class ChatrgPage implements OnInit {
   msg;
   async ngOnInit() {
     this.activeOrder = JSON.parse(await this.local.get('activeOrder'));
-  }
-  activeOrder;
-  async ionViewDidEnter() {
     console.log(this.activeOrder);
     this.myService.mySocket.emit('GetMessages', this.activeOrder.OrderId);
     this.myService.mySocket.once('getMessages', (data) => {
@@ -41,6 +38,7 @@ export class ChatrgPage implements OnInit {
       this.messages.push(data);
     });
   }
+  activeOrder;
   sendMsg() {
     this.myService.mySocket.emit('SendMessage', {
       OrderId: this.activeOrder.OrderId,

@@ -5,7 +5,7 @@
       <div class="header">
         <div class="left">
           <ion-avatar>
-            <img src="/assets/img/p4.jpg">
+            <img src="{{activeOrder.Driver.photo}}">
           </ion-avatar>
           <div class="name">
             <p>{{activeOrder.Driver.fullname}}</p>
@@ -18,13 +18,10 @@
       </div>
     </div>
     <div class="cont">
-      <ion-list >
+      <ion-list>
         <ion-item *ngFor="let msg of messages" class="{{msg.writer=='user'?'me':'you'}}" lines="none">
           <p slot="{{msg.writer=='user'?'end':'start'}}">{{msg.message}}</p>
         </ion-item>
-        <!-- <ion-item class="you" lines="none">
-          <p slot="start">Alekum</p>
-        </ion-item> -->
       </ion-list>
       <div class="foot">
         <ion-textarea [(ngModel)]="msg" placeholder="Mesaj yazın" cols="1" rows="1"></ion-textarea>

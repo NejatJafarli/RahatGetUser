@@ -9,7 +9,6 @@ import {
 } from '@capacitor/camera';
 import { Filesystem } from '@capacitor/filesystem';
 import { NavController, Platform } from '@ionic/angular';
-import { identity } from 'rxjs/internal/util/identity';
 import { ApiService } from 'src/app/services/api.service';
 import { MyService } from 'src/app/services/my-service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -72,7 +71,8 @@ export class MyinfoPage implements OnInit {
     this.navCtrl.back();
   }
   async ngOnInit() {
-    this.User = this.myService.user;
+    //deep copy
+    this.User = JSON.parse(JSON.stringify(this.myService.user));
   }
   async selectImage1() {
     const image = await Camera.getPhoto({
@@ -91,9 +91,12 @@ export class MyinfoPage implements OnInit {
       console.log(readFile1);
       
       this.myPhoto.data = `data:image/jpeg;base64,${readFile1.data}`;
+      this.imgData=this.myPhoto.data;
+      this.User.photo = this.myPhoto.data;
       console.log(this.myPhoto);
     }
   }
+  imgData;
   async SentImg() {
     const readFile1 = await Filesystem.readFile({
       path: this.myPhoto.path,
@@ -154,12 +157,12 @@ export class MyinfoPage implements OnInit {
     });
 
   async Save() {
-    let imgData = null;
+    let blop = null;
     if (this.myPhoto.name.length > 0) {
-      imgData = await this.SentImg();
+      blop = await this.SentImg();
     }
     let res;
-    if (imgData == null) {
+    if (blop == null) {
       res = await this.apiService.updateAccount(
         this.User.fullname,
         this.User.phone,
@@ -171,7 +174,7 @@ export class MyinfoPage implements OnInit {
         this.User.fullname,
         this.User.phone,
         this.User.age,
-        imgData
+        blop
       );
     }
 
@@ -179,9 +182,14 @@ export class MyinfoPage implements OnInit {
       this.myService.Toast(res['message']);
       return;
     }
+    console.log(res);
+    
     this.User = res['data'];
+    this.User.photo='data:image/jpeg;base64,'+this.User.photo;
     this.myService.Toast(res['message']);
+    this.User = res['data'];
     this.local.set('user', JSON.stringify(this.User));
+    this.myService.user = this.User;
     this.router.navigate(['/home']);
   }
   OldPass;

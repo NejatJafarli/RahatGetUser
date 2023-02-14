@@ -8,58 +8,19 @@
       <ion-title slot="center">Bildirişlər</ion-title>
     </div>
     <div class="card-list">
-      <div class="item-date">
-        <span>Bu gün</span>
-      </div>
-      <div class="item">
-        <div class="left">
-          <img src="/assets/icon/cupon.svg">
+      <div *ngFor="let item of notifications">
+        <div class="item-date">
+          <!-- //item have created_at date -->
+          <span>{{item.created_at | date:'dd MMMM yyyy'}}</span>
         </div>
-        <div class="text">
-          <p>30% Xüsusi Endirim!</p>
-          <span>Xüsusi kampaniya yalnız bu gün keçərlidir</span>
-        </div>
-      </div>
-      <div class="item-date">
-        <span>Dünən</span>
-      </div>
-      <div class="item">
-        <div class="left">
-          <img src="/assets/icon/cupon.svg">
-        </div>
-        <div class="text">
-          <p>30% Xüsusi Endirim!</p>
-          <span>Xüsusi kampaniya yalnız bu gün keçərlidir</span>
-        </div>
-      </div>
-      <div class="item">
-        <div class="left">
-          <img src="/assets/icon/cupon.svg">
-        </div>
-        <div class="text">
-          <p>30% Xüsusi Endirim!</p>
-          <span>Xüsusi kampaniya yalnız bu gün keçərlidir</span>
-        </div>
-      </div>
-      <div class="item-date">
-        <span>iyun 22. 2022</span>
-      </div>
-      <div class="item">
-        <div class="left">
-          <img src="/assets/icon/cupon.svg">
-        </div>
-        <div class="text">
-          <p>30% Xüsusi Endirim!</p>
-          <span>Xüsusi kampaniya yalnız bu gün keçərlidir</span>
-        </div>
-      </div>
-      <div class="item">
-        <div class="left">
-          <img src="/assets/icon/cupon.svg">
-        </div>
-        <div class="text">
-          <p>30% Xüsusi Endirim!</p>
-          <span>Xüsusi kampaniya yalnız bu gün keçərlidir</span>
+        <div class="item">
+          <div class="left">
+            <img src="{{item.image==null?'/assets/icon/cupon.svg':item.image}}">
+          </div>
+          <div class="text">
+            <p>{{item.title}}</p>
+            <span>{{item.description}}</span>
+          </div>
         </div>
       </div>
     </div>

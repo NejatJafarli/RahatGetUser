@@ -43,7 +43,7 @@ export class AppComponent {
     private platform: Platform,
     private apiService: ApiService,
     private local: StorageService,
-    private auth:AuthService
+    private auth: AuthService
   ) {}
   //ng on init
   async ngOnInit() {
@@ -51,22 +51,21 @@ export class AppComponent {
     await this.service.init();
 
     //remove
-// let active=await this.local.get('activeRezerv');
+    // let active = await this.local.get('activeRezerv');
 
-console.log( JSON.parse(await this.local.get('activeOrder')));
-console.log( JSON.parse(await this.local.get('activeRezerv')));
-// let date=new Date(active.ExpireDate);
-// console.log(date);
+    console.log(JSON.parse(await this.local.get('activeOrder')));
+    console.log(JSON.parse(await this.local.get('activeRezerv')));
+    // let date = new Date(active.ExpireDate);
 
+    // // console.log(date);
 
-    
-   await this.local.remove('activeRezerv');
-   await this.local.remove('activeOrder');
+    // await this.local.remove('activeRezerv');
+    // await this.local.remove('activeOrder');
 
-   console.log('app component');
-   
+    console.log('app component');
+
     this.platform.ready().then(() => {
-      // this.OneSignalInit();
+      this.OneSignalInit();
     });
     // //check if activeorder have send home page step 5
     // if (localStorage.getItem('activeOrder') != null) {
@@ -76,13 +75,11 @@ console.log( JSON.parse(await this.local.get('activeRezerv')));
     this.service.selectedApp$.subscribe((data) => {
       this.selected = data;
     });
-    
-    let loggedin=await this.auth.isloggedIn();
-    if(loggedin){
+
+    let loggedin = await this.auth.isloggedIn();
+    if (loggedin) {
       this.router.navigate(['/transition']);
     }
-
-    
   }
   home() {
     this.router.navigate(['/home']);
@@ -169,10 +166,10 @@ console.log( JSON.parse(await this.local.get('activeRezerv')));
   async logout() {
     //send logout request
     await this.apiService.logout();
-    // OneSignal.setExternalUserId(null);
+    this.service.TokenCheck = false;
+    OneSignal.setExternalUserId(null);
 
     //PROBLEM HERE
-
     this.menuCtrl.close();
     document
       .getElementById('main-content')
