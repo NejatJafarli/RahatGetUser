@@ -50,6 +50,7 @@ export class ChatrgPage implements OnInit {
   close() {
     // this.navCtrl.back();
     //send home step 6
-    this.router.navigate(['/home/' + this.activeOrder.step]);
+    // this.router.navigate(['/home/' + this.activeOrder.step]);
+    this.navCtrl.back();
   }
 }

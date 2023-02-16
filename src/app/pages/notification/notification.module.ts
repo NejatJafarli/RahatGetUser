@@ -8,6 +8,7 @@ import { NotificationPageRoutingModule } from './notification-routing.module';
 
 import { NotificationPage } from './notification.page';
 import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.componen
     FormsModule,
     IonicModule,
     NotificationPageRoutingModule,
-    HeaderbgComponent
+    HeaderbgComponent,
+    TranslateModule
 
   ],
   declarations: [

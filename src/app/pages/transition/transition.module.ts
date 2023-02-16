@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { TransitionPageRoutingModule } from './transition-routing.module';
 
 import { TransitionPage } from './transition.page';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    TransitionPageRoutingModule
+    TransitionPageRoutingModule,
+    TranslateModule
   ],
   declarations: [TransitionPage]
 })

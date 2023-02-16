@@ -8,6 +8,7 @@ import { MyinfoPageRoutingModule } from './myinfo-routing.module';
 
 import { MyinfoPage } from './myinfo.page';
 import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.componen
     FormsModule,
     IonicModule,
     MyinfoPageRoutingModule,
-    HeaderbgComponent
+    HeaderbgComponent,
+    TranslateModule
 
   ],
   declarations: [

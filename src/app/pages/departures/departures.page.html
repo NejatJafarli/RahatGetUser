@@ -5,14 +5,14 @@
       <ion-buttons slot="start" (click)="navBack()">
         <ion-icon name="chevron-back-outline"></ion-icon>
       </ion-buttons>
-      <ion-title slot="center">Gedişlər</ion-title>
+      <ion-title slot="center">{{"depatures_moves"|translate}}</ion-title>
     </div>
     <ion-list>
       <ion-item lines="none" class="items" *ngFor="let ride of rides">
         <div class="card">
           <div class="head">
-            <p class="cancelled" *ngIf="ride.status=='Canceled'">{{ride.status}}</p>
-            <p class="success" *ngIf="ride.status=='Completed'">{{ride.status}}</p>
+            <p class="cancelled" *ngIf="ride.status=='Canceled'">{{ride.status | translate}}</p>
+            <p class="success" *ngIf="ride.status=='Completed'">{{ride.status |translate}}</p>
           </div>
           <div class="const">
             <div class="address1">

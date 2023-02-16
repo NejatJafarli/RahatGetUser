@@ -5,7 +5,7 @@
       <ion-buttons slot="start" (click)="navBack()">
         <ion-icon name="chevron-back-outline"></ion-icon>
       </ion-buttons>
-      <ion-title slot="center">İstifadəci məlumatlarım</ion-title>
+      <ion-title slot="center">{{"account_account_info"|translate}}</ion-title>
     </div>
     <div class="form">
       <ion-list>
@@ -20,21 +20,21 @@
             </ion-button>
         </ion-item>
         <ion-item lines="none">
-          <ion-label position="stacked">Ad Soyad</ion-label>
-          <ion-input [(ngModel)]="User.fullname" type="text" placeholder="Ad Soyad"></ion-input>
+          <ion-label position="stacked">{{"account_name_surname"|translate}}</ion-label>
+          <ion-input [(ngModel)]="User.fullname" type="text" placeholder="{{'account_fullname'|translate}}"></ion-input>
         </ion-item>
         <ion-item lines="none">
-          <ion-label position="stacked">Yaş</ion-label>
-          <ion-input [(ngModel)]="User.age" type="number" placeholder="Yaş"></ion-input>
+          <ion-label position="stacked">{{"account_age"|translate}}</ion-label>
+          <ion-input [(ngModel)]="User.age" type="number" placeholder="{{'account_age'|translate}}"></ion-input>
         </ion-item>
         <ion-item lines="none">
-          <ion-label position="stacked">Telefon</ion-label>
+          <ion-label position="stacked">{{"account_phone"|translate}}</ion-label>
           <ion-input [(ngModel)]="User.phone" type="tel" placeholder="+994555555555"></ion-input>
         </ion-item>
       </ion-list>
       <div class="enter-btn">
-        <ion-button (click)="Save()" class="btn-primary">Yadda saxla</ion-button>
-        <ion-button (click)="profile2()" class="reset">Parolu yenilə</ion-button>
+        <ion-button (click)="Save()" class="btn-primary">{{"account_save"|translate}}</ion-button>
+        <ion-button (click)="profile2()" class="reset">{{"account_reset_pass"|translate}}</ion-button>
       </div>
     </div>
   </div>
@@ -46,12 +46,12 @@
       <ion-buttons slot="start" (click)="backbtn()">
         <ion-icon name="chevron-back-outline"></ion-icon>
       </ion-buttons>
-      <ion-title slot="center">Parolu yenilə</ion-title>
+      <ion-title slot="center">{{"account_reset_pass"|translate}}</ion-title>
     </div>
     <div class="form">
       <ion-list>
         <ion-item lines="none">
-          <ion-label position="stacked">Köhnə parol</ion-label>
+          <ion-label position="stacked">{{"account_old_pass"|translate}}</ion-label>
           <div class="inputs">
             <ion-input class="ion-no-padding" [(ngModel)]="OldPass" [type]="passwordType2"
               placeholder="*********"></ion-input>
@@ -62,7 +62,7 @@
           </div>
         </ion-item>
         <ion-item lines="none">
-          <ion-label position="stacked">Yeni parol</ion-label>
+          <ion-label position="stacked">{{"account_new_pass"|translate}}</ion-label>
           <div class="inputs">
             <ion-input class="ion-no-padding" [(ngModel)]="NewPass" [type]="passwordType"
               placeholder="*********"></ion-input>
@@ -73,7 +73,7 @@
           </div>
         </ion-item>
         <ion-item lines="none">
-          <ion-label position="stacked">Yeni parolu təkrar edin</ion-label>
+          <ion-label position="stacked">{{"account_new_pass_again"|translate}}</ion-label>
           <div class="inputs">
             <ion-input class="ion-no-padding" [(ngModel)]="ConfirmPass" [type]="passwordType1"
               placeholder="*********"></ion-input>
@@ -82,11 +82,11 @@
               <ion-icon class="hide-option" [hidden]="!passwordShow1" name="eye-outline"></ion-icon>
             </a>
           </div>
-          <span class="text-span">Min 6 karakter</span>
+          <span class="text-span">{{"account_min_6char"|translate}}</span>
         </ion-item>
       </ion-list>
       <div class="enter-btn">
-        <ion-button (click)="SavePass()" class="btn-primary">Yadda saxla</ion-button>
+        <ion-button (click)="SavePass()" class="btn-primary">{{"account_save"|translate}}</ion-button>
       </div>
     </div>
   </div>

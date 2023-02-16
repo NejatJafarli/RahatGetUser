@@ -65,7 +65,7 @@ export class AppComponent {
     console.log('app component');
 
     this.platform.ready().then(() => {
-      this.OneSignalInit();
+      // this.OneSignalInit();
     });
     // //check if activeorder have send home page step 5
     // if (localStorage.getItem('activeOrder') != null) {
@@ -167,7 +167,7 @@ export class AppComponent {
     //send logout request
     await this.apiService.logout();
     this.service.TokenCheck = false;
-    OneSignal.setExternalUserId(null);
+    // OneSignal.setExternalUserId(null);
 
     //PROBLEM HERE
     this.menuCtrl.close();

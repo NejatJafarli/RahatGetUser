@@ -11,6 +11,7 @@ import { MenuComponent } from 'src/app/components/menu/menu.component';
 import { RadarSearchComponent } from 'src/app/components/radar-search/radar-search.component';
 import { EnteraddressComponent } from 'src/app/components/enteraddress/enteraddress.component';
 import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.componen
     FormsModule,
     IonicModule,
     HomePageRoutingModule,
-    HeaderbgComponent
+    HeaderbgComponent,
+    TranslateModule
   ],
   declarations: [
     HomePage,

@@ -8,6 +8,7 @@ import { SettingPageRoutingModule } from './setting-routing.module';
 
 import { SettingPage } from './setting.page';
 import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -15,11 +16,9 @@ import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.componen
     FormsModule,
     IonicModule,
     SettingPageRoutingModule,
-    HeaderbgComponent
-
+    HeaderbgComponent,
+    TranslateModule,
   ],
-  declarations: [
-    SettingPage,
-  ]
+  declarations: [SettingPage],
 })
 export class SettingPageModule {}

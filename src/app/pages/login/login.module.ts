@@ -9,6 +9,7 @@ import { LoginPageRoutingModule } from './login-routing.module';
 import { LoginPage } from './login.page';
 import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.component';
 import { OtpcodeComponent } from 'src/app/components/otpcode/otpcode.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { OtpcodeComponent } from 'src/app/components/otpcode/otpcode.component';
     IonicModule,
     LoginPageRoutingModule,
     ReactiveFormsModule ,
-    HeaderbgComponent
+    HeaderbgComponent,
+    TranslateModule
   ],
   declarations: [
     OtpcodeComponent,

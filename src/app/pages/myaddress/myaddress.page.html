@@ -2,10 +2,10 @@
   <app-headerbg></app-headerbg>
   <div class="myaddress-main">
     <div class="title">
-      <ion-buttons slot="start" (click)="navBack()" >
+      <ion-buttons slot="start" (click)="navBack()">
         <ion-icon name="chevron-back-outline"></ion-icon>
       </ion-buttons>
-      <ion-title slot="center">Ünvanlarım</ion-title>
+      <ion-title slot="center">{{"address_address"|translate}}</ion-title>
     </div>
     <div class="card-list">
       <div class="item" *ngFor="let item of addresses;let i=index">
@@ -25,10 +25,10 @@
               <ion-content class="ion-padding">
                 <div class="btn-edit">
                   <ion-button (click)="remove(item.id)">
-                    <ion-icon name="trash-outline"></ion-icon> Sil
+                    <ion-icon name="trash-outline"></ion-icon> {{"address_remove"|translate}}
                   </ion-button>
-                  <ion-button (click)="editAddress(i)" >
-                    <ion-icon name="create-outline"></ion-icon> Düzəliş et
+                  <ion-button (click)="editAddress(i)">
+                    <ion-icon name="create-outline"></ion-icon> {{"address_update"|translate}}
                   </ion-button>
                 </div>
               </ion-content>
@@ -40,7 +40,7 @@
     <div class="add-address">
       <ion-button class="btn-primary" (click)="addNewLocation()">
         <ion-icon name="add-outline"></ion-icon>
-        <p>Yeni ünvan əlavə edin</p>
+        <p>{{"address_add_new_location"|translate}}</p>
       </ion-button>
     </div>
   </div>
@@ -55,12 +55,13 @@
         <ion-buttons slot="start" (click)="backbtn()">
           <ion-icon name="chevron-back-outline"></ion-icon>
         </ion-buttons>
-        <ion-title slot="center">Ünvan əlavə edin</ion-title>
+        <ion-title slot="center">{{"address_add_location"|translate}}</ion-title>
       </div>
       <div class="inputs">
         <ion-item lines="none" class="ion-no-padding where">
-          <ion-input [(ngModel)]="selectedAddressJson.AddressName" debounce="300" (ionChange)="whereChange(selectedAddressJson.AddressName)" type="text"
-            placeholder="Ünvan" expand="block"></ion-input>
+          <ion-input [(ngModel)]="selectedAddressJson.AddressName" debounce="300"
+            (ionChange)="whereChange(selectedAddressJson.AddressName)" type="text" placeholder="{{'address_location'|translate}}"
+            expand="block"></ion-input>
           <ion-icon name="location-outline"></ion-icon>
         </ion-item>
       </div>
@@ -73,17 +74,18 @@
         </ion-item>
       </ion-list>
       <div class="foot">
-        <ion-button class="btn-primary" id="open-custom-dialog" >Ünvanı Adini Qeyd Et</ion-button>
+        <ion-button class="btn-primary" id="open-custom-dialog">{{"address_set_location_name"|translate}}</ion-button>
         <ion-modal id="example-modal" #modal trigger="open-custom-dialog">
           <ng-template>
             <div class="wrapper">
               <div class="closes">
-                <p>Rahat ünvan</p>
-                <ion-button (click)="modal.dismiss()" class="close" id="open-custom-dialog" expand="block"><ion-icon name="close-outline"></ion-icon></ion-button>
+                <p>{{"address_rahat_location"|translate}}</p>
+                <ion-button (click)="modal.dismiss()" class="close" id="open-custom-dialog" expand="block"><ion-icon
+                    name="close-outline"></ion-icon></ion-button>
               </div>
               <ion-input [(ngModel)]="tempName" type="text" placeholder="Ünvan adı"></ion-input>
               <div class="add">
-                <ion-button class="btn-primary" (click)="nameClick(tempName)" expand="block">Ünvanı Yadda Saxla</ion-button>
+                <ion-button class="btn-primary" (click)="nameClick(tempName)" expand="block">{{"address_save_location"|translate}}</ion-button>
               </div>
             </div>
           </ng-template>

@@ -36,6 +36,27 @@ export class MyService {
     this.selectedApp.next(value);
     this.local.set('selectedApp', value);
   }
+  myGuid() {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1)
+    }
+    return (
+      s4() +
+      s4() +
+      '-' +
+      s4() +
+      '-' +
+      s4() +
+      '-' +
+      s4() +
+      '-' +
+      s4() +
+      s4() +
+      s4()
+    )
+  }
 
   user;
   apiKey = 'AIzaSyBMqRoKxM1TmwA7PTM8sbWzrcCD5VQLSP0';

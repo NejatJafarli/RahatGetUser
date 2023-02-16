@@ -8,6 +8,7 @@ import { PaymentmethodsPageRoutingModule } from './paymentmethods-routing.module
 
 import { PaymentmethodsPage } from './paymentmethods.page';
 import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.componen
     FormsModule,
     IonicModule,
     PaymentmethodsPageRoutingModule,
-    HeaderbgComponent
+    HeaderbgComponent,
+    TranslateModule
 
   ],
   declarations: [

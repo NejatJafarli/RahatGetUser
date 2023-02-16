@@ -9,12 +9,12 @@
     </div>
     <div class="modals">
       <div class="foot">
-        <p>Ünvanı daxıl edin</p>
+        <p>{{"home_enter_your_location"|translate}}</p>
         <ion-item lines="none" (click)="setOpen(true)" class="ion-no-padding where">
-          <ion-input type="text" placeholder="Haraya?" expand="block"></ion-input>
+          <ion-input type="text" placeholder="{{'home_where'|translate}}" expand="block"></ion-input>
           <ion-icon name="navigate-outline"></ion-icon>
         </ion-item>
-        <span>Gedəceyiniz ünvanı qeyd edin</span>
+        <span>{{"home_enter_your_destination_location"}}</span>
       </div>
       <ion-modal class="add-loc-modal" [isOpen]="isModalOpen" [keepContentsMounted]="true">
         <ng-template #modalTemplate>
@@ -36,12 +36,13 @@
               </div>
               <form>
                 <ion-item lines="none" class="ion-margin-bottom">
-                  <ion-input type="text" [(ngModel)]="positionGeocod" [ngModelOptions]="{standalone:true}" debounce="300"
-                    (ionChange)="whereChange(positionGeocod)" (click)="SelectedText=1" placeholder="Hardan?"></ion-input>
+                  <ion-input type="text" [(ngModel)]="positionGeocod" [ngModelOptions]="{standalone:true}"
+                    debounce="300" (ionChange)="whereChange(positionGeocod)" (click)="SelectedText=1"
+                    placeholder="{{'home_from'|translate}}"></ion-input>
                   <ion-icon name="location-outline"></ion-icon>
                 </ion-item>
                 <ion-item lines="none">
-                  <ion-input type="text" placeholder="Haraya?" [(ngModel)]="WhereText" debounce="300"
+                  <ion-input type="text" placeholder="{{'home_where'|translate}}" [(ngModel)]="WhereText" debounce="300"
                     [ngModelOptions]="{standalone: true}" (click)="SelectedText=2" (ionChange)="whereChange(WhereText)"
                     expand="block"></ion-input>
                   <ion-icon name="navigate-outline"></ion-icon>
@@ -51,7 +52,7 @@
             <div class="abs">
               <div class="ready-location">
                 <ion-list>
-                  <ion-item lines="none"  *ngFor="let item of myAddresses;let i=index" (click)="SavedLocationClick(i)"  >
+                  <ion-item lines="none" *ngFor="let item of myAddresses;let i=index" (click)="SavedLocationClick(i)">
                     <ion-icon name="heart-outline"></ion-icon>
                     <ion-label>
                       <p>{{item.name}}</p>
@@ -73,7 +74,8 @@
               </div>
             </div>
             <div class="confrm-btn btn-primary ion-no-padding">
-              <ion-button (click)="ConfirmLocations()" expand="block" class="ion-no-padding">Məkanı təsdiqlə</ion-button>
+              <ion-button (click)="ConfirmLocations()" expand="block"
+                class="ion-no-padding">{{"home_confirm_the_place"|translate}}</ion-button>
             </div>
           </ion-content>
         </ng-template>
@@ -93,20 +95,20 @@
     <div class="form-detail">
       <ion-list>
         <ion-item lines="none">
-          <ion-label position="stacked">Haradan?</ion-label>
-          <ion-input placeholder="Hardan?" [(ngModel)]="positionGeocod"  disabled="true"></ion-input>
+          <ion-label position="stacked">{{"home_from"|translate}}</ion-label>
+          <ion-input placeholder="{{'home_from'|translate}}" [(ngModel)]="positionGeocod" disabled="true"></ion-input>
         </ion-item>
         <ion-item lines="none">
-          <ion-label position="stacked">Haraya?</ion-label>
-          <ion-input disabled="true" [(ngModel)]="WhereText" placeholder="Haraya?"></ion-input>
+          <ion-label position="stacked">{{"home_where"|translate}}</ion-label>
+          <ion-input disabled="true" [(ngModel)]="WhereText" placeholder="{{'home_where'|translate}}"></ion-input>
         </ion-item>
         <div class="select-to-rezerv">
-          <p>Vaxtı təyin et</p>
+          <p>{{"home_define_the_time"|translate}}</p>
           <div class="rezeservation-btns">
             <ion-button class="btns" (click)="rezervChange()"
-              [class.reservationActive]="!toggleDisplayForRezerv">İndi</ion-button>
+              [class.reservationActive]="!toggleDisplayForRezerv">{{"home_now"|translate}}</ion-button>
             <ion-button class="btns" (click)="rezervChange()"
-              [class.reservationActive]="toggleDisplayForRezerv">Rezerv</ion-button>
+              [class.reservationActive]="toggleDisplayForRezerv">{{"home_rezerv"|translate}}</ion-button>
           </div>
         </div>
         <div class="reservation-date" *ngIf="toggleDisplayForRezerv">
@@ -115,12 +117,13 @@
               <ion-col>
                 <div class="date-times">
                   <ion-label>
-                    <p>Tarix</p>
+                    <p>{{"home_date"|translate}}</p>
                   </ion-label>
                   <ion-datetime-button datetime="datetime"></ion-datetime-button>
                   <ion-modal class="datetime-modal" [keepContentsMounted]="true">
                     <ng-template>
-                      <ion-datetime [(ngModel)]="RezervDate" id="datetime" presentation="date" [showDefaultButtons]="true"></ion-datetime>
+                      <ion-datetime [(ngModel)]="RezervDate" id="datetime" presentation="date"
+                        [showDefaultButtons]="true"></ion-datetime>
                     </ng-template>
                   </ion-modal>
                 </div>
@@ -128,12 +131,13 @@
               <ion-col>
                 <div class="date-times">
                   <ion-label>
-                    <p>Saat</p>
+                    <p>{{"home_time"|translate}}</p>
                   </ion-label>
                   <ion-datetime-button datetime="datetime1"></ion-datetime-button>
                   <ion-modal class="datetime-modal" [keepContentsMounted]="true">
                     <ng-template>
-                      <ion-datetime [(ngModel)]="RezervTime" id="datetime1" presentation="time" [showDefaultButtons]="true"></ion-datetime>
+                      <ion-datetime [(ngModel)]="RezervTime" id="datetime1" presentation="time"
+                        [showDefaultButtons]="true"></ion-datetime>
                     </ng-template>
                   </ion-modal>
                 </div>
@@ -142,18 +146,18 @@
           </ion-grid>
         </div>
         <ion-item lines="none">
-          <ion-label position="stacked">Nəqliyatın Markası</ion-label>
+          <ion-label position="stacked">{{"home_vehicle_make"|translate}}</ion-label>
           <ion-input [(ngModel)]="make" type="text" placeholder="BMW"></ion-input>
         </ion-item>
         <ion-item lines="none">
-          <ion-label position="stacked">D.Nişanı</ion-label>
+          <ion-label position="stacked">{{"home_vehicle_plate"|translate}}</ion-label>
           <ion-input [(ngModel)]="plate" type="text" placeholder="XX-XX-XXX"></ion-input>
         </ion-item>
         <div class="payment-sections">
           <div class="left">
             <div class="cash-methods" (click)="SelectedPayment=1" [class.PaymentActive]="SelectedPayment==1">
               <img src="/assets/icon/cash.png">
-              <p>Nağd ödəniş</p>
+              <p>{{"home_pay_with_cash"|translate}}</p>
             </div>
             <div class="cart-methods" id="open-modal" [class.PaymentActive]="SelectedPayment==2">
               <img src="/assets/icon/apple-pay2.png">
@@ -161,34 +165,34 @@
             </div>
           </div>
           <ion-modal #modal trigger="open-modal" [backdropDismiss]="true" class="payment-modal"
-          (willDismiss)="onWillDismiss($event)">
-          <ng-template>
-            <ion-content>
-              <p class="title">Kredit kartları</p>
-              <ion-list>
-                <ion-radio-group [(ngModel)]="selectedRadio">
-                  <ion-item lines="none" *ngFor="let card of MyCards;let i=index">
-                    <div class="labels">
-                      <img src="/assets/icon/apple-pay2.png">
-                      <p>{{card.Cardvalue}}</p>
-                    </div>
-                    <ion-radio (click)="RadioClick(i)" slot="end" value="{{i}}"></ion-radio>
-                  </ion-item>
-                  <ion-item lines="none" (click)="sendProfile()">
-                    <div class="labels">
-                      <img src="/assets/icon/apple-pay2.png">
-                      <p>Kart əlavə et</p>
-                    </div>
-                    <ion-icon slot="end" name="add-circle-outline"></ion-icon>
-                  </ion-item>
-                </ion-radio-group>
-              </ion-list>
-            </ion-content>
-          </ng-template>
-        </ion-modal>
+            (willDismiss)="onWillDismiss($event)">
+            <ng-template>
+              <ion-content>
+                <p class="title">{{"home_credit_carts"|translate}}</p>
+                <ion-list>
+                  <ion-radio-group [(ngModel)]="selectedRadio">
+                    <ion-item lines="none" *ngFor="let card of MyCards;let i=index">
+                      <div class="labels">
+                        <img src="/assets/icon/apple-pay2.png">
+                        <p>{{card.Cardvalue}}</p>
+                      </div>
+                      <ion-radio (click)="RadioClick(i)" slot="end" value="{{i}}"></ion-radio>
+                    </ion-item>
+                    <ion-item lines="none" (click)="sendProfile()">
+                      <div class="labels">
+                        <img src="/assets/icon/apple-pay2.png">
+                        <p>{{"home_add_cart"|translate}}</p>
+                      </div>
+                      <ion-icon slot="end" name="add-circle-outline"></ion-icon>
+                    </ion-item>
+                  </ion-radio-group>
+                </ion-list>
+              </ion-content>
+            </ng-template>
+          </ion-modal>
           <div class="right">
             <div class="text">
-              <p class="title">Qiymət</p>
+              <p class="title">{{"home_price"|translate}}</p>
               <p class="price">56₼</p>
             </div>
             <img src="/assets/icon/car2.png">
@@ -198,20 +202,21 @@
       <div class="salary-button">
         <div class="left">
           <p>56₼</p>
-          <span>Qiymət</span>
+          <span>{{"home_price"|translate}}</span>
         </div>
         <div class="right">
-          <ion-button class="btn-yellow ion-no-padding" (click)="home3()" [disabled]="HomeThreeDisable">Sürücü axtar</ion-button>
+          <ion-button class="btn-yellow ion-no-padding" (click)="home3()"
+            [disabled]="HomeThreeDisable">{{"home_search_driver"|translate}}</ion-button>
         </div>
       </div>
-      <ion-button (click)="step=1" class="backto-loc ion-no-padding">Dəyişiklik et</ion-button>
+      <ion-button (click)="step=1" class="backto-loc ion-no-padding">{{"home_make_modifier"|translate}}</ion-button>
     </div>
   </div>
 </ion-content>
 <ion-content *ngIf="step ==3">
   <div class="home2">
     <ion-item lines="none">
-      <p class="text1">Ünvanı daxil edin</p>
+      <p class="text1">{{"home_enter_your_location"|translate}}</p>
     </ion-item>
     <div class="enteraddress-component">
       <div class="dot">
@@ -222,18 +227,19 @@
       <form>
         <ion-item lines="none" class="ion-margin-bottom">
           <ion-input type="text" [(ngModel)]="activeOrder.OrderData.address" [ngModelOptions]="{standalone: true}"
-            placeholder="Hardan?" disabled="true"></ion-input>
+            placeholder="{{'home_from'|translate}}" disabled="true"></ion-input>
           <ion-icon name="location-outline"></ion-icon>
         </ion-item>
         <ion-item lines="none">
-          <ion-input type="text" placeholder="Haraya?" [(ngModel)]="activeOrder.OrderData.wherePosGeocod" [ngModelOptions]="{standalone: true}"
-            expand="block" disabled="true"></ion-input>
+          <ion-input type="text" placeholder="{{'home_where'|translate}}"
+            [(ngModel)]="activeOrder.OrderData.wherePosGeocod" [ngModelOptions]="{standalone: true}" expand="block"
+            disabled="true"></ion-input>
           <ion-icon name="navigate-outline"></ion-icon>
         </ion-item>
       </form>
     </div>
     <ion-item lines="none">
-      <p class="text2">Sizə ən yaxın sürücü axtarılır</p>
+      <p class="text2">{{"home_we_search_the_nearlest_driver"|translate}}</p>
     </ion-item>
     <app-radar-search [isSearching]=true personPhoto="/assets/img/p4.jpg" personPhoto1="/assets/img/p1.jpg"
       personPhoto2="/assets/img/p2.jpg" personPhoto3="/assets/img/p3.jpg" personPhoto4="/assets/img/p4.jpg"
@@ -256,20 +262,21 @@
         <form>
           <ion-item lines="none" class="ion-margin-bottom">
             <ion-input type="text" [(ngModel)]="activeOrder.OrderData.address" [ngModelOptions]="{standalone: true}"
-              placeholder="Hardan?" disabled="true"></ion-input>
+              placeholder="{{'home_from'|translate}}" disabled="true"></ion-input>
             <ion-icon name="location-outline"></ion-icon>
           </ion-item>
           <ion-item lines="none">
-            <ion-input type="text" placeholder="Haraya?" [(ngModel)]="activeOrder.OrderData.wherePosGeocod" [ngModelOptions]="{standalone: true}"
-              expand="block" disabled="true"></ion-input>
+            <ion-input type="text" placeholder="{{'home_where'|translate}}"
+              [(ngModel)]="activeOrder.OrderData.wherePosGeocod" [ngModelOptions]="{standalone: true}" expand="block"
+              disabled="true"></ion-input>
             <ion-icon name="navigate-outline"></ion-icon>
           </ion-item>
         </form>
       </div>
     </div>
-    <app-radar-search [isSearching]="DriverFound" [personPhoto]="activeOrder.Driver.photo" personPhoto1="/assets/img/p1.jpg"
-      personPhoto2="/assets/img/p2.jpg" personPhoto3="/assets/img/p3.jpg" personPhoto4="/assets/img/p4.jpg"
-      personPhoto5="/assets/img/p5.jpg">
+    <app-radar-search [isSearching]="DriverFound" [personPhoto]="activeOrder.Driver.photo"
+      personPhoto1="/assets/img/p1.jpg" personPhoto2="/assets/img/p2.jpg" personPhoto3="/assets/img/p3.jpg"
+      personPhoto4="/assets/img/p4.jpg" personPhoto5="/assets/img/p5.jpg">
     </app-radar-search>
     <p class="name">{{activeOrder.Driver.fullname}}</p>
     <!-- <ion-button (click)="home5()">Go</ion-button> -->
@@ -384,7 +391,8 @@
         <img src="{{activeOrder.Driver.photo}}">
       </ion-avatar>
       <ion-text>
-        <p>{{activeOrder.Driver.fullname}} <img src="/assets/icon/star.svg"><span>{{activeOrder.Driver.reyting}}</span></p>
+        <p>{{activeOrder.Driver.fullname}} <img src="/assets/icon/star.svg"><span>{{activeOrder.Driver.reyting}}</span>
+        </p>
         <span class="phone">{{activeOrder.Driver.phone}}</span>
       </ion-text>
     </div>
@@ -393,11 +401,11 @@
         <ion-row>
           <ion-col>
             <ion-button class="btn-primary"><img src="/assets/icon/call.svg"></ion-button>
-            <p>Zəng et</p>
+            <p>{{"home_make_call"|translate}}</p>
           </ion-col>
           <ion-col>
             <ion-button class="btn-primary" routerLink="/chatrg"><img src="/assets/icon/message.svg"></ion-button>
-            <p>Mesaj</p>
+            <p>{{"home_messages"|translate}}</p>
           </ion-col>
           <!-- <ion-col>
             <ion-button class="btn-primary" (click)="home8()"><img src="/assets/icon/maps.svg"></ion-button>
@@ -405,7 +413,7 @@
           </ion-col> -->
           <ion-col>
             <ion-button class="btn-primary" (click)="home1()"><img src="/assets/icon/x-mark.svg"></ion-button>
-            <p>İmtina et</p>
+            <p>{{"home_cancel_It" | translate }}</p>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -419,19 +427,21 @@
       <form>
         <ion-item lines="none" class="ion-margin-bottom">
           <ion-input type="text" [(ngModel)]="activeOrder.OrderData.address" [ngModelOptions]="{standalone: true}"
-            placeholder="Hardan?" disabled="true"></ion-input>
+            placeholder="{{'home_from'|translate}}" disabled="true"></ion-input>
           <ion-icon name="location-outline"></ion-icon>
         </ion-item>
         <ion-item lines="none">
-          <ion-input type="text" placeholder="Haraya?" [(ngModel)]="activeOrder.OrderData.wherePosGeocod" [ngModelOptions]="{standalone: true}"
-            expand="block" disabled="true"></ion-input>
+          <ion-input type="text" placeholder="{{'home_where'|translate}}"
+            [(ngModel)]="activeOrder.OrderData.wherePosGeocod" [ngModelOptions]="{standalone: true}" expand="block"
+            disabled="true"></ion-input>
           <ion-icon name="navigate-outline"></ion-icon>
         </ion-item>
       </form>
     </div>
     <div class="catchtime" *ngIf="activeOrder.RemainingTime!=0">
-      <p class="text"><span  *ngIf="OnWay=='Yolda'">Çatma vaxdı: <span>{{activeOrder.RemainingTime}}</span> </span></p>
-      <span class="status" >{{OnWay}}</span>
+      <p class="text"><span *ngIf="OnWay=='Yolda'">{{"home_destination_time"|translate}}
+          <span>{{activeOrder.RemainingTime}}</span> </span></p>
+      <span class="status">{{OnWay | translate}}</span>
     </div>
     <div class="reservation-date">
       <ion-grid>
@@ -466,11 +476,11 @@
       </ion-grid>
     </div>
     <div class="car-view" *ngIf="activeOrder.OrderData.make!=null && activeOrder.OrderData.plate!=null">
-      <p class="title">Nəqliyatım</p>
+      <p class="title">{{"home_vehicles"|translate}}</p>
       <div class="conts">
         <div class="left">
-          <p *ngIf="activeOrder.OrderData.make!=null" class="left-text">Marka</p>
-          <p *ngIf="activeOrder.OrderData.plate!=null"class="left-text">D.nişanı</p>
+          <p *ngIf="activeOrder.OrderData.make!=null" class="left-text">{{"home_make"|translate}}</p>
+          <p *ngIf="activeOrder.OrderData.plate!=null" class="left-text">{{"home_plate"|translate}}</p>
         </div>
         <div class="right">
           <p *ngIf="activeOrder.OrderData.make!=null" class="right-text">{{activeOrder.OrderData.make}}</p>
@@ -500,13 +510,14 @@
           <img src="{{activeOrder.Driver.photo}}">
         </ion-avatar>
         <ion-text>
-          <p>{{activeOrder.Driver.fullname}} <img src="/assets/icon/star.svg"><span>{{activeOrder.Driver.reyting}}</span></p>
+          <p>{{activeOrder.Driver.fullname}} <img
+              src="/assets/icon/star.svg"><span>{{activeOrder.Driver.reyting}}</span></p>
           <span class="phone">{{activeOrder.Driver.phone}}</span>
         </ion-text>
       </div>
       <div class="main">
         <div class="head-title">
-          <p>{{activeOrder.Driver.fullname}}  səfəriniz necə keçdi?</p>
+          <p>{{activeOrder.Driver.fullname}} {{"home_orders_is_good"|translate}}</p>
         </div>
         <div class="rating">
           <ion-button *ngFor="let r of [1,2,3,4,5]" (click)="starClick(r)">
@@ -515,12 +526,12 @@
         </div>
         <div class="comment">
           <ion-item lines="none">
-            <ion-textarea [(ngModel)]="comment" placeholder="Şərh yazın" rows="1"></ion-textarea>
+            <ion-textarea [(ngModel)]="comment" placeholder="{{'home_write_a_comment'|translate}}" rows="1"></ion-textarea>
           </ion-item>
         </div>
       </div>
       <div class="foot-btn">
-        <ion-button (click)="home8()" class="btn-primary">Rəyi Göndər</ion-button>
+        <ion-button (click)="home8()" class="btn-primary">{{"home_send_comment"|translate}}</ion-button>
       </div>
     </div>
   </div>
@@ -535,7 +546,7 @@
           <img src="/assets/img/1103-confetti-outline.gif">
         </div>
         <div class="head-title">
-          <p>Bizi seçdiyiniz ücün təşəkkürlər</p>
+          <p>{{"home_thanks_for_select_us"|translate}}</p>
         </div>
         <div class="rating">
           <ion-button *ngFor="let r of [1,2,3,4,5]" (click)="starClick(r)">

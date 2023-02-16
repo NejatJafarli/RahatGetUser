@@ -10,6 +10,7 @@ import { MyaddressPage } from './myaddress.page';
 import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.component';
 
 import { BrowserModule } from '@angular/platform-browser'
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { BrowserModule } from '@angular/platform-browser'
     FormsModule,
     IonicModule,
     MyaddressPageRoutingModule,
-    HeaderbgComponent
+    HeaderbgComponent,
+    TranslateModule
   ],
   declarations: [
     MyaddressPage

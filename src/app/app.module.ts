@@ -4,7 +4,7 @@ import { RouteReuseStrategy } from '@angular/router';
 
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 //http client
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -21,6 +21,14 @@ import { AuthService } from './services/auth.service';
 import { AuthGuardGuard } from './auth-guard.guard';
 const config: SocketIoConfig = { url: 'https://io.rahatget.az', options: {} };
 
+import {
+  TranslateLoader,
+  TranslatePipe,
+  TranslateModule,
+} from '@ngx-translate/core';
+import { TranslateConfigService } from './services/translate-config.service';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -29,19 +37,31 @@ const config: SocketIoConfig = { url: 'https://io.rahatget.az', options: {} };
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: (http: HttpClient) =>
+          new TranslateHttpLoader(http, './assets/i18n/', '.json'),
+        deps: [HttpClient],
+      },
+    }),
     IonicStorageModule.forRoot({
       name: '__AyigDriver',
-      driverOrder: [cordovaSQLiteDriver._driver, Drivers.IndexedDB, Drivers.LocalStorage],
+      driverOrder: [
+        cordovaSQLiteDriver._driver,
+        Drivers.IndexedDB,
+        Drivers.LocalStorage,
+      ],
     }),
-    
   ],
   providers: [
+  TranslateConfigService,
     Camera,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     ApiService,
     StorageService,
     AuthService,
-    AuthGuardGuard
+    AuthGuardGuard,
   ],
   bootstrap: [AppComponent],
 })

@@ -122,7 +122,7 @@ export class LoginPage implements OnInit {
         UserId: userid,
       });
 
-      OneSignal.setExternalUserId(userid);
+      // OneSignal.setExternalUserId(userid);
       this.router.navigate(['transition']);
     } else {
       this.loginPassword = '';

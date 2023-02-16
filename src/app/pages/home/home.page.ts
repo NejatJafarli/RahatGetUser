@@ -261,6 +261,7 @@ export class HomePage implements OnInit, AfterViewInit {
           //remove activeRezerv add it activeOrder and go to step 3
           activeRezerv.step = 3;
           await this.local.set('activeOrder', JSON.stringify(activeRezerv));
+          activeOrder=activeRezerv;
         }
       }
       console.log(activeOrder);
@@ -278,7 +279,8 @@ export class HomePage implements OnInit, AfterViewInit {
           activeOrder.OrderStatus = 'Pending';
           activeOrder.step = 3;
           this.local.set('activeOrder', JSON.stringify(activeOrder));
-          this.roter.navigate(['/home/' + activeOrder.step]);
+          // this.roter.navigate(['/home/' + activeOrder.step]);
+          this.step = activeOrder.step;
           this.service.mySocket.on('OrderAccepted', async (AcceptedData) => {
             let ress = await this.apiService.getDriverInfo(
               AcceptedData.DriverId
@@ -325,7 +327,7 @@ export class HomePage implements OnInit, AfterViewInit {
             console.log('WaitingCustomer', data);
 
             if (data.OrderId != this.activeOrder.OrderId) return;
-            this.OnWay = 'Sizi Gözləyir';
+            this.OnWay = 'waiting you';
 
             this.activeOrder.OrderStatus = 'Waiting Customer';
             this.activeOrder.RemainingTime = data.RemainingTime;
@@ -349,19 +351,21 @@ export class HomePage implements OnInit, AfterViewInit {
                     'activeOrder',
                     JSON.stringify(this.activeOrder)
                   );
-                  this.step = 7;
-                  this.roter.navigate(['/home/' + activeOrder.step]);
+                  this.step = activeOrder.step;
+                  // this.roter.navigate(['/home/' + activeOrder.step]);
                 }
               );
             });
             this.local.set('activeOrder', JSON.stringify(this.activeOrder));
-            this.roter.navigate(['/home/' + activeOrder.step]);
+            // this.roter.navigate(['/home/' + activeOrder.step]);
+            this.step = activeOrder.step;
           });
-          this.roter.navigate(['/home/' + activeOrder.step]);
+          // this.roter.navigate(['/home/' + activeOrder.step]);
+          this.step = activeOrder.step;
           return;
         } else if (res['data']['status'] == 'Waiting Customer') {
           activeOrder.OrderStatus = 'Waiting Customer';
-          this.OnWay = 'Sizi Gözləyir';
+          this.OnWay = 'waiting you';
           activeOrder.step = 6;
           activeOrder.DriverId = 'driver' + res['data']['AyigDriverId'];
           activeOrder.OrderId = res['data']['OrderId'];
@@ -378,26 +382,28 @@ export class HomePage implements OnInit, AfterViewInit {
           activeOrder.Driver = ress['data'];
           this.local.set('activeOrder', JSON.stringify(activeOrder));
           this.activeOrder = activeOrder;
-          this.roter.navigate(['/home/' + activeOrder.step]);
+          // this.roter.navigate(['/home/' + activeOrder.step]);
+          this.step=activeOrder.step;
           this.service.mySocket.once('OrderCompletedConfirm', async (data) => {
             this.activeOrder.OrderStatus = 'Completed';
             this.activeOrder.step = 7;
             this.local.set('activeOrder', JSON.stringify(this.activeOrder));
             this.step = 7;
-            this.roter.navigate(['/home/' + activeOrder.step]);
+            // this.roter.navigate(['/home/' + activeOrder.step]);
           });
         } else if (res['data']['status'] == 'Started') {
           this.OnWay = 'Yolda';
           this.activeOrder.OrderStatus = 'Started';
           this.activeOrder.RemainingTime = 0;
           this.local.set('activeOrder', JSON.stringify(this.activeOrder));
-          this.roter.navigate(['/home/' + activeOrder.step]);
+          this.step=activeOrder.step;
+          // this.roter.navigate(['/home/' + activeOrder.step]);
           this.service.mySocket.once('OrderCompletedConfirm', async (data) => {
             this.activeOrder.OrderStatus = 'Completed';
             this.activeOrder.step = 7;
             this.local.set('activeOrder', JSON.stringify(this.activeOrder));
             this.step = 7;
-            this.roter.navigate(['/home/' + activeOrder.step]);
+            // this.roter.navigate(['/home/' + activeOrder.step]);
           });
           //finished
         } else if (res['data']['status'] == 'Completed') {
@@ -405,7 +411,7 @@ export class HomePage implements OnInit, AfterViewInit {
           this.activeOrder.step = 7;
           this.local.set('activeOrder', JSON.stringify(this.activeOrder));
           this.step = 7;
-          this.roter.navigate(['/home/' + activeOrder.step]);
+          // this.roter.navigate(['/home/' + activeOrder.step]);
         } else if (res['data']['status'] == 'rezerv') {
           //remove active order
           this.local.remove('activeOrder');
@@ -414,7 +420,7 @@ export class HomePage implements OnInit, AfterViewInit {
           );
           this.activeOrder = null;
           this.step = 1;
-          this.roter.navigate(['/home/' + this.step]);
+          // this.roter.navigate(['/home/' + this.step]);
         }
       }
     });
@@ -477,13 +483,16 @@ export class HomePage implements OnInit, AfterViewInit {
         //remove activeRezerv add it activeOrder and go to step 3
         activeRezerv.step = 3;
         await this.local.set('activeOrder', JSON.stringify(activeRezerv));
+        activeOrder=activeRezerv;
       }
     }
     console.log(activeOrder);
     if (activeOrder != null) {
       this.activeOrder = activeOrder;
       console.log(this.activeOrder);
-      let res = await this.apiService.getInfoAyigRide(this.activeOrder.RideId);
+      let res = await this.apiService.getInfoAyigRide(
+        this.activeOrder.RideId
+      );
 
       if (!res['status']) return this.service.Toast(res['message']);
 
@@ -492,16 +501,18 @@ export class HomePage implements OnInit, AfterViewInit {
         activeOrder.OrderStatus = 'Pending';
         activeOrder.step = 3;
         this.local.set('activeOrder', JSON.stringify(activeOrder));
-        this.roter.navigate(['/home/' + activeOrder.step]);
+        // this.roter.navigate(['/home/' + activeOrder.step]);
+        this.step = activeOrder.step;
         this.service.mySocket.on('OrderAccepted', async (AcceptedData) => {
-          let ress = await this.apiService.getDriverInfo(AcceptedData.DriverId);
+          let ress = await this.apiService.getDriverInfo(
+            AcceptedData.DriverId
+          );
 
           if (!ress['status']) return this.service.Toast(ress['message']);
 
           AcceptedData.Driver = ress['data'];
           AcceptedData.step = 6;
           this.service.Toast('Sifariş qəbul edildi');
-
           this.local.set('activeOrder', JSON.stringify(AcceptedData));
           this.activeOrder = AcceptedData;
           this.step = 4;
@@ -513,7 +524,6 @@ export class HomePage implements OnInit, AfterViewInit {
             }, 2000);
           }, 1000);
         });
-
         return;
       } else if (res['data']['status'] == 'Accepted') {
         activeOrder.OrderStatus = 'Accepted';
@@ -537,7 +547,7 @@ export class HomePage implements OnInit, AfterViewInit {
           console.log('WaitingCustomer', data);
 
           if (data.OrderId != this.activeOrder.OrderId) return;
-          this.OnWay = 'Sizi Gözləyir';
+          this.OnWay = 'waiting you';
 
           this.activeOrder.OrderStatus = 'Waiting Customer';
           this.activeOrder.RemainingTime = data.RemainingTime;
@@ -553,20 +563,29 @@ export class HomePage implements OnInit, AfterViewInit {
               async (data) => {
                 this.activeOrder.OrderStatus = 'Completed';
                 this.activeOrder.step = 7;
-                this.local.set('activeOrder', JSON.stringify(this.activeOrder));
-                this.step = 7;
-                this.roter.navigate(['/home/' + activeOrder.step]);
+                let DriverRes = await this.apiService.getDriverInfo(
+                  this.activeOrder.DriverId
+                );
+                this.activeOrder.Driver = DriverRes['data'];
+                this.local.set(
+                  'activeOrder',
+                  JSON.stringify(this.activeOrder)
+                );
+                this.step = activeOrder.step;
+                // this.roter.navigate(['/home/' + activeOrder.step]);
               }
             );
           });
           this.local.set('activeOrder', JSON.stringify(this.activeOrder));
-          this.roter.navigate(['/home/' + activeOrder.step]);
+          // this.roter.navigate(['/home/' + activeOrder.step]);
+          this.step = activeOrder.step;
         });
-        this.roter.navigate(['/home/' + activeOrder.step]);
+        // this.roter.navigate(['/home/' + activeOrder.step]);
+        this.step = activeOrder.step;
         return;
       } else if (res['data']['status'] == 'Waiting Customer') {
         activeOrder.OrderStatus = 'Waiting Customer';
-        this.OnWay = 'Sizi Gözləyir';
+        this.OnWay = 'waiting you';
         activeOrder.step = 6;
         activeOrder.DriverId = 'driver' + res['data']['AyigDriverId'];
         activeOrder.OrderId = res['data']['OrderId'];
@@ -583,13 +602,14 @@ export class HomePage implements OnInit, AfterViewInit {
         activeOrder.Driver = ress['data'];
         this.local.set('activeOrder', JSON.stringify(activeOrder));
         this.activeOrder = activeOrder;
-        this.roter.navigate(['/home/' + activeOrder.step]);
+        // this.roter.navigate(['/home/' + activeOrder.step]);
+        this.step=activeOrder.step;
         this.service.mySocket.once('OrderCompletedConfirm', async (data) => {
           this.activeOrder.OrderStatus = 'Completed';
           this.activeOrder.step = 7;
           this.local.set('activeOrder', JSON.stringify(this.activeOrder));
           this.step = 7;
-          this.roter.navigate(['/home/' + activeOrder.step]);
+          // this.roter.navigate(['/home/' + activeOrder.step]);
         });
       } else if (res['data']['status'] == 'Started') {
         this.OnWay = 'Yolda';
@@ -602,7 +622,7 @@ export class HomePage implements OnInit, AfterViewInit {
           this.activeOrder.step = 7;
           this.local.set('activeOrder', JSON.stringify(this.activeOrder));
           this.step = 7;
-          this.roter.navigate(['/home/' + activeOrder.step]);
+          // this.roter.navigate(['/home/' + activeOrder.step]);
         });
         //finished
       } else if (res['data']['status'] == 'Completed') {
@@ -610,7 +630,7 @@ export class HomePage implements OnInit, AfterViewInit {
         this.activeOrder.step = 7;
         this.local.set('activeOrder', JSON.stringify(this.activeOrder));
         this.step = 7;
-        this.roter.navigate(['/home/' + activeOrder.step]);
+        // this.roter.navigate(['/home/' + activeOrder.step]);
       } else if (res['data']['status'] == 'rezerv') {
         //remove active order
         this.local.remove('activeOrder');
@@ -619,7 +639,7 @@ export class HomePage implements OnInit, AfterViewInit {
         );
         this.activeOrder = null;
         this.step = 1;
-        this.roter.navigate(['/home/' + this.step]);
+        // this.roter.navigate(['/home/' + this.step]);
       }
     }
     if (this.step == 1) {
@@ -661,7 +681,7 @@ export class HomePage implements OnInit, AfterViewInit {
     this.step = 1;
     this.activeOrder = null;
 
-    this.roter.navigate(['/home/1']);
+    // this.roter.navigate(['/home/1']);
   }
   home2() {
     this.step = 2;
@@ -743,9 +763,11 @@ export class HomePage implements OnInit, AfterViewInit {
       console.log(json);
       await this.local.set('activeRezerv', JSON.stringify(json));
 
+      let OrderId=this.service.myGuid();
       let json2 = {
         RideId: res['RideId'],
         UserId: 'user' + this.service.user.id,
+        OrderId:OrderId,
         OrderData: {
           pos: pos,
           address: this.positionGeocod,
@@ -764,21 +786,15 @@ export class HomePage implements OnInit, AfterViewInit {
         // },
       };
       this.service.mySocket.emit('CreateRezervOrder', json2);
-
-      this.service.mySocket.once('RezervOrderCreated', async (data) => {
-        console.log('RezervOrderCreated', data);
-
-        let id = data.OrderId;
-        let resFromApi = await this.apiService.updateRezerv(res['RideId'], id);
+        let resFromApi = await this.apiService.updateRezerv(res['RideId'], OrderId);
         console.log(resFromApi);
 
         if (!resFromApi['status'])
           return this.service.Toast(resFromApi['message']);
         let rezerv = JSON.parse(await this.local.get('activeRezerv'));
         console.log(rezerv);
-        rezerv.OrderId = id;
+        rezerv.OrderId = OrderId;
         await this.local.set('activeRezerv', JSON.stringify(rezerv));
-      });
 
       //return step 1
       this.step = 1;
@@ -867,7 +883,7 @@ export class HomePage implements OnInit, AfterViewInit {
           console.log('WaitingCustomer', data);
 
           if (data.OrderId != this.activeOrder.OrderId) return;
-          this.OnWay = 'Sizi Gözləyir';
+          this.OnWay = 'waiting you';
 
           this.activeOrder.OrderStatus = 'Waiting Customer';
           this.activeOrder.RemainingTime = data.RemainingTime;
@@ -1028,9 +1044,12 @@ export class HomePage implements OnInit, AfterViewInit {
     this.step = 8;
     // save rating and comment to mysql
     this.local.remove('activeOrder');
-    setTimeout(() => {
+    setTimeout(async () => {
       this.step = 1;
-      this.roter.navigate(['/home/1']);
+      let res = await this.apiService.getLocations();
+
+      this.myAddresses = res['data'];
+      // this.roter.navigate(['/home/1']);
     }, 2000);
   }
   chatclick() {

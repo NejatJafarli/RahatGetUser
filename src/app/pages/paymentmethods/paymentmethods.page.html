@@ -5,17 +5,17 @@
       <ion-buttons slot="start" (click)="navBack()">
         <ion-icon name="chevron-back-outline"></ion-icon>
       </ion-buttons>
-      <ion-title slot="center">Ödəniş üsulları</ion-title>
+      <ion-title slot="center">{{"payment_payment_methods"|translate}}</ion-title>
     </div>
     <div class="cashmet">
       <img src="/assets/icon/dollar.svg">
       <div class="text">
-        <p>Nəğd ödəniş</p>
-        <span>Ödəniş üsulu</span>
+        <p>{{"payment_with_cash"|translate}}</p>
+        <span>{{"payment_payment_methods"|translate}}</span>
       </div>
     </div>
     <div class="list">
-      <p class="cart-title">Kredit kartları</p>
+      <p class="cart-title">{{"payment_credit_carts"|translate}}</p>
       <div class="itemss">
         <img src="/assets/icon/apple-pay.png">
         <p>**** **** **** 5755</p>
@@ -32,10 +32,10 @@
     <div class="add-cartmet">
       <ion-button class="btn-primary" (click)="addcart2()">
         <ion-icon name="add-outline"></ion-icon>
-        <p>Yeni kart əlavə edin</p>
+        <p>{{"payment_add_new_credit_cart"|translate}}</p>
       </ion-button>
     </div>
-   </div>
+  </div>
 </ion-content>
 <ion-content class="addcartmethods" *ngIf="step == 2">
   <app-headerbg></app-headerbg>
@@ -45,34 +45,34 @@
         <ion-buttons slot="start" (click)="backbtn()">
           <ion-icon name="chevron-back-outline"></ion-icon>
         </ion-buttons>
-        <ion-title slot="center">Ödəniş üsulları</ion-title>
+        <ion-title slot="center">{{"payment_payment_methods"|translate}}</ion-title>
       </div>
-      <p>PCI DSS ilə təhlükəsiz şəkildə davam edin</p>
+      <p>{{"payment_continue_with_safe"|translate}}</p>
     </div>
     <div class="main">
       <div class="card">
         <ion-item lines="none">
-          <ion-label position="stacked">Kart sahibinin adı</ion-label>
-          <ion-input type="text" placeholder="Kart sahibinin adını daxil edin"></ion-input>
+          <ion-label position="stacked">{{"payment_credit_cart_owner_name"|translate}}</ion-label>
+          <ion-input type="text" placeholder="{{'payment_enter_credit_cart_owner_name'|translate}}"></ion-input>
         </ion-item>
         <ion-item lines="none">
-          <ion-label position="stacked">Kartın nömrəsi</ion-label>
-          <ion-input type="text" placeholder="Kartın nömrəsini daxil edin"></ion-input>
+          <ion-label position="stacked">{{"payment_credit_cart_number"|translate}}</ion-label>
+          <ion-input type="text" placeholder="{{'payment_enter_credit_cart_number'|translate}}"></ion-input>
         </ion-item>
         <div class="cvv">
           <ion-item lines="none">
-            <ion-label position="stacked">Tarix</ion-label>
+            <ion-label position="stacked">{{"payment_date"|translate}}</ion-label>
             <ion-input type="text" placeholder="MM/YY"></ion-input>
           </ion-item>
           <ion-item lines="none">
-            <ion-label position="stacked">CVV</ion-label>
+            <ion-label position="stacked">{{"payment_CVV"|translate}}</ion-label>
             <ion-input type="text" placeholder="XXX"></ion-input>
           </ion-item>
         </div>
         <!-- btn -->
         <div class="btn-add">
           <ion-button class="btn-primary">
-            <p>Kartı əlavə et</p>
+            <p>{{"payment_add_the_credit_cart"|translate}}</p>
           </ion-button>
         </div>
       </div>

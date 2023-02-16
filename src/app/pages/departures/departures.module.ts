@@ -8,6 +8,7 @@ import { DeparturesPageRoutingModule } from './departures-routing.module';
 
 import { DeparturesPage } from './departures.page';
 import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.componen
     FormsModule,
     IonicModule,
     DeparturesPageRoutingModule
-    ,HeaderbgComponent
+    ,HeaderbgComponent,
+    TranslateModule
     
   ],
   declarations: [
