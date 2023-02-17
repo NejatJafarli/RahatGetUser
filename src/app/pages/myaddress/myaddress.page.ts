@@ -40,6 +40,7 @@ export class MyaddressPage implements OnInit {
       this.myService.Toast(res['message']);
       return;
     }
+    if(this.myService.handleErrors(res)) return;
     this.myService.Toast(res['message']);
     this.addresses = this.addresses.filter((item) => item.id !== id);
   }
@@ -57,6 +58,7 @@ export class MyaddressPage implements OnInit {
     this.User = JSON.parse(jsn);
 
     let res = await this.apiService.getLocations();
+    if(this.myService.handleErrors(res)) return;
 
     this.addresses = res['data'];
     
@@ -88,6 +90,7 @@ export class MyaddressPage implements OnInit {
           cordinates,
           this.selectedAddressJson.AddressName
         );
+        if(this.myService.handleErrors(res)) return;
 
         this.myService.Toast(res['message']);
 
@@ -115,9 +118,10 @@ export class MyaddressPage implements OnInit {
           cord,
           this.selectedAddressJson.AddressName
         );
-
+        
         if (!res['status']) return this.myService.Toast(res['message']);
-
+        if(this.myService.handleErrors(res)) return;
+        
         this.myService.Toast(res['message']);
 
         for (let i = 0; i < this.addresses.length; i++) {

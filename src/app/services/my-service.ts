@@ -4,6 +4,7 @@ import { Socket } from 'ngx-socket-io';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ApiService } from './api.service';
 import { StorageService } from './storage.service';
+import { TranslateCacheService } from './translate-cache.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,8 @@ export class MyService {
     private local: StorageService,
     private apiService: ApiService,
     private menuCtrl: MenuController,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private translate: TranslateCacheService,
   ) {}
   async init() {
     this.selectedApp = new BehaviorSubject<string>(
@@ -35,6 +37,21 @@ export class MyService {
   setValueSelectedApp(value) {
     this.selectedApp.next(value);
     this.local.set('selectedApp', value);
+  }
+  
+  handleErrors(res) {
+    if (res['error']) {
+      let errors = res['error']['errors'];
+      let message = '';
+      //get the first error
+      for (let key in errors) {
+        message = errors[key][0];
+        break;
+      }
+      this.Toast(message);
+      return true;
+    }
+    return false;
   }
   myGuid() {
     function s4() {
@@ -63,11 +80,18 @@ export class MyService {
   ApiLink = 'https://user.rahatget.az/api';
   TokenCheck=false;
   async Toast(message) {
+    message=this.translate.get(message);
     const toast = await this.ToastController.create({
       message: message,
       duration: 2000,
       position: 'top',
     });
     await toast.present();
+  }
+  getTranslate(value){
+    return this.translate.get(value);
+  }
+  getCurrentLang(){
+    return this.local.get('def_lang');
   }
 }

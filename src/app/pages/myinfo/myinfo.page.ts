@@ -182,6 +182,8 @@ export class MyinfoPage implements OnInit {
       this.myService.Toast(res['message']);
       return;
     }
+    if(this.myService.handleErrors(res)) return;
+
     console.log(res);
     
     this.User = res['data'];
@@ -200,11 +202,11 @@ export class MyinfoPage implements OnInit {
   }
   async SavePass() {
     if (this.OldPass == null) {
-      this.myService.Toast('Please enter old password');
+      this.myService.Toast('Please_enter_old_password');
       return;
     }
     if (this.NewPass != this.ConfirmPass) {
-      this.myService.Toast('Password not match');
+      this.myService.Toast('Password_not_match');
       return;
     }
     let res = await this.apiService.updatePassword(this.OldPass, this.NewPass);
@@ -212,6 +214,7 @@ export class MyinfoPage implements OnInit {
       this.myService.Toast(res['message']);
       return;
     }
+    if(this.myService.handleErrors(res)) return;
 
     this.myService.Toast(res['message']);
 

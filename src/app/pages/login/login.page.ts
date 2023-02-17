@@ -10,6 +10,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { ImageService } from 'src/app/services/image.service';
 import { MyService } from 'src/app/services/my-service';
 import { StorageService } from 'src/app/services/storage.service';
+import { TranslateCacheService } from 'src/app/services/translate-cache.service';
 import { environment } from 'src/environments/environment';
 // import { LoginPageForm } from './login.page.form';
 @Component({
@@ -41,7 +42,8 @@ export class LoginPage implements OnInit {
     private apiService: ApiService,
     private local: StorageService,
     private auth: AuthService,
-    private imageService: ImageService
+    private imageService: ImageService,
+    private translateCache:TranslateCacheService
   ) {}
   codePhone;
   action;
@@ -115,7 +117,7 @@ export class LoginPage implements OnInit {
       this.local.remove('sendNewRequestEndDate');
       this.loginPhone = '';
       this.loginPassword = '';
-      this.service.Toast('Login Success');
+      this.service.Toast('Login_Success');
       this.service.mySocket.connect();
       let userid = 'user' + res['user']['id'];
       this.service.mySocket.emit('UserConnect', {
@@ -144,8 +146,10 @@ export class LoginPage implements OnInit {
       let end = new Date(endDate).getTime();
       if (now < end) {
         let second = Math.floor((end - now) / 1000);
+        let text1=await this.translateCache.get('Please_wait');
+        let text2=await this.translateCache.get('second_to_send_new_request');
         this.service.Toast(
-          'Please wait ' + second + ' second to send new request'
+          text1+' ' + second + ' '+text2
         );
         return;
       }
@@ -176,15 +180,17 @@ export class LoginPage implements OnInit {
       let end = new Date(endDate).getTime();
       if (now < end) {
         let second = Math.floor((end - now) / 1000);
+        let text1=await this.translateCache.get('Please_wait');
+        let text2=await this.translateCache.get('second_to_send_new_request');
         this.service.Toast(
-          'Please wait ' + second + ' second to send new request'
+          text1+' ' + second + ' '+text2
         );
         return;
       }
     }
     // registerPassword must be 6 character
     if (this.registerPassword.length < 6) {
-      this.service.Toast('Password must be 6 character');
+      this.service.Toast('Password_must_be_6_character');
       return;
     }
 

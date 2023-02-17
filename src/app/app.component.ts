@@ -8,6 +8,8 @@ import { ApiService } from './services/api.service';
 import { StorageService } from './services/storage.service';
 import { runInThisContext } from 'vm';
 import { AuthService } from './services/auth.service';
+import { TranslateService } from '@ngx-translate/core';
+import { TranslateConfigService } from './services/translate-config.service';
 
 @Component({
   selector: 'app-root',
@@ -43,13 +45,31 @@ export class AppComponent {
     private platform: Platform,
     private apiService: ApiService,
     private local: StorageService,
-    private auth: AuthService
+    private auth: AuthService,
+    private translate:TranslateService,
+    public translateConfigService: TranslateConfigService
+
   ) {}
+  SelectedLang;
+  selectLang() {
+    this.translateConfigService.setLanguage(this.SelectedLang);
+  }
   //ng on init
   async ngOnInit() {
+    this.translate.setDefaultLang('az');
+    this.translate.addLangs(['az', 'en', 'ru']);
     await this.local.init();
+    // await this.local.remove('def_lang');
+    this.local.get('def_lang')?.then((res) => {
+      if (res) {
+        this.translate.use(res);
+        this.SelectedLang=res;
+      } else {
+        this.translate.use('az');
+        this.SelectedLang='az';
+      }
+    });
     await this.service.init();
-
     //remove
     // let active = await this.local.get('activeRezerv');
 
@@ -61,8 +81,6 @@ export class AppComponent {
 
     // await this.local.remove('activeRezerv');
     // await this.local.remove('activeOrder');
-
-    console.log('app component');
 
     this.platform.ready().then(() => {
       // this.OneSignalInit();

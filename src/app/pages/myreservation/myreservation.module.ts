@@ -8,6 +8,7 @@ import { MyreservationPageRoutingModule } from './myreservation-routing.module';
 
 import { MyreservationPage } from './myreservation.page';
 import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.componen
     FormsModule,
     IonicModule,
     MyreservationPageRoutingModule,
-    HeaderbgComponent
+    HeaderbgComponent,
+    TranslateModule
     
   ],
   declarations: [

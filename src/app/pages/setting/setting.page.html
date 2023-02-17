@@ -44,10 +44,10 @@
       </ion-item>
       <ion-item lines="none">
         <ion-label class="ion-no-padding">{{"setting_change_lang"|translate}}</ion-label>
-        <ion-select value="AZ">
-          <ion-select-option value="AZ">AZ</ion-select-option>
-          <ion-select-option value="RU">RU</ion-select-option>
-          <ion-select-option value="EN">EN</ion-select-option>
+        <ion-select [(ngModel)]="SelectedLang" (ionChange)="selectLang()">
+          <ion-select-option value="en">EN</ion-select-option>
+          <ion-select-option value="az">AZ</ion-select-option>
+          <ion-select-option value="ru">RU</ion-select-option>
         </ion-select>
       </ion-item>
       <ion-item lines="none" detail="true" routerLink="/help">

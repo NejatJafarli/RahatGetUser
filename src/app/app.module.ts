@@ -28,11 +28,13 @@ import {
 } from '@ngx-translate/core';
 import { TranslateConfigService } from './services/translate-config.service';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
+    FormsModule,
     SocketIoModule.forRoot(config),
     IonicModule.forRoot(),
     AppRoutingModule,

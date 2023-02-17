@@ -8,6 +8,7 @@ import { PromocodePageRoutingModule } from './promocode-routing.module';
 
 import { PromocodePage } from './promocode.page';
 import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.componen
     FormsModule,
     IonicModule,
     PromocodePageRoutingModule,
-    HeaderbgComponent
+    HeaderbgComponent,
+    TranslateModule
 
   ],
   declarations: [

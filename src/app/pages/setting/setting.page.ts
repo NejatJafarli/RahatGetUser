@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Camera } from '@awesome-cordova-plugins/camera/ngx';
 import { MyService } from 'src/app/services/my-service';
+import { TranslateConfigService } from 'src/app/services/translate-config.service';
 
 @Component({
   selector: 'app-setting',
@@ -11,12 +12,23 @@ import { MyService } from 'src/app/services/my-service';
 export class SettingPage implements OnInit {
   imgURL;
 
-  constructor(public myService: MyService,private router:Router) {}
+  constructor(
+    public myService: MyService,
+    private router: Router,
+    private translateConfigService: TranslateConfigService
+  ) {}
 
-  ngOnInit() {}
-  goToMyInfo(){
+  ngOnInit() {
+    this.myService.getCurrentLang().then((res) => {
+      this.SelectedLang = res;
+    });
+  }
+  SelectedLang;
+  selectLang() {
+    this.translateConfigService.setLanguage(this.SelectedLang);
+  }
+  goToMyInfo() {
     this.router.navigate(['/myinfo']);
-
   }
   // getCamera() {
   //   this.camera

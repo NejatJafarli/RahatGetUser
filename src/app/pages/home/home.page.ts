@@ -54,7 +54,6 @@ export class HomePage implements OnInit, AfterViewInit {
     private roter: Router,
     private modalCtrl: ModalController,
     private activatedRoute: ActivatedRoute,
-    private http: HttpClient,
     private service: MyService,
     private apiService: ApiService,
     private local: StorageService,
@@ -174,7 +173,7 @@ export class HomePage implements OnInit, AfterViewInit {
   CardValue;
   async ngOnInit() {
     this.activeOrder = JSON.parse(await this.local.get('activeOrder'));
-    this.CardValue = 'Kartla ödəniş';
+    this.CardValue = await this.service.getTranslate('home_pay_with_card');
 
     // this.RezervDate
     // this.RezervTime  get current date and time UTC +4
@@ -261,7 +260,7 @@ export class HomePage implements OnInit, AfterViewInit {
           //remove activeRezerv add it activeOrder and go to step 3
           activeRezerv.step = 3;
           await this.local.set('activeOrder', JSON.stringify(activeRezerv));
-          activeOrder=activeRezerv;
+          activeOrder = activeRezerv;
         }
       }
       console.log(activeOrder);
@@ -273,9 +272,10 @@ export class HomePage implements OnInit, AfterViewInit {
         );
 
         if (!res['status']) return this.service.Toast(res['message']);
+        if (this.service.handleErrors(res)) return;
 
         if (res['data']['status'] == 'Pending') {
-          this.service.Toast('Surucu Axtarilir');
+          this.service.Toast('toast_we_are_searching_for_a_driver');
           activeOrder.OrderStatus = 'Pending';
           activeOrder.step = 3;
           this.local.set('activeOrder', JSON.stringify(activeOrder));
@@ -287,10 +287,11 @@ export class HomePage implements OnInit, AfterViewInit {
             );
 
             if (!ress['status']) return this.service.Toast(ress['message']);
+            if (this.service.handleErrors(ress)) return;
 
             AcceptedData.Driver = ress['data'];
             AcceptedData.step = 6;
-            this.service.Toast('Sifariş qəbul edildi');
+            this.service.Toast('toast_your_order_is_accepted');
 
             this.local.set('activeOrder', JSON.stringify(AcceptedData));
             this.activeOrder = AcceptedData;
@@ -315,6 +316,7 @@ export class HomePage implements OnInit, AfterViewInit {
           );
           console.log(ress);
           if (!ress['status']) return this.service.Toast(ress['message']);
+          if (this.service.handleErrors(ress)) return;
           activeOrder.Driver = ress['data'];
           this.local.set('activeOrder', JSON.stringify(activeOrder));
           this.activeOrder = activeOrder;
@@ -346,6 +348,7 @@ export class HomePage implements OnInit, AfterViewInit {
                   let DriverRes = await this.apiService.getDriverInfo(
                     this.activeOrder.DriverId
                   );
+                  if (this.service.handleErrors(DriverRes)) return;
                   this.activeOrder.Driver = DriverRes['data'];
                   this.local.set(
                     'activeOrder',
@@ -373,6 +376,7 @@ export class HomePage implements OnInit, AfterViewInit {
             res['data']['AyigDriverId']
           );
           if (!ress['status']) return this.service.Toast(ress['message']);
+          if (this.service.handleErrors(ress)) return;
           this.service.mySocket.once('OrderStarted', async (data) => {
             this.OnWay = 'Yolda';
             this.activeOrder.OrderStatus = 'Started';
@@ -383,7 +387,7 @@ export class HomePage implements OnInit, AfterViewInit {
           this.local.set('activeOrder', JSON.stringify(activeOrder));
           this.activeOrder = activeOrder;
           // this.roter.navigate(['/home/' + activeOrder.step]);
-          this.step=activeOrder.step;
+          this.step = activeOrder.step;
           this.service.mySocket.once('OrderCompletedConfirm', async (data) => {
             this.activeOrder.OrderStatus = 'Completed';
             this.activeOrder.step = 7;
@@ -396,7 +400,7 @@ export class HomePage implements OnInit, AfterViewInit {
           this.activeOrder.OrderStatus = 'Started';
           this.activeOrder.RemainingTime = 0;
           this.local.set('activeOrder', JSON.stringify(this.activeOrder));
-          this.step=activeOrder.step;
+          this.step = activeOrder.step;
           // this.roter.navigate(['/home/' + activeOrder.step]);
           this.service.mySocket.once('OrderCompletedConfirm', async (data) => {
             this.activeOrder.OrderStatus = 'Completed';
@@ -416,7 +420,7 @@ export class HomePage implements OnInit, AfterViewInit {
           //remove active order
           this.local.remove('activeOrder');
           this.service.Toast(
-            'Rezervasiyanız surucu tapilmadigi ucun ləğv edildi'
+            'toast_your__reservation_has_been_canceled_because_we_could_not_find_a_driver'
           );
           this.activeOrder = null;
           this.step = 1;
@@ -483,36 +487,35 @@ export class HomePage implements OnInit, AfterViewInit {
         //remove activeRezerv add it activeOrder and go to step 3
         activeRezerv.step = 3;
         await this.local.set('activeOrder', JSON.stringify(activeRezerv));
-        activeOrder=activeRezerv;
+        activeOrder = activeRezerv;
       }
     }
     console.log(activeOrder);
     if (activeOrder != null) {
       this.activeOrder = activeOrder;
       console.log(this.activeOrder);
-      let res = await this.apiService.getInfoAyigRide(
-        this.activeOrder.RideId
-      );
+      let res = await this.apiService.getInfoAyigRide(this.activeOrder.RideId);
 
       if (!res['status']) return this.service.Toast(res['message']);
 
+      if (this.service.handleErrors(res)) return;
       if (res['data']['status'] == 'Pending') {
-        this.service.Toast('Surucu Axtarilir');
+        this.service.Toast('toast_we_are_searching_for_a_driver');
         activeOrder.OrderStatus = 'Pending';
         activeOrder.step = 3;
         this.local.set('activeOrder', JSON.stringify(activeOrder));
         // this.roter.navigate(['/home/' + activeOrder.step]);
         this.step = activeOrder.step;
         this.service.mySocket.on('OrderAccepted', async (AcceptedData) => {
-          let ress = await this.apiService.getDriverInfo(
-            AcceptedData.DriverId
-          );
+          let ress = await this.apiService.getDriverInfo(AcceptedData.DriverId);
 
           if (!ress['status']) return this.service.Toast(ress['message']);
 
+          if (this.service.handleErrors(ress)) return;
+
           AcceptedData.Driver = ress['data'];
           AcceptedData.step = 6;
-          this.service.Toast('Sifariş qəbul edildi');
+          this.service.Toast('toast_your_order_is_accepted');
           this.local.set('activeOrder', JSON.stringify(AcceptedData));
           this.activeOrder = AcceptedData;
           this.step = 4;
@@ -535,6 +538,7 @@ export class HomePage implements OnInit, AfterViewInit {
         );
         console.log(ress);
         if (!ress['status']) return this.service.Toast(ress['message']);
+        if (this.service.handleErrors(ress)) return;
         activeOrder.Driver = ress['data'];
         this.local.set('activeOrder', JSON.stringify(activeOrder));
         this.activeOrder = activeOrder;
@@ -566,11 +570,9 @@ export class HomePage implements OnInit, AfterViewInit {
                 let DriverRes = await this.apiService.getDriverInfo(
                   this.activeOrder.DriverId
                 );
+                if (this.service.handleErrors(DriverRes)) return;
                 this.activeOrder.Driver = DriverRes['data'];
-                this.local.set(
-                  'activeOrder',
-                  JSON.stringify(this.activeOrder)
-                );
+                this.local.set('activeOrder', JSON.stringify(this.activeOrder));
                 this.step = activeOrder.step;
                 // this.roter.navigate(['/home/' + activeOrder.step]);
               }
@@ -593,6 +595,7 @@ export class HomePage implements OnInit, AfterViewInit {
           res['data']['AyigDriverId']
         );
         if (!ress['status']) return this.service.Toast(ress['message']);
+        if (this.service.handleErrors(ress)) return;
         this.service.mySocket.once('OrderStarted', async (data) => {
           this.OnWay = 'Yolda';
           this.activeOrder.OrderStatus = 'Started';
@@ -603,7 +606,7 @@ export class HomePage implements OnInit, AfterViewInit {
         this.local.set('activeOrder', JSON.stringify(activeOrder));
         this.activeOrder = activeOrder;
         // this.roter.navigate(['/home/' + activeOrder.step]);
-        this.step=activeOrder.step;
+        this.step = activeOrder.step;
         this.service.mySocket.once('OrderCompletedConfirm', async (data) => {
           this.activeOrder.OrderStatus = 'Completed';
           this.activeOrder.step = 7;
@@ -635,7 +638,7 @@ export class HomePage implements OnInit, AfterViewInit {
         //remove active order
         this.local.remove('activeOrder');
         this.service.Toast(
-          'Rezervasiyanız surucu tapilmadigi ucun ləğv edildi'
+          'toast_your__reservation_has_been_canceled_because_we_could_not_find_a_driver'
         );
         this.activeOrder = null;
         this.step = 1;
@@ -644,7 +647,7 @@ export class HomePage implements OnInit, AfterViewInit {
     }
     if (this.step == 1) {
       let res = await this.apiService.getLocations();
-
+      if (this.service.handleErrors(res)) return;
       this.myAddresses = res['data'];
     }
   }
@@ -669,7 +672,8 @@ export class HomePage implements OnInit, AfterViewInit {
   async home1() {
     let res = await this.apiService.cancelRideAyig(this.activeOrder.RideId);
     if (!res['status']) return this.service.Toast(res['message']);
-    this.service.Toast('Sifariş imtina edildi');
+    if (this.service.handleErrors(res)) return;
+    this.service.Toast('toast_your_order_has_been_canceled');
     this.service.mySocket.emit('CancelOrder', this.activeOrder);
     this.local.remove('activeOrder');
     this.OnWay = 'Yolda';
@@ -677,6 +681,7 @@ export class HomePage implements OnInit, AfterViewInit {
 
     res = await this.apiService.getLocations();
 
+    if (this.service.handleErrors(res)) return;
     this.myAddresses = res['data'];
     this.step = 1;
     this.activeOrder = null;
@@ -692,11 +697,13 @@ export class HomePage implements OnInit, AfterViewInit {
     if (this.toggleDisplayForRezerv == true) {
       //check if user has active rezerv in local storage
       let activeRezerv = await this.local.get('activeRezerv');
-      if (activeRezerv) return this.service.Toast('Sizdə aktiv rezerv var');
+      if (activeRezerv)
+        return this.service.Toast('toast_you_have_an_active_reservation');
       //check if user has active rezerv in server
       let res = await this.apiService.checkActiveRezerv();
 
       if (res['status']) return this.service.Toast(res['message']);
+      if (this.service.handleErrors(res)) return;
       //create rezerv
       let pos = { lat: this.position.lat, lng: this.position.lng };
       this.HomeThreeDisable = true;
@@ -715,7 +722,7 @@ export class HomePage implements OnInit, AfterViewInit {
       currentDate.setMinutes(currentDate.getMinutes() + 30);
       if (MyRezervDate < currentDate)
         return this.service.Toast(
-          'Minumum 30 deqiye sonra rezerv edə bilərsiniz'
+          'toast_your_reservation_date_and_time_must_be_at_least_30_minutes_later'
         );
 
       let RezervIsoString = MyRezervDate.toISOString();
@@ -731,11 +738,12 @@ export class HomePage implements OnInit, AfterViewInit {
       console.log(res);
 
       if (!res['status']) return this.service.Toast(res['message']);
+      if (this.service.handleErrors(res)) return;
 
       this.toggleDisplayForRezerv = false;
       this.HomeThreeDisable = true;
       this.service.Toast(
-        'Rezerv yaradıldı və Gedisler səhifəsindən göstəriləcək'
+        'toast_your_reservation_has_been_created_successfully_and_It_will_be_show_In_my_reservations_page'
       );
       // let MyRezervDate = new Date(getCurrentDate);
       MyRezervDate.setMinutes(MyRezervDate.getMinutes() - 30);
@@ -763,11 +771,11 @@ export class HomePage implements OnInit, AfterViewInit {
       console.log(json);
       await this.local.set('activeRezerv', JSON.stringify(json));
 
-      let OrderId=this.service.myGuid();
+      let OrderId = this.service.myGuid();
       let json2 = {
         RideId: res['RideId'],
         UserId: 'user' + this.service.user.id,
-        OrderId:OrderId,
+        OrderId: OrderId,
         OrderData: {
           pos: pos,
           address: this.positionGeocod,
@@ -786,15 +794,19 @@ export class HomePage implements OnInit, AfterViewInit {
         // },
       };
       this.service.mySocket.emit('CreateRezervOrder', json2);
-        let resFromApi = await this.apiService.updateRezerv(res['RideId'], OrderId);
-        console.log(resFromApi);
+      let resFromApi = await this.apiService.updateRezerv(
+        res['RideId'],
+        OrderId
+      );
+      console.log(resFromApi);
 
-        if (!resFromApi['status'])
-          return this.service.Toast(resFromApi['message']);
-        let rezerv = JSON.parse(await this.local.get('activeRezerv'));
-        console.log(rezerv);
-        rezerv.OrderId = OrderId;
-        await this.local.set('activeRezerv', JSON.stringify(rezerv));
+      if (!resFromApi['status'])
+        return this.service.Toast(resFromApi['message']);
+      if (this.service.handleErrors(resFromApi)) return;
+      let rezerv = JSON.parse(await this.local.get('activeRezerv'));
+      console.log(rezerv);
+      rezerv.OrderId = OrderId;
+      await this.local.set('activeRezerv', JSON.stringify(rezerv));
 
       //return step 1
       this.step = 1;
@@ -823,7 +835,7 @@ export class HomePage implements OnInit, AfterViewInit {
       });
 
       if (!res['status']) return this.service.Toast(res['message']);
-
+      if (this.service.handleErrors(res)) return;
       let RideId = res['RideId'];
       console.log(res);
       // RideId: data.RideId,
@@ -879,6 +891,8 @@ export class HomePage implements OnInit, AfterViewInit {
 
         if (!ress['status']) return this.service.Toast(ress['message']);
 
+        if (this.service.handleErrors(ress)) return;
+
         this.service.mySocket.once('WaitingCustomer', async (data) => {
           console.log('WaitingCustomer', data);
 
@@ -909,7 +923,7 @@ export class HomePage implements OnInit, AfterViewInit {
 
         AcceptedData.Driver = ress['data'];
         AcceptedData.step = 6;
-        this.service.Toast('Sifariş qəbul edildi');
+        this.service.Toast('toast_your_order_is_accepted');
 
         this.local.set('activeOrder', JSON.stringify(AcceptedData));
         this.activeOrder = AcceptedData;
@@ -1036,17 +1050,20 @@ export class HomePage implements OnInit, AfterViewInit {
   }
   comment;
   home8() {
-    this.apiService.sendReytingToDriver(
+    let res=this.apiService.sendReytingToDriver(
       this.activeOrder.Driver.id,
       this.rating,
       this.comment
     );
+    if (!res['status']) return this.service.Toast(res['message']);
+    if (this.service.handleErrors(res)) return;
     this.step = 8;
     // save rating and comment to mysql
     this.local.remove('activeOrder');
     setTimeout(async () => {
       this.step = 1;
       let res = await this.apiService.getLocations();
+      if(this.service.handleErrors(res)) return;
 
       this.myAddresses = res['data'];
       // this.roter.navigate(['/home/1']);

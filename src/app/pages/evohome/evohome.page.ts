@@ -203,14 +203,14 @@ export class EvohomePage implements OnInit {
   }
   closeModal(event) {
     if (this.selectedData == null || this.selectedDataTwo == null) {
-      this.service.Toast('Məkan seçilməyib');
+      this.service.Toast('toast_location_dont_setted');
     } else {
       if (this.selectedSearchOne == '') {
         this.selectedSearchOne = this.selectedData.name;
-        this.service.Toast('Mekan Secin');
+        this.service.Toast('toast_choose_location');
       } else if (this.selectedSearchTwo == '') {
         this.selectedSearchTwo = this.selectedDataTwo.name;
-        this.service.Toast('Mekan Secin');
+        this.service.Toast('toast_choose_location');
       } else {
         this.modal2.dismiss();
         this.WherePosition = this.selectedData.position;

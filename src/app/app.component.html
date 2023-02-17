@@ -16,46 +16,49 @@
         </div>
         <ion-list>
           <ion-item lines="none" detail="true" (click)="home()">
-            <ion-label class="ion-no-padding">Sifariş ver</ion-label>
+            <ion-label class="ion-no-padding">{{"app_order"|translate}}</ion-label>
           </ion-item>
           <ion-item lines="none" detail="true" (click)="notifications()">
             <ion-label class="ion-no-padding">
-              <p>Bildirişlər <span></span></p>
+              <p>{{"app_notifications"|translate}} <span></span></p>
             </ion-label>
           </ion-item>
           <ion-item lines="none" detail="true" (click)="depatures()">
-            <ion-label class="ion-no-padding">Gedişlər</ion-label>
+            <ion-label class="ion-no-padding">{{"app_departures"|translate}}</ion-label>
           </ion-item>
           <ion-item lines="none" detail="true" (click)="paymentmethods()">
-            <ion-label class="ion-no-padding">Ödəmə üsulları</ion-label>
+            <ion-label class="ion-no-padding">{{"app_payment_method"|translate}}</ion-label>
           </ion-item>
           <ion-item lines="none" detail="true" (click)="myinfo()">
-            <ion-label class="ion-no-padding">İstifadəci məlumatlarım</ion-label>
+            <ion-label class="ion-no-padding">{{"app_account_info"|translate}}</ion-label>
           </ion-item>
           <ion-item lines="none" detail="true" (click)="promocode()">
-            <ion-label class="ion-no-padding">Promo code</ion-label>
+            <ion-label class="ion-no-padding">{{"app_promo_code"|translate}}</ion-label>
           </ion-item>
           <ion-item lines="none" detail="true" (click)="myaddress()">
-            <ion-label class="ion-no-padding">Ünvanlarım</ion-label>
+            <ion-label class="ion-no-padding">{{"app_address"|translate}}</ion-label>
+          </ion-item>
+          <ion-item lines="none" detail="true" routerLink="/myreservation">
+            <ion-label class="ion-no-padding">{{"setting_rezervs"|translate}}</ion-label>
           </ion-item>
           <ion-item lines="none">
-            <ion-label class="ion-no-padding">Dili dəyiş</ion-label>
+            <ion-label class="ion-no-padding">{{"app_change_lang"|translate}}</ion-label>
             <!-- <ion-text slot="end">AZ</ion-text> -->
-            <ion-select value="AZ">
-              <ion-select-option value="AZ">AZ</ion-select-option>
-              <ion-select-option value="RU">RU</ion-select-option>
-              <ion-select-option value="EN">EN</ion-select-option>
+            <ion-select [(ngModel)]="SelectedLang" (ionChange)="selectLang()">
+              <ion-select-option value="en">EN</ion-select-option>
+              <ion-select-option value="az">AZ</ion-select-option>
+              <ion-select-option value="ru">RU</ion-select-option>
             </ion-select>
           </ion-item>
           <ion-item lines="none" detail="true" (click)="help()">
-            <ion-label class="ion-no-padding">Dəstəy</ion-label>
+            <ion-label class="ion-no-padding">{{"app_support"|translate}}</ion-label>
           </ion-item>
           <ion-item (click)="logout()" lines="none" class="log-out" detail="true">
             <ion-icon name="log-out-outline"></ion-icon>
-            <ion-label class="ion-no-padding">Hesabdan çıxış</ion-label>
+            <ion-label class="ion-no-padding">{{"app_logout_account"|translate}}</ion-label>
           </ion-item>
           <ion-item (click)="changeToEvo()" lines="none" class="access-towtruck">
-            <ion-label class="ion-no-padding">Evakuator xidmeti</ion-label>
+            <ion-label class="ion-no-padding">{{"app_evo_service"|translate}}</ion-label>
           </ion-item>
         </ion-list>
       </ion-content>
@@ -70,49 +73,48 @@
             </div>
           </ion-avatar>
           <div class="name">
-            <h3>Sahib</h3>
-            <p>+994 50 000-00-00</p>
+            <h3>{{service.user.fullname}}</h3>
+            <p>{{service.user.phone}}</p>
           </div>
         </div>
         <ion-list>
           <ion-item lines="none" detail="true" (click)="evohome()">
-            <ion-label class="ion-no-padding">Sifariş ver</ion-label>
+            <ion-label class="ion-no-padding">{{"app_order"|translate}}</ion-label>
           </ion-item>
           <ion-item lines="none" detail="true" (click)="evonotification()">
             <ion-label class="ion-no-padding">
-              <p>Bildirişlər <span></span></p>
+              <p>{{"app_notifications"|translate}} <span></span></p>
             </ion-label>
           </ion-item>
           <ion-item lines="none" detail="true" (click)="evodepartures()">
-            <ion-label class="ion-no-padding">Gedişlər</ion-label>
+            <ion-label class="ion-no-padding">{{"app_departures"|translate}}</ion-label>
           </ion-item>
           <ion-item lines="none" detail="true" (click)="evopaymentmethods()">
-            <ion-label class="ion-no-padding">Ödəmə üsulları</ion-label>
+            <ion-label class="ion-no-padding">{{"app_payment_method"|translate}}</ion-label>
           </ion-item>
           <ion-item lines="none" detail="true" (click)="evomyinfo()">
-            <ion-label class="ion-no-padding">İstifadəci məlumatlarım</ion-label>
+            <ion-label class="ion-no-padding">{{"app_account_info"|translate}}</ion-label>
           </ion-item>
           <ion-item lines="none" detail="true" (click)="evopromocode()">
-            <ion-label class="ion-no-padding">Promo code</ion-label>
+            <ion-label class="ion-no-padding">{{"app_promo_code"|translate}}</ion-label>
           </ion-item>
           <ion-item lines="none">
-            <ion-label class="ion-no-padding">Dili dəyiş</ion-label>
-            <!-- <ion-text slot="end">AZ</ion-text> -->
-            <ion-select value="AZ">
-              <ion-select-option value="AZ">AZ</ion-select-option>
-              <ion-select-option value="RU">RU</ion-select-option>
-              <ion-select-option value="EN">EN</ion-select-option>
+            <ion-label class="ion-no-padding">{{"app_change_lang"|translate}}</ion-label>
+            <ion-select>
+              <ion-select-option value="en">EN</ion-select-option>
+              <ion-select-option value="az">AZ</ion-select-option>
+              <ion-select-option value="ru">RU</ion-select-option>
             </ion-select>
           </ion-item>
           <ion-item lines="none" detail="true" (click)="evohelp()">
-            <ion-label class="ion-no-padding">Dəstəy</ion-label>
+            <ion-label class="ion-no-padding">{{"app_support"|translate}}</ion-label>
           </ion-item>
           <ion-item (click)="logout()"  lines="none" class="log-out" detail="true">
             <ion-icon name="log-out-outline"></ion-icon>
-            <ion-label  class="ion-no-padding">Hesabdan çıxış</ion-label>
+            <ion-label class="ion-no-padding">{{"app_logout_account"|translate}}</ion-label>
           </ion-item>
           <ion-item lines="none" class="access-towtruck">
-            <ion-label (click)="changeToRahatGet()" class="ion-no-padding">RahatGet xidmeti</ion-label>
+            <ion-label (click)="changeToRahatGet()" class="ion-no-padding">{{"app_ayig_service"|translate}}</ion-label>
           </ion-item>
         </ion-list>
       </ion-content>
