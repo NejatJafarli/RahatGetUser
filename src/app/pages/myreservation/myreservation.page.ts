@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
+import { ApiService } from 'src/app/services/api.service';
+import { MyService } from 'src/app/services/my-service';
 
 @Component({
   selector: 'app-myreservation',
@@ -7,13 +9,22 @@ import { NavController } from '@ionic/angular';
   styleUrls: ['./myreservation.page.scss'],
 })
 export class MyreservationPage implements OnInit {
+  constructor(
+    private navCtrl: NavController,
+    private apiService: ApiService,
+    private myService: MyService
+  ) {}
 
-  constructor(private navCtrl:NavController) { }
+  rezervs = [];
+  async ngOnInit() {}
+  async ionViewDidEnter() {
+    let res = await this.apiService.getRezervs();
+    if (!res['status']) this.myService.Toast(res['message']);
+    console.log(res);
 
-  ngOnInit() {
+    this.rezervs = res['data'];
   }
-  navBack(){
+  navBack() {
     this.navCtrl.back();
   }
-
 }

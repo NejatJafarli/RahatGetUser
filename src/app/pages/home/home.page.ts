@@ -1049,14 +1049,15 @@ export class HomePage implements OnInit, AfterViewInit {
     this.step = 7;
   }
   comment;
-  home8() {
-    let res=this.apiService.sendReytingToDriver(
+  async home8() {
+    let res=await this.apiService.sendReytingToDriver(
       this.activeOrder.Driver.id,
       this.rating,
       this.comment
     );
-    if (!res['status']) return this.service.Toast(res['message']);
+    console.log(res);
     if (this.service.handleErrors(res)) return;
+    if (!res['status']) return this.service.Toast(res['message']);
     this.step = 8;
     // save rating and comment to mysql
     this.local.remove('activeOrder');

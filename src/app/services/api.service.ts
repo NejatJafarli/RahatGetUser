@@ -31,7 +31,28 @@ export class ApiService {
 
   //   });
   // }
-
+  async getRezervs() {
+    return await new Promise((resolve, reject) => {
+      this.http
+        .post(
+          environment.ApiLink + '/user/getRezervs',
+          {},
+          {
+            headers: {
+              Authorization: 'Bearer ' + this._token,
+            },
+          }
+        )
+        .subscribe(
+          (data) => {
+            resolve(data);
+          },
+          (error) => {
+            resolve(error);
+          }
+        );
+    });
+  }
   async login(json) {
     //convert to promise
     return await new Promise((resolve, reject) => {
@@ -40,15 +61,20 @@ export class ApiService {
           phone: '+994' + json.loginPhone,
           password: json.loginPassword,
         })
-        .subscribe(async (data) => {
-          await this.local.setToken(data['token']);
-          console.log('lging');
+        .subscribe(
+          async (data) => {
+            await this.local.setToken(data['token']);
+            console.log('lging');
 
-          console.log(data['token']);
+            console.log(data['token']);
 
-          this._token = data['token'];
-          resolve(data);
-        });
+            this._token = data['token'];
+            resolve(data);
+          },
+          (err) => {
+            resolve(err);
+          }
+        );
     });
   }
   async getTextSearch(query) {
@@ -108,12 +134,17 @@ export class ApiService {
             Authorization: 'Bearer ' + this._token,
           },
         })
-        .subscribe((data) => {
-          this._token = null;
-          this.local.remove('token');
-          this.local.remove('user');
-          resolve(data);
-        });
+        .subscribe(
+          (data) => {
+            this._token = null;
+            this.local.remove('token');
+            this.local.remove('user');
+            resolve(data);
+          },
+          (err) => {
+            resolve(err);
+          }
+        );
     });
   }
   async checkToken() {
@@ -226,9 +257,14 @@ export class ApiService {
               },
             }
           )
-          .subscribe((data) => {
-            resolve(data);
-          });
+          .subscribe(
+            (data) => {
+              resolve(data);
+            },
+            (err) => {
+              resolve(err);
+            }
+          );
       });
       this.local.cacheRequests(
         environment.ApiLink + '/user/getDriverInfo',
@@ -250,9 +286,14 @@ export class ApiService {
             },
           }
         )
-        .subscribe((data) => {
-          resolve(data);
-        });
+        .subscribe(
+          (data) => {
+            resolve(data);
+          },
+          (err) => {
+            resolve(err);
+          }
+        );
       // , (error) => {
       //   reject(error);
       // }
@@ -330,9 +371,14 @@ export class ApiService {
             },
           }
         )
-        .subscribe((data) => {
-          resolve(data);
-        });
+        .subscribe(
+          (data) => {
+            resolve(data);
+          },
+          (err) => {
+            resolve(err);
+          }
+        );
     });
   }
 
@@ -340,7 +386,7 @@ export class ApiService {
     let formData = new FormData();
     formData.append('fullname', fullname);
     formData.append('phone', phone);
-    formData.append('age', age);
+    if (age != null) formData.append('age', age);
     if (img != null) {
       formData.append('photo', img, 'photo');
     }
@@ -402,9 +448,14 @@ export class ApiService {
             },
           }
         )
-        .subscribe((data) => {
-          resolve(data);
-        });
+        .subscribe(
+          (data) => {
+            resolve(data);
+          },
+          (err) => {
+            resolve(err);
+          }
+        );
     });
   }
 
@@ -424,9 +475,14 @@ export class ApiService {
             },
           }
         )
-        .subscribe((data) => {
-          resolve(data);
-        });
+        .subscribe(
+          (data) => {
+            resolve(data);
+          },
+          (err) => {
+            resolve(err);
+          }
+        );
     });
   }
   async updateLocation(id, name, cordinates, location_name) {
@@ -446,9 +502,14 @@ export class ApiService {
             },
           }
         )
-        .subscribe((data) => {
-          resolve(data);
-        });
+        .subscribe(
+          (data) => {
+            resolve(data);
+          },
+          (err) => {
+            resolve(err);
+          }
+        );
     });
   }
 
@@ -471,10 +532,10 @@ export class ApiService {
         .subscribe(
           (data) => {
             resolve(data);
+          },
+          (err) => {
+            resolve(err);
           }
-          // , (error) => {
-          //   reject(error);
-          // }
         );
     });
   }

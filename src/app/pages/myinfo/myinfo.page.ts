@@ -177,12 +177,14 @@ export class MyinfoPage implements OnInit {
         blop
       );
     }
+    console.log(res);
+    
+    if(this.myService.handleErrors(res)) return;
 
     if (!res['status']) {
       this.myService.Toast(res['message']);
       return;
     }
-    if(this.myService.handleErrors(res)) return;
 
     console.log(res);
     
@@ -210,11 +212,13 @@ export class MyinfoPage implements OnInit {
       return;
     }
     let res = await this.apiService.updatePassword(this.OldPass, this.NewPass);
+    console.log(res);
+    if(this.myService.handleErrors(res)) return;
+    
     if (!res['status']) {
       this.myService.Toast(res['message']);
       return;
     }
-    if(this.myService.handleErrors(res)) return;
 
     this.myService.Toast(res['message']);
 

@@ -43,7 +43,7 @@ export class LoginPage implements OnInit {
     private local: StorageService,
     private auth: AuthService,
     private imageService: ImageService,
-    private translateCache:TranslateCacheService
+    private translateCache: TranslateCacheService
   ) {}
   codePhone;
   action;
@@ -97,14 +97,24 @@ export class LoginPage implements OnInit {
       this.loginPhone = this.loginPhone.substring(4);
     }
 
-    let res = await this.http
-      .post(this.service.ApiLink + '/user/login', {
-        phone: '+994' + this.loginPhone,
-        password: this.loginPassword,
-      })
-      .toPromise();
+    let res = await new Promise((resolve, reject) => {
+      this.http
+        .post(this.service.ApiLink + '/user/login', {
+          phone: '+994' + this.loginPhone,
+          password: this.loginPassword,
+        })
+        .subscribe(
+          (data) => {
+            resolve(data);
+          },
+          (error) => {
+            resolve(error);
+          }
+        );
+    });
 
     console.log(res);
+    if (this.service.handleErrors(res)) return;
 
     if (res['status']) {
       await this.local.setToken(res['token']);
@@ -146,11 +156,9 @@ export class LoginPage implements OnInit {
       let end = new Date(endDate).getTime();
       if (now < end) {
         let second = Math.floor((end - now) / 1000);
-        let text1=await this.translateCache.get('Please_wait');
-        let text2=await this.translateCache.get('second_to_send_new_request');
-        this.service.Toast(
-          text1+' ' + second + ' '+text2
-        );
+        let text1 = await this.translateCache.get('Please_wait');
+        let text2 = await this.translateCache.get('second_to_send_new_request');
+        this.service.Toast(text1 + ' ' + second + ' ' + text2);
         return;
       }
     }
@@ -180,11 +188,9 @@ export class LoginPage implements OnInit {
       let end = new Date(endDate).getTime();
       if (now < end) {
         let second = Math.floor((end - now) / 1000);
-        let text1=await this.translateCache.get('Please_wait');
-        let text2=await this.translateCache.get('second_to_send_new_request');
-        this.service.Toast(
-          text1+' ' + second + ' '+text2
-        );
+        let text1 = await this.translateCache.get('Please_wait');
+        let text2 = await this.translateCache.get('second_to_send_new_request');
+        this.service.Toast(text1 + ' ' + second + ' ' + text2);
         return;
       }
     }

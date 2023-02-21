@@ -17,15 +17,15 @@
           <div class="const">
             <div class="address1">
               <p class="address-title">{{ride.startLocationName}}</p>
-              <p class="date">{{ride.created_at | date: 'HH:mm'}}</p>
+              <p class="date">{{ride.startDate | date: 'HH:mm'}}</p>
             </div>
             <div class="address2">
               <p class="address-title">{{ride.endLocationName}}</p>
-              <p class="date">{{ride.updated_at | date: 'HH:mm'}}</p>
+              <p class="date">{{ride.endDate | date: 'HH:mm'}}</p>
             </div>
           </div>
           <div class="foot">
-            <p class="price">{{ride.price}}</p>
+            <p class="price">{{ride.price}}₼</p>
             <p class="date">{{ride.created_at | date: 'dd.MM.yyyy'}}</p>
           </div>
         </div>

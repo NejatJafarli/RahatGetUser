@@ -9,23 +9,24 @@
     </div>
     <ion-list>
       <ion-item lines="none" class="items">
-        <div class="card">
+        <div class="card" *ngFor="let rezerv of rezervs">
           <div class="head">
-            <p class="one">Rezerv</p>
+            <p class="one">{{rezerv.status |translate}}</p>
           </div>
           <div class="const">
             <div class="address1">
-              <p class="address-title">Koroğlu Rəhimov 34A</p>
-              <p class="date">02:10 PM </p>
+              <p class="address-title">{{rezerv.startLocationName}}</p>
+              <p class="date">{{rezerv.startDate | date: 'HH:mm'}}</p>
             </div>
             <div class="address2">
-              <p class="address-title">Şirvanlı 1</p>
-              <p class="date">02:10 PM </p>
+              <p class="address-title">{{rezerv.endLocationName}}</p>
+              <p class="date">{{rezerv.endDate | date: 'HH:mm'}}</p>
+              <!-- <p class="date">02:10 PM </p> -->
             </div>
           </div>
           <div class="foot">
-            <p class="price">₼ 20</p>
-            <p class="date">02/05/2022 </p>
+            <p class="price">{{rezerv.price}}₼</p>
+            <p class="date">{{rezerv.created_at | date: 'dd.MM.yyyy'}}</p>
           </div>
         </div>
       </ion-item>

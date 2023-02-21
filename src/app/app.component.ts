@@ -83,7 +83,7 @@ export class AppComponent {
     // await this.local.remove('activeOrder');
 
     this.platform.ready().then(() => {
-      // this.OneSignalInit();
+      this.OneSignalInit();
     });
     // //check if activeorder have send home page step 5
     // if (localStorage.getItem('activeOrder') != null) {
@@ -98,6 +98,10 @@ export class AppComponent {
     if (loggedin) {
       this.router.navigate(['/transition']);
     }
+  }
+  myreservation(){
+    this.router.navigate(['/myreservation']);
+    this.menuCtrl.close();
   }
   home() {
     this.router.navigate(['/home']);
@@ -185,7 +189,7 @@ export class AppComponent {
     //send logout request
     await this.apiService.logout();
     this.service.TokenCheck = false;
-    // OneSignal.setExternalUserId(null);
+    OneSignal.setExternalUserId(null);
 
     //PROBLEM HERE
     this.menuCtrl.close();

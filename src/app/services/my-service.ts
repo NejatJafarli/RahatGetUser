@@ -48,6 +48,7 @@ export class MyService {
         message = errors[key][0];
         break;
       }
+      message=message.replace(" ","_");
       this.Toast(message);
       return true;
     }
@@ -80,7 +81,7 @@ export class MyService {
   ApiLink = 'https://user.rahatget.az/api';
   TokenCheck=false;
   async Toast(message) {
-    message=this.translate.get(message);
+    message=await this.translate.get(message);
     const toast = await this.ToastController.create({
       message: message,
       duration: 2000,
