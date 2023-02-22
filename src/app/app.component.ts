@@ -46,9 +46,8 @@ export class AppComponent {
     private apiService: ApiService,
     private local: StorageService,
     private auth: AuthService,
-    private translate:TranslateService,
+    private translate: TranslateService,
     public translateConfigService: TranslateConfigService
-
   ) {}
   SelectedLang;
   selectLang() {
@@ -63,10 +62,10 @@ export class AppComponent {
     this.local.get('def_lang')?.then((res) => {
       if (res) {
         this.translate.use(res);
-        this.SelectedLang=res;
+        this.SelectedLang = res;
       } else {
         this.translate.use('az');
-        this.SelectedLang='az';
+        this.SelectedLang = 'az';
       }
     });
     await this.service.init();
@@ -90,6 +89,19 @@ export class AppComponent {
     //   this.router.navigate(['/home/'+JSON.parse(localStorage.getItem('activeOrder')).step]);
     // }
     //get value selectedapp
+
+    this.service.CheckInternet().then((network) => {
+      window.addEventListener('offline', async () => {
+        await this.service.Toast('check_network');
+        this.navCtrl.navigateRoot(['./no-wifi']);
+      });
+      if (network == false) {
+        //send no-wifi page
+        this.navCtrl.navigateRoot(['./no-wifi']);
+        return;
+      }
+    });
+
     this.service.selectedApp$.subscribe((data) => {
       this.selected = data;
     });
@@ -97,9 +109,10 @@ export class AppComponent {
     let loggedin = await this.auth.isloggedIn();
     if (loggedin) {
       this.router.navigate(['/transition']);
+      // this.router.navigate(['/no-wifi']);
     }
   }
-  myreservation(){
+  myreservation() {
     this.router.navigate(['/myreservation']);
     this.menuCtrl.close();
   }

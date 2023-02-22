@@ -10,6 +10,7 @@ import { LoginPage } from './login.page';
 import { HeaderbgComponent } from 'src/app/components/headerbg/headerbg.component';
 import { OtpcodeComponent } from 'src/app/components/otpcode/otpcode.component';
 import { TranslateModule } from '@ngx-translate/core';
+import { IonicInputMaskModule } from '@thiagoprz/ionic-input-mask';
 
 @NgModule({
   imports: [
@@ -18,6 +19,7 @@ import { TranslateModule } from '@ngx-translate/core';
     IonicModule,
     LoginPageRoutingModule,
     ReactiveFormsModule ,
+    IonicInputMaskModule,
     HeaderbgComponent,
     TranslateModule
   ],

@@ -16,8 +16,8 @@ export class ChatrgPage implements OnInit {
     private navCtrl: NavController,
     private myService: MyService
   ) {
-    this.activeOrder={
-      Driver:{}
+    this.activeOrder = {
+      Driver: {},
     };
     this.local.get('activeOrder').then((data) => {
       this.activeOrder = JSON.parse(data);
@@ -30,13 +30,18 @@ export class ChatrgPage implements OnInit {
   async ngOnInit() {
     this.activeOrder = JSON.parse(await this.local.get('activeOrder'));
     console.log(this.activeOrder);
+    if (!this.myService.hasListeners('getMessages')) {
+      this.myService.mySocket.once('getMessages', (data) => {
+        this.messages = data;
+      });
+    }
     this.myService.mySocket.emit('GetMessages', this.activeOrder.OrderId);
-    this.myService.mySocket.once('getMessages', (data) => {
-      this.messages = data;
-    });
-    this.myService.mySocket.on('NewMessage', (data) => {
-      this.messages.push(data);
-    });
+
+    if (!this.myService.hasListeners('NewMessage')) {
+      this.myService.mySocket.on('NewMessage', (data) => {
+        this.messages.push(data);
+      });
+    }
   }
   activeOrder;
   sendMsg() {

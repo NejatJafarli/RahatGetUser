@@ -85,7 +85,7 @@
               </div>
               <ion-input [(ngModel)]="tempName" type="text" placeholder="Ünvan adı"></ion-input>
               <div class="add">
-                <ion-button class="btn-primary" (click)="nameClick(tempName)" expand="block">{{"address_save_location"|translate}}</ion-button>
+                <ion-button [disabled]="disableAddBtn" class="btn-primary" (click)="nameClick(tempName)" expand="block">{{"address_save_location"|translate}}</ion-button>
               </div>
             </div>
           </ng-template>

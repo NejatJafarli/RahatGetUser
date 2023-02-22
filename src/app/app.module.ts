@@ -29,6 +29,7 @@ import {
 import { TranslateConfigService } from './services/translate-config.service';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { FormsModule } from '@angular/forms';
+import { IonicInputMaskModule } from '@thiagoprz/ionic-input-mask';
 
 @NgModule({
   declarations: [AppComponent],
@@ -39,6 +40,7 @@ import { FormsModule } from '@angular/forms';
     IonicModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
+    IonicInputMaskModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

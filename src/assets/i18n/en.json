@@ -213,4 +213,8 @@
   "Location_id_is_required": "Location ID is required",
   "you_have_not_rezerv": "You have not reserved",
   "Photo_size_must_be_less_than_10MB": "Photo size must be less than 10MB"
+  ,"check_network": "Check your internet connection",
+  "no_internet_connection":  "No internet connection",
+  "check_network_try_again": "Check your internet connection and try again",
+  "load_again": "Load again"
 }

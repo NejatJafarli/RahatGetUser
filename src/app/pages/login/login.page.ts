@@ -93,14 +93,10 @@ export class LoginPage implements OnInit {
     //send post request to server with phone and password
     //if this.loginPhone start with +
 
-    if (this.loginPhone[0] == '+') {
-      this.loginPhone = this.loginPhone.substring(4);
-    }
-
     let res = await new Promise((resolve, reject) => {
       this.http
         .post(this.service.ApiLink + '/user/login', {
-          phone: '+994' + this.loginPhone,
+          phone: '+994' + this.loginPhone.replaceAll('-', ''),
           password: this.loginPassword,
         })
         .subscribe(
@@ -134,7 +130,7 @@ export class LoginPage implements OnInit {
         UserId: userid,
       });
 
-      // OneSignal.setExternalUserId(userid);
+      OneSignal.setExternalUserId(userid);
       this.router.navigate(['transition']);
     } else {
       this.loginPassword = '';
@@ -178,9 +174,6 @@ export class LoginPage implements OnInit {
     }
   }
   async loginstep3() {
-    if (this.registerPhone[0] == '+') {
-      this.registerPhone = this.registerPhone.substring(4);
-    }
     let endDate = await this.local.get('sendNewRequestEndDate');
     if (endDate) {
       // Y-m-d H:i:s
@@ -202,12 +195,14 @@ export class LoginPage implements OnInit {
 
     let res = await this.http
       .post(this.service.ApiLink + '/user/register', {
-        phone: '+994' + this.registerPhone,
+        phone: '+994' + this.registerPhone.replaceAll('-', ''),
         password: this.registerPassword,
         fullname: this.registerFullname,
       })
       .toPromise();
     console.log(res);
+
+    if (this.service.handleErrors(res)) return;
 
     if (res['status']) {
       this.registerFullname = '';

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ApiService } from 'src/app/services/api.service';
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-loader',
@@ -7,12 +9,17 @@ import { Router } from '@angular/router';
   styleUrls: ['./loader.page.scss'],
 })
 export class LoaderPage implements OnInit {
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private apiService: ApiService,
+    private local: StorageService
+  ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
+    let token = await this.local.get('token');
     setTimeout(() => {
-      // this.router.navigate(['pickup-calls']);
-      this.router.navigate(['login']);
+      if (token != null) this.router.navigate(['transition']);
+      else this.router.navigate(['login']);
     }, 1000);
   }
 }

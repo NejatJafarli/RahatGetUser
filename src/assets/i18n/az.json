@@ -212,5 +212,9 @@
   "Location_name_is_required": "Məkan adı tələb olunur",
   "Location_id_is_required": "Məkan id-si tələb olunur",
   "you_have_not_rezerv": "Sizin hecbir rezerviniz yoxdur",
-  "Photo_size_must_be_less_than_10MB": "Şəkilin ölçüsü 10MB-dan az olmalıdır"
+  "Photo_size_must_be_less_than_10MB": "Şəkilin ölçüsü 10MB-dan az olmalıdır",
+  "check_network": "Zəhmət olmasa internet bağlantınızı yoxlayın",
+  "no_internet_connection": "İnternet bağlantısı yoxdur",
+  "check_network_try_again": "Zəhmət olmasa internet bağlantınızı yoxlayın və yenidən cəhd edin",
+  "load_again": "Yenidən yüklə"
 }

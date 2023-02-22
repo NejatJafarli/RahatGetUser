@@ -83,6 +83,7 @@ export class MyaddressPage implements OnInit {
         //SEND API REQUEST TO APPEND NEW ADDRESS TO DATABASE
         //SEND API REQUEST TO APPEND NEW ADDRESS TO DATABASE
         //SEND API REQUEST TO APPEND NEW ADDRESS TO DATABASE
+        this.disableAddBtn = true;
         let cordinates =
           this.selectedAddressJson.lat + ',' + this.selectedAddressJson.long;
         let res = await this.apiService.addLocation(
@@ -90,6 +91,7 @@ export class MyaddressPage implements OnInit {
           cordinates,
           this.selectedAddressJson.AddressName
         );
+        this.disableAddBtn = false;
         if(this.myService.handleErrors(res)) return;
 
         this.myService.Toast(res['message']);
@@ -112,13 +114,14 @@ export class MyaddressPage implements OnInit {
         //edit address in database
         let cord =
           this.selectedAddressJson.lat + ',' + this.selectedAddressJson.long;
+          this.disableAddBtn = true;
         let res = await this.apiService.updateLocation(
           this.selectedAddressJson.id,
           value,
           cord,
           this.selectedAddressJson.AddressName
         );
-        
+        this.disableAddBtn = false;
         if (!res['status']) return this.myService.Toast(res['message']);
         if(this.myService.handleErrors(res)) return;
         
@@ -174,6 +177,7 @@ export class MyaddressPage implements OnInit {
     console.log(this.selectedAddressJson);
     
   }
+  disableAddBtn=false;
   async whereChange(value) {
     this.addressTextResults = [];
     this.addressPositions = [];

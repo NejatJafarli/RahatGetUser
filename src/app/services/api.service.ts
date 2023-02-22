@@ -240,12 +240,12 @@ export class ApiService {
     //convert to number
     let driverId = Number(str);
 
-    let cache = await this.local.getCachedRequests(
-      environment.ApiLink + '/user/getDriverInfo'
-    );
-    if (cache != null) {
-      return cache;
-    } else {
+    // let cache = await this.local.getCachedRequests(
+    //   environment.ApiLink + '/user/getDriverInfo'
+    // );
+    // if (cache != null) {
+    //   return cache;
+    // } else {
       let data = new Promise((resolve, reject) => {
         this.http
           .post(
@@ -266,12 +266,12 @@ export class ApiService {
             }
           );
       });
-      this.local.cacheRequests(
-        environment.ApiLink + '/user/getDriverInfo',
-        data
-      );
+      // this.local.cacheRequests(
+      //   environment.ApiLink + '/user/getDriverInfo',
+      //   data
+      // );
       return data;
-    }
+    // }
   }
 
   async getLocations() {
@@ -382,10 +382,9 @@ export class ApiService {
     });
   }
 
-  async updateAccount(fullname, phone, age, img = null) {
+  async updateAccount(fullname, age, img = null) {
     let formData = new FormData();
     formData.append('fullname', fullname);
-    formData.append('phone', phone);
     if (age != null) formData.append('age', age);
     if (img != null) {
       formData.append('photo', img, 'photo');

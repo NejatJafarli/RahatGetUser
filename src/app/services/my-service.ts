@@ -34,6 +34,11 @@ export class MyService {
   getValueSelectedApp() {
     return this.selectedApp.getValue();
   }
+  async CheckInternet() {
+    if (navigator.onLine) return true;
+    else await this.Toast('check_network');
+    return false;
+  }
   setValueSelectedApp(value) {
     this.selectedApp.next(value);
     this.local.set('selectedApp', value);
@@ -79,6 +84,7 @@ export class MyService {
   user;
   apiKey = 'AIzaSyBMqRoKxM1TmwA7PTM8sbWzrcCD5VQLSP0';
   ApiLink = 'https://user.rahatget.az/api';
+  platforumResume=false;
   TokenCheck=false;
   async Toast(message) {
     message=await this.translate.get(message);
@@ -88,6 +94,9 @@ export class MyService {
       position: 'top',
     });
     await toast.present();
+  }
+  hasListeners(eventName: string) {
+    return this.mySocket.ioSocket.hasListeners(eventName);
   }
   getTranslate(value){
     return this.translate.get(value);

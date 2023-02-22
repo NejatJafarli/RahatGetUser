@@ -165,14 +165,12 @@ export class MyinfoPage implements OnInit {
     if (blop == null) {
       res = await this.apiService.updateAccount(
         this.User.fullname,
-        this.User.phone,
         this.User.age
       );
     }
     else{
       res = await this.apiService.updateAccount(
         this.User.fullname,
-        this.User.phone,
         this.User.age,
         blop
       );

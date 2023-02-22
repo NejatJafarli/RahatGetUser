@@ -10,8 +10,8 @@
               <div class="inputs">
                 <ion-label>+994</ion-label>
                 <span class="line">|</span>
-                <ion-input [(ngModel)]="loginPhone" class="ion-no-padding" type="number"
-                  placeholder="(99) 999 99 99"></ion-input>
+                <ion-input [(ngModel)]="loginPhone" class="ion-no-padding" type="tel"
+                placeholder="99-999-99-99" mask="**-***-**-**" maxlength="12"></ion-input>
               </div>
             </div>
           </ion-item>
@@ -50,8 +50,8 @@
               <div class="inputs">
                 <ion-label>+994</ion-label>
                 <span class="line">|</span>
-                <ion-input [(ngModel)]="registerPhone" class="ion-no-padding" type="number"
-                  placeholder="(99) 999 99 99"></ion-input>
+                <ion-input [(ngModel)]="registerPhone" class="ion-no-padding" type="tel"
+                  placeholder="99-999-99-99" mask="**-***-**-**" maxlength="12"></ion-input>
               </div>
             </div>
           </ion-item>
@@ -90,7 +90,7 @@
   </div>
   <div *ngIf="step == 3">
     <div class="otpcode-page">
-      <app-headerbg title="{{'login_enter_otp'|translate}}}"
+      <app-headerbg title="{{'login_enter_otp'|translate}}"
         subtitle="{{'login_please_enter_the_otp_1' | translate}} {{this.registerPhone}}{{'login_please_enter_the_otp_2'|translate}}"
         [image]="'../assets/img/fingerprint-security-outline.gif'" [paddingTop]=10></app-headerbg>
       <app-otpcode (getCode)="getCode($event)"></app-otpcode>

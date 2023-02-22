@@ -130,7 +130,11 @@ const routes: Routes = [
     path: 'myreservation',
     loadChildren: () => import('./pages/myreservation/myreservation.module').then( m => m.MyreservationPageModule)
     ,canActivate: [AuthGuardGuard]
+  },  {
+    path: 'no-wifi',
+    loadChildren: () => import('./pages/no-wifi/no-wifi.module').then( m => m.NoWifiPageModule)
   },
+
 
 
 

@@ -210,5 +210,9 @@
   "Location_name_is_required": "Требуется указать название местоположения",
   "Location_id_is_required": "Требуется указать идентификатор местоположения",
   "you_have_not_rezerv": "У вас нет бронирования",
-  "Photo_size_must_be_less_than_10MB": "Размер фотографии должен быть меньше 10 МБ"
+  "Photo_size_must_be_less_than_10MB": "Размер фотографии должен быть меньше 10 МБ",
+  "check_network": "Проверьте подключение к сети",
+  "no_internet_connection": "Нет подключения к интернету",
+  "check_network_try_again": "Проверьте подключение к сети и попробуйте еще раз",
+  "load_again": "Загрузить еще"
 }

@@ -193,7 +193,7 @@
           <div class="right">
             <div class="text">
               <p class="title">{{"home_price"|translate}}</p>
-              <p class="price">56₼</p>
+              <p class="price">4₼</p>
             </div>
             <img src="/assets/icon/car2.png">
           </div>
@@ -201,7 +201,7 @@
       </ion-list>
       <div class="salary-button">
         <div class="left">
-          <p>56₼</p>
+          <p>4 ₼</p>
           <span>{{"home_price"|translate}}</span>
         </div>
         <div class="right">
@@ -490,7 +490,8 @@
     </div>
     <ion-item lines="none">
       <div class="cash">
-        <p class="left"> <img src="/assets/icon/apple-pay2.png"> {{this.CardValue}}</p>
+        <p class="left" *ngIf="SelectedPayment==2"> <img src="/assets/icon/apple-pay2.png">{{this.CardValue}} </p>
+        <p class="left" *ngIf="SelectedPayment==1"> <img src="/assets/icon/cash.png">{{"home_pay_with_cash"|translate}} </p>
         <div class="right">
           <img src="/assets/icon/money.svg">
           <span>{{activeOrder.OrderData.price}}</span>
@@ -526,12 +527,13 @@
         </div>
         <div class="comment">
           <ion-item lines="none">
-            <ion-textarea [(ngModel)]="comment" placeholder="{{'home_write_a_comment'|translate}}" rows="1"></ion-textarea>
+            <ion-textarea [(ngModel)]="comment" placeholder="{{'home_write_a_comment'|translate}}"
+              rows="1"></ion-textarea>
           </ion-item>
         </div>
       </div>
       <div class="foot-btn">
-        <ion-button (click)="home8()" class="btn-primary">{{"home_send_comment"|translate}}</ion-button>
+        <ion-button [disabled]="disableReytingButton" (click)="home8()" class="btn-primary">{{"home_send_comment"|translate}}</ion-button>
       </div>
     </div>
   </div>
