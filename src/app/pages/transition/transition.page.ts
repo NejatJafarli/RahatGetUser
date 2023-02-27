@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { NavController } from '@ionic/angular';
 import { MyService } from 'src/app/services/my-service';
 
 @Component({
@@ -9,13 +10,13 @@ import { MyService } from 'src/app/services/my-service';
 })
 export class TransitionPage implements OnInit {
   temp;
-  constructor(private router: Router, private service: MyService) {}
+  constructor(private router: Router, private service: MyService,private navCtrl:NavController) {}
 
   ngOnInit() {}
 
   evo() {
     this.service.setValueSelectedApp('evo');
-    this.router.navigate(['/evohome']);
+    this.navCtrl.navigateRoot(['/evohome']);
   }
   ayig() {
     this.service.setValueSelectedApp('ayig');

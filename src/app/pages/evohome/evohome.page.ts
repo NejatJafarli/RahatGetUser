@@ -41,15 +41,14 @@ export class EvohomePage implements OnInit {
         this.step = 1;
       }
     });
-    let temp = this.router.getCurrentNavigation()?.extras.state;
-
-    if (temp) {
-      setTimeout(() => {
-        if (temp.reload) {
-          window.location.reload();
-        }
-      }, 100);
-    }
+    // let temp = this.router.getCurrentNavigation()?.extras.state;
+    // if (temp) {
+    //   setTimeout(() => {
+    //     if (temp.reload) {
+    //       window.location.reload();
+    //     }
+    //   }, 100);
+    // }
     this.SelectedAccidents = 'accident';
     this.CardValue = 'Kartla ödəniş';
 
@@ -109,65 +108,73 @@ export class EvohomePage implements OnInit {
     if (this.SelectedAccidents == 'more') this.toggleDisplayForAccidents = true;
     else this.toggleDisplayForAccidents = false;
   }
-  ionViewDidEnter() {
+  async ionViewDidEnter() {
+    // if (this.loadmap) {
+    // setTimeout(() => {
+    // });
+    // this.loadmap = false;
+    // }
     // setTimeout(()=>{
     //   this.showMap();
     // },1000);
-
-    //check permission
-    MyGeo.checkPermissions().then((res) => {
-      if (res.location === 'granted') {
-        //get current location
-        MyGeo.watchPosition({ enableHighAccuracy: true }, (position) => {
-          if (position.coords) {
-            this.position = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            };
-            this.geoCodePosition(position);
-            if (this.temp) {
-              this.step = 2;
-              this.temp = false;
-            }
-            if (this.loadmap) {
-              setTimeout(() => {
-                this.showMap();
-              });
-              this.loadmap = false;
-            }
-          }
-        });
-      } else {
-        //request permission
-        MyGeo.requestPermissions().then((res) => {
-          if (res.location === 'granted') {
-            //get current location
-            MyGeo.watchPosition({ enableHighAccuracy: true }, (position) => {
-              if (position.coords) {
-                this.position = {
-                  lat: position.coords.latitude,
-                  lng: position.coords.longitude,
-                };
-                this.geoCodePosition(position);
-                if (this.temp) {
-                  this.step = 2;
-                  this.temp = false;
-                }
-                if (this.loadmap) {
-                  setTimeout(() => {
-                    this.showMap();
-                  });
-                  this.loadmap = false;
-                }
-              }
-            });
-          } else {
-            this.router.navigate(['/transition']);
-          }
-        });
-      }
-    });
+    // //check permission
+    // MyGeo.checkPermissions().then((res) => {
+    //   if (res.location === 'granted') {
+    //     //get current location
+    //     MyGeo.watchPosition({ enableHighAccuracy: true }, (position) => {
+    //       console.log("hello");
+    //       if (position.coords) {
+    //         this.position = {
+    //           lat: position.coords.latitude,
+    //           lng: position.coords.longitude,
+    //         };
+    //         this.geoCodePosition(position);
+    //         if (this.temp) {
+    //           this.step = 2;
+    //           this.temp = false;
+    //         }
+    //       }
+    //       console.log(this.loadmap);
+    //       if (this.loadmap) {
+    //         setTimeout(() => {
+    //           this.showMap();
+    //         });
+    //         this.loadmap = false;
+    //       }
+    //     });
+    //   } else {
+    //     //request permission
+    //     MyGeo.requestPermissions().then((res) => {
+    //       if (res.location === 'granted') {
+    //         //get current location
+    //         MyGeo.watchPosition({ enableHighAccuracy: true }, (position) => {
+    //           if (position.coords) {
+    //             this.position = {
+    //               lat: position.coords.latitude,
+    //               lng: position.coords.longitude,
+    //             };
+    //             this.geoCodePosition(position);
+    //             if (this.temp) {
+    //               this.step = 2;
+    //               this.temp = false;
+    //             }
+    //           }
+    //           console.log(this.loadmap);
+    //             if (this.loadmap) {
+    //               setTimeout(() => {
+    //                 this.showMap();
+    //               });
+    //               this.loadmap = false;
+    //             }
+    //         });
+    //       } else {
+    //         this.router.navigate(['/transition']);
+    //       }
+    //     });
+    //   }
+    // });
   }
+
   showMap() {
     const location = new google.maps.LatLng(
       this.position.lat,
@@ -268,6 +275,71 @@ export class EvohomePage implements OnInit {
     this.WherePositions = [];
   }
   mark;
+  SetWhereIAmTwo() {
+    this.toggleDisplay = !this.toggleDisplay;
+    //clear car markers from map Future
+
+    //add marker to map
+    if (!this.toggleDisplay) {
+      this.mark = new google.maps.Marker({
+        position: this.position,
+        map: this.map,
+        draggable: false,
+        animation: google.maps.Animation.DROP,
+      });
+
+      this.map.setCenter(this.position);
+      this.mark.setPosition(this.map.getCenter());
+      this.selectedPosition = this.map.getCenter();
+
+      let geocoder = new google.maps.Geocoder();
+      let request = {
+        latLng: this.selectedPosition,
+      };
+      geocoder.geocode(request, (results, status) => {
+        if (status == google.maps.GeocoderStatus.OK) {
+          if (results[0] != null) {
+            this.selectedPositionGeoCode = results[0].formatted_address;
+            this.selectedDataTwo = {
+              position: this.selectedPosition,
+              name: this.selectedPositionGeoCode,
+            };
+            this.selectedSearchOne = this.selectedPositionGeoCode;
+          } else {
+            this.selectedPositionGeoCode = '';
+          }
+        }
+      });
+
+      google.maps.event.addListener(this.map, 'drag', (event) => {
+        this.mark.setPosition(this.map.getCenter());
+        this.selectedPosition = this.map.getCenter();
+
+        let geocoder = new google.maps.Geocoder();
+        let request = {
+          latLng: this.selectedPosition,
+        };
+        geocoder.geocode(request, (results, status) => {
+          if (status == google.maps.GeocoderStatus.OK) {
+            if (results[0] != null) {
+              this.selectedPositionGeoCodeTwo = results[0].formatted_address;
+              this.selectedData = {
+                position: this.selectedPosition,
+                name: this.selectedPositionGeoCodeTwo,
+              };
+              this.selectedSearchOne = this.selectedPositionGeoCodeTwo;
+            } else {
+              this.selectedPositionGeoCodeTwo = '';
+            }
+          }
+        });
+      });
+    } else {
+      this.selectedPosition = null;
+      this.selectedPositionGeoCode = '';
+      this.mark.setMap(null);
+    }
+  }
   SetWhereIAm() {
     this.toggleDisplay = !this.toggleDisplay;
     //clear car markers from map Future
@@ -357,11 +429,32 @@ export class EvohomePage implements OnInit {
     });
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     // setTimeout(() => {
     //   this.step=2
     // }, 1000);
     this.presentingElement = document.querySelector('.ion-page');
+
+    let position = await MyGeo.getCurrentPosition();
+    this.position = {
+      lat: position.coords.latitude,
+      lng: position.coords.longitude,
+    };
+    this.geoCodePosition(position);
+
+    console.log('step', this.step);
+    
+    this.step = 2;
+    setTimeout(() => {
+      this.showMap();
+    }, 200);
+
+    // if (this.loadmap) {
+    //   setTimeout(() => {
+    //     this.showMap();
+    //   });
+    //   this.loadmap = false;
+    // }
   }
 
   geoCodePosition(position) {

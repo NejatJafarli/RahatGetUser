@@ -37,6 +37,7 @@ export class MyService {
   async CheckInternet() {
     if (navigator.onLine) return true;
     else await this.Toast('check_network');
+    this.menuCtrl.close();
     return false;
   }
   setValueSelectedApp(value) {

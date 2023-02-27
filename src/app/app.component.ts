@@ -82,7 +82,7 @@ export class AppComponent {
     // await this.local.remove('activeOrder');
 
     this.platform.ready().then(() => {
-      this.OneSignalInit();
+      // this.OneSignalInit();
     });
     // //check if activeorder have send home page step 5
     // if (localStorage.getItem('activeOrder') != null) {
@@ -154,7 +154,7 @@ export class AppComponent {
   }
 
   evohome() {
-    this.router.navigate(['/evohome']);
+    this.navCtrl.navigateRoot(['/evohome']);
     this.menuCtrl.close();
   }
   evomyinfo() {
@@ -187,22 +187,30 @@ export class AppComponent {
   //   this.menuCtrl.close();
   // }
   changeToRahatGet() {
+    
     this.menuCtrl.close();
-    this.local.set('selectedApp', 'ayig');
-    this.router.navigate(['/home'], { state: { reload: true } });
+    document
+      .getElementById('main-content')
+      .classList.remove('menu-content-open');
+    this.service.setValueSelectedApp('ayig');
+    
+    this.router.navigate(['/home']);
   }
   changeToEvo() {
     //reload page
-
     this.menuCtrl.close();
-    this.local.set('selectedApp', 'evo');
-    this.router.navigate(['/evohome'], { state: { reload: true } });
+    document
+      .getElementById('main-content')
+      .classList.remove('menu-content-open');
+    this.service.setValueSelectedApp('evo');
+
+    this.navCtrl.navigateRoot(['/evohome']);
   }
   async logout() {
     //send logout request
     await this.apiService.logout();
     this.service.TokenCheck = false;
-    OneSignal.setExternalUserId(null);
+    // OneSignal.setExternalUserId(null);
 
     //PROBLEM HERE
     this.menuCtrl.close();

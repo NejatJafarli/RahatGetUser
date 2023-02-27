@@ -31,7 +31,7 @@ export class EvopaymentmethodsPage implements OnInit {
   }
 
   backbtn() {
-    this.step == 1 ? this.router.navigate(['/evohome']) : this.step = 1;
+    this.step == 1 ? this.navCtrl.navigateRoot(['/evohome']) : this.step = 1;
   }
   backevohome() {
     this.navCtrl.back();

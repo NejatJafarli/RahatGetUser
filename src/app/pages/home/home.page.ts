@@ -59,15 +59,16 @@ export class HomePage implements OnInit, AfterViewInit {
     private local: StorageService,
     private platform: Platform
   ) {
-    let temp = this.roter.getCurrentNavigation()?.extras.state;
+    // let temp = this.roter.getCurrentNavigation()?.extras.state;
 
-    if (temp) {
-      setTimeout(() => {
-        if (temp.reload) {
-          window.location.reload();
-        }
-      }, 100);
-    }
+    // if (temp) {
+    //   setTimeout(() => {
+    //     if (temp.reload) {
+    //       return this.roter.navigate(['/home']);
+    //     }
+    //   }, 100);
+    //   return;
+    // }
   }
   MyCards;
   selectedRadio;
