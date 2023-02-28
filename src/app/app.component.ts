@@ -82,7 +82,7 @@ export class AppComponent {
     // await this.local.remove('activeOrder');
 
     this.platform.ready().then(() => {
-      // this.OneSignalInit();
+      this.OneSignalInit();
     });
     // //check if activeorder have send home page step 5
     // if (localStorage.getItem('activeOrder') != null) {
@@ -152,7 +152,6 @@ export class AppComponent {
     this.router.navigate(['/notification']);
     this.menuCtrl.close();
   }
-
   evohome() {
     this.navCtrl.navigateRoot(['/evohome']);
     this.menuCtrl.close();
@@ -187,7 +186,6 @@ export class AppComponent {
   //   this.menuCtrl.close();
   // }
   changeToRahatGet() {
-    
     this.menuCtrl.close();
     document
       .getElementById('main-content')
@@ -210,7 +208,7 @@ export class AppComponent {
     //send logout request
     await this.apiService.logout();
     this.service.TokenCheck = false;
-    // OneSignal.setExternalUserId(null);
+    OneSignal.setExternalUserId(null);
 
     //PROBLEM HERE
     this.menuCtrl.close();

@@ -36,9 +36,28 @@ export class ChatrgPage implements OnInit {
       });
     }
     this.myService.mySocket.emit('GetMessages', this.activeOrder.OrderId);
-
+    //show this.myService.mysokcet listeners
+    let socket = this.myService.mySocket;
+    console.log(socket);
     if (!this.myService.hasListeners('NewMessage')) {
       this.myService.mySocket.on('NewMessage', (data) => {
+        console.log(data);
+
+        this.messages.push(data);
+      });
+    }
+  }
+
+  ionViewWillEnter() {
+    if (!this.myService.hasListeners('getMessages')) {
+      this.myService.mySocket.once('getMessages', (data) => {
+        this.messages = data;
+      });
+    }
+    if (!this.myService.hasListeners('NewMessage')) {
+      this.myService.mySocket.on('NewMessage', (data) => {
+        console.log(data);
+
         this.messages.push(data);
       });
     }

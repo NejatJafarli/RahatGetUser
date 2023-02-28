@@ -604,6 +604,7 @@ export class HomePage implements OnInit, AfterViewInit {
       } else if (res['data']['status'] == 'Accepted') {
         activeOrder.OrderStatus = 'Accepted';
         activeOrder.step = 6;
+        this.step=6;
         activeOrder.DriverId = 'driver' + res['data']['AyigDriverId'];
         activeOrder.OrderId = res['data']['OrderId'];
         let ress = await this.apiService.getDriverInfo(
